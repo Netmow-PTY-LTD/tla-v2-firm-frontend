@@ -1,0 +1,75 @@
+/* Header Main */
+
+.main_header {
+  background-color: #fff;
+  padding: 10px 0;
+  border-bottom: 1px solid #dce2ea;
+}
+
+.main_header.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 3px 2px 0px rgba(0, 0, 0, 0.1);
+  animation: sticky 1s ease-in-out;
+}
+
+@keyframes sticky {
+  0% {
+    -webkit-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    transform: translateY(-100%);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+.logo {
+  flex-shrink: 0;
+}
+
+.nav_link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-black);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.btn_register {
+  background-color: var(--color-black);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 12px;
+}
+
+@media (max-width: 767px) {
+  .logo {
+    width: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn_register_mobile {
+    display: none;
+  }
+}
