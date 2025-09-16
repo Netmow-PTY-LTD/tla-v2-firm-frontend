@@ -26,7 +26,7 @@ export default function CompanyProfile() {
         <div className="w-full md:w-1/2 flex flex-col gap-4">
           <TextInput
             name="companyName"
-            label="Name"
+            label="Company Name"
             placeholder="Enter Your Company Name"
             textColor="text-[#4b4949]"
           />
