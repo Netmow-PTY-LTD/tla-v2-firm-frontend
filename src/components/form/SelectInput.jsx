@@ -47,7 +47,7 @@ export default function SelectInput({
               >
                 <SelectTrigger
                   className={clsx(
-                    'bg-white h-[44px]',
+                    'bg-white h-[48px]',
                     textColor,
                     triggerClassName
                   )}
