@@ -87,7 +87,7 @@ export default function LawFirmSidebar({ isCollapsed, setIsCollapsed }) {
                   onClick={() => toggleMenu(item.title)}
                   className={`w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
                     isParentActive
-                      ? "bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] font-medium text-white"
+                      ? "bg-[linear-gradient(121deg,_rgb(241,161,13),_#ffffff)] font-medium text-white"
                       : ""
                   }`}
                 >
@@ -110,7 +110,7 @@ export default function LawFirmSidebar({ isCollapsed, setIsCollapsed }) {
                           onClick={handleItemClick}
                           className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
                             isActive
-                              ? "bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium"
+                              ? "bg-[linear-gradient(121deg,_rgb(241,161,13),_#ffffff)] text-white font-medium"
                               : "hover:bg-gray-100"
                           }`}
                         >
@@ -132,7 +132,7 @@ export default function LawFirmSidebar({ isCollapsed, setIsCollapsed }) {
               onClick={handleItemClick}
               className={`flex items-center gap-2 p-2 rounded transition font-medium ${
                 pathname === item.url
-                  ? "bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium"
+                  ? "bg-[linear-gradient(121deg,_rgb(241,161,13),_#ffffff)] text-white font-medium"
                   : "hover:bg-gray-100"
               }`}
             >

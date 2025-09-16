@@ -32,7 +32,7 @@ const LawFirmLoginForm = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    router.push("/law-firm/dashboard");
+    router.push("/dashboard");
   };
 
   useEffect(() => {
@@ -75,12 +75,12 @@ const LawFirmLoginForm = () => {
               />
               {showPassword ? (
                 <EyeOff
-                  className="absolute right-[12px] top-[33px] text-[var(--color-text)] cursor-pointer"
+                  className="absolute right-[12px] top-[36px] text-[var(--color-text)] cursor-pointer"
                   onClick={() => setShowPassword(false)}
                 />
               ) : (
                 <Eye
-                  className="absolute right-[12px] top-[33px] text-[var(--color-text)] cursor-pointer"
+                  className="absolute right-[12px] top-[36px] text-[var(--color-text)] cursor-pointer"
                   onClick={() => setShowPassword(true)}
                 />
               )}
@@ -99,14 +99,17 @@ const LawFirmLoginForm = () => {
                 Remember Me
               </label>
 
-              <Link href="/forget-password" className="text-[#00C3C0]">
+              <Link
+                href="/forget-password"
+                className="text-[var(--primary-color)]"
+              >
                 Forgot Password?
               </Link>
             </div>
 
             <button
               type="submit"
-              className="btn-auth-login bg-[var(--color-special)] w-full hover:bg-[--primary-color] transition-all duration-300"
+              className="btn-auth-login bg-[var(--primary-color)] w-full hover:bg-[--secondary-color] transition-all duration-300"
               style={{ cursor: "pointer" }}
               // disabled={loading || isLoading}
             >
@@ -119,13 +122,19 @@ const LawFirmLoginForm = () => {
 
         <div className="tla-auth-footer text-center">
           <span>Manage your firm? </span>
-          <Link href="/register">
+          <Link
+            href="/register"
+            className="text-[var(--primary-color)] underline"
+          >
             <b>Register your law firm</b>
           </Link>
         </div>
         <div className="text-center mt-3 text-sm text-[var(--color-text)]">
           <span>Lost your account? </span>
-          <Link href="/claim-account" className="text-[#00C3C0] underline">
+          <Link
+            href="/claim-account"
+            className="text-[var(--primary-color)] underline"
+          >
             <b>Claim Account</b>
           </Link>
         </div>
