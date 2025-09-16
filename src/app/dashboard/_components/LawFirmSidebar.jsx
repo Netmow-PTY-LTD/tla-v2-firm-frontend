@@ -8,7 +8,16 @@ import SidebarTop from "./SidebarTop";
 
 export default function LawFirmSidebar({ isCollapsed, setIsCollapsed }) {
   const pathname = usePathname();
-  const [openMenus, setOpenMenus] = useState({});
+  const [openMenus, setOpenMenus] = useState(() => {
+    const initialState = {};
+    LawFirmSidebarItems?.navMain?.forEach((item) => {
+      if (Array.isArray(item.items) && item.items.length > 0) {
+        initialState[item.title] = true; // ✅ open all submenus by default
+      }
+    });
+    return initialState;
+  });
+
   const sidebarRef = useRef(null);
 
   const toggleMenu = (title) => {
