@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 import { Loader } from 'lucide-react';
 import AddPartnerModal from './components/AddPartnerModal';
-// import EditParterModal from './components/EditParterModal';
+import EditParterModal from './components/EditParterModal';
 // import PartnerList from './components/PartnerList';
 
 export default function ManagingPartner() {
@@ -58,18 +58,17 @@ export default function ManagingPartner() {
           refetch={false}
         />
       </div>
-      {/* <PartnerList
+    {/* <PartnerList
         profile={profile}
         handleEditClick={handleEditClick}
         refetch={refetch}
-      />
+      /> */}
       <EditParterModal
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         selectedPartner={selectedPartner}
-        updateUserData={updateUserData}
-        refetch={refetch}
-      /> */}
+        refetch={false}
+      /> 
     </div>
   );
 }
