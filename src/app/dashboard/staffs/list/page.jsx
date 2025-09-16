@@ -143,7 +143,7 @@ export default function StaffsList() {
   ];
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <div className="max-w-[1200px] mx-auto bg-white p-6 rounded-lg shadow-sm">
       <h2 className="text-2xl font-bold mb-6">List of Staffs</h2>
       <StaffDataTable
         data={staffData || []}
