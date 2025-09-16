@@ -25,7 +25,7 @@ export default function Locations() {
                 ...prev,
                 { ...form, id: Date.now().toString() },
             ]);
-            
+
         }
         setForm({ name: "", address: "", lat: "", lng: "" });
     };
@@ -41,7 +41,7 @@ export default function Locations() {
 
     return (
        
-        <div className="space-y-6">
+        <div className="max-w-[900px] mx-auto  space-y-6">
             {/* Top Header */}
             <div className="flex items-center justify-between">
                 <div>
