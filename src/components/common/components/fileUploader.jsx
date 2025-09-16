@@ -1,3 +1,6 @@
+'use client'
+
+
 import { useFormContext } from 'react-hook-form';
 
 export default function FileUploader({
@@ -12,6 +15,7 @@ export default function FileUploader({
   const { register } = useFormContext();
   return (
     <div className={`${width}`}>
+       {label !== '' && <p className="mt-2 text-sm text-gray-500">{label}</p>}
       <label
         htmlFor={name}
         className={`flex flex-col items-center justify-center w-full  px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition`}
@@ -26,7 +30,7 @@ export default function FileUploader({
           {...register(name, { onChange })}
         />
       </label>
-      {label !== '' && <p className="mt-2 text-sm text-gray-500">{label}</p>}
+     
     </div>
   );
 }
