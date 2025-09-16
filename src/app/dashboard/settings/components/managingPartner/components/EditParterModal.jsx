@@ -77,7 +77,7 @@ const EditPartnerModal = ({
           <TextInput label="Position" name="position" placeholder="Enter position" />
           <TextInput label="Email" name="email" placeholder="Enter email" />
           <TextInput label="Phone" name="phone" placeholder="Enter phone number" />
-          <TextInput
+          {/* <TextInput
             label="Bar Association"
             name="barAssociation"
             placeholder="Enter bar association"
@@ -86,7 +86,7 @@ const EditPartnerModal = ({
             label="License Number"
             name="licenseNo"
             placeholder="Enter license number"
-          />
+          /> */}
         </div>
 
         {/* Footer Buttons */}

@@ -29,7 +29,18 @@ export default function BillingAndTax() {
   };
 
   return (
-   <div className="max-w-[900px] mx-auto">
+
+<div className="max-w-[900px] mx-auto">
+  {/* Heading and Description */}
+  <div className="mb-6">
+    <h1 className="text-2xl font-semibold text-gray-800">
+      Billing & Tax Information
+    </h1>
+    <p className="text-gray-600 mt-1">
+      Please provide your billing details including contact email, IBAN, BIC/SWIFT code, Tax ID, and invoicing currency. This information will be used for generating invoices.
+    </p>
+  </div>
+
   <FormWrapper
     onSubmit={onSubmit}
     defaultValues={initialValues}
@@ -71,8 +82,6 @@ export default function BillingAndTax() {
         placeholder="Any extra billing or tax notes"
         className="col-span-1 md:col-span-2"
       />
-
- 
     </div>
 
     <div className="border-t border-white mt-6" />
@@ -84,6 +93,7 @@ export default function BillingAndTax() {
     />
   </FormWrapper>
 </div>
+
 
   );
 }
