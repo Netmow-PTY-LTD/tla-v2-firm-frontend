@@ -39,7 +39,7 @@ export default function TextareaInput({
               placeholder={placeholder}
               disabled={disabled}
               className={clsx(
-                'bg-white border-[#DCE2EA] placeholder:text-[#a6a8ab] w-full ',
+                'bg-white border-[#DCE2EA] placeholder:text-[#a6a8ab] w-full  h-auto ',
                 textColor,
                 textareaClassName
               )}
