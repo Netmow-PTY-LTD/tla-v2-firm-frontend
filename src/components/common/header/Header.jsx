@@ -48,7 +48,7 @@ export default function Header() {
         <div className="flex items-center gap-4 md:gap-6">
           <Link href="/" className={styles.logo}>
             <Image
-              src="/assets/img/logo.webp"
+              src="/assets/img/company-logo.png"
               alt="TLA Logo"
               width={166}
               height={40}
