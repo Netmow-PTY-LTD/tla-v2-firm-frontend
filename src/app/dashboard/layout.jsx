@@ -41,7 +41,7 @@ export default function LawFirmDashboardLayout({ children }) {
           setIsCollapsed={setIsCollapsed}
         />
         <div
-          className={`flex-1 dashboard-content ${
+          className={`flex-1 bg-[#F9F9F9] dashboard-content ${
             isNoScrollPage ? "no-scroll" : ""
           }`}
         >
