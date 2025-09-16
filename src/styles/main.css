@@ -518,7 +518,7 @@ input:focus {
 
 .tla-auth-footer a {
   text-decoration: underline;
-  color: var(--color-special);
+  color: var(--primary-color);
   font-weight: 500;
 }
 

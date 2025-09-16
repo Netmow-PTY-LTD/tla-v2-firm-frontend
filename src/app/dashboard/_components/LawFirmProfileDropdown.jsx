@@ -92,10 +92,10 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href="/lawyer/dashboard"
-                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+                href="/"
+                className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >
-                <span>Switch to Lawyer</span>
+                <span>Company Profile</span>
                 <DropdownMenuShortcut>
                   <SendToBack />
                 </DropdownMenuShortcut>
@@ -106,22 +106,8 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href="/client/dashboard"
-                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
-              >
-                <span>Switch to Client</span>
-                <DropdownMenuShortcut>
-                  <SendToBack />
-                </DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link
-                href="/admin/settings"
-                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+                href="/dashboard/settings"
+                className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >
                 <span>Settings</span>
                 <DropdownMenuShortcut>
@@ -134,7 +120,7 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
 
           <DropdownMenuItem>
             <div
-              className="flex items-center justify-between w-full cursor-pointer px-2 py-1.5"
+              className="flex items-center justify-between w-full cursor-pointer"
               onClick={handleLogout}
             >
               <span>Log out</span>
