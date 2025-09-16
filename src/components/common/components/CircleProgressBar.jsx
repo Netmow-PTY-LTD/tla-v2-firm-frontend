@@ -24,7 +24,7 @@ const CircularProgress = ({ progress = 25, size = 80 }) => {
         />
         {/* Progress circle */}
         <circle
-          stroke="#06b6d4"
+          stroke="#e79d13"
           fill="transparent"
           strokeWidth={stroke}
           strokeLinecap="round"
@@ -45,7 +45,7 @@ const CircularProgress = ({ progress = 25, size = 80 }) => {
           fill="none"
           viewBox="0 0 24 24"
           // stroke="currentColor"
-           stroke={isComplete ? '#06b6d4' : '#9ca3af'}
+           stroke={isComplete ? '#e79d13' : '#9ca3af'}
           strokeWidth={2}
         >
           <path
