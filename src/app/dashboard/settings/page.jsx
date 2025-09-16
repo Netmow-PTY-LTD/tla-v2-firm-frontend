@@ -3,17 +3,21 @@ import Firm from "./components/firm/Firm";
 import Licenses from "./components/lisenses/Licenses";
 import { Loader } from "lucide-react";
 import { DynamicAccordion } from "@/components/common/components/AcordionComponent";
+import ManagingPartner from "./components/managingPartner/ManagingPartner";
+import BillingAndTax from "./components/billingTax/BillingAndTax";
+import Media from "./components/media/Media";
 
 
 
 export default function DashboardSettings() {
-  const accordionItems = [
-    { id: 'firm', title: 'Firm', content: <Firm /> },
+const accordionItems = [
+  { id: "firm", title: "Firm", content: <Firm /> },
+  { id: "licenses", title: "Licenses & Credentials", content: <Licenses /> },
+  { id: "managing-partner", title: "Managing Partner", content: <ManagingPartner /> },
+  { id: "billing-tax", title: "Billing & Tax Info", content: <BillingAndTax /> },
+  { id: "media", title: "Photos & Videos", content: <Media /> },
+];
 
-    { id: 'licenses', title: 'Licenses', content: <Licenses /> },
-   
-  
-  ];
   return (
     <div>
     
