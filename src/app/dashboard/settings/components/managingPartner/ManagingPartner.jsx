@@ -1,47 +1,72 @@
 'use client';
 
 
-// import {
-//   useAuthUserInfoQuery,
-//   useUpdateUserDataMutation,
-// } from '@/store/features/auth/authApiService';
 import { useState } from 'react';
 
-import { Loader } from 'lucide-react';
 import AddPartnerModal from './components/AddPartnerModal';
 import EditParterModal from './components/EditParterModal';
-// import PartnerList from './components/PartnerList';
+import PartnerList from './components/PartnerList';
+
+
+
+const partnerData = [
+  {
+    _id: "64f9c1a7b3f5c1a2e7d12345",
+    firmId: "64f9c1a7b3f5c1a2e7d00001",
+    name: "John Doe",
+    position: "Senior Partner",
+    email: "john.doe@example.com",
+    phone: "+8801712345678",
+    barAssociation: "Bangladesh Bar Council",
+    licenseNo: "LIC123456",
+    createdAt: new Date("2025-09-16T06:00:00.000Z"),
+    updatedAt: new Date("2025-09-16T06:00:00.000Z")
+  },
+  {
+    _id: "64f9c1a7b3f5c1a2e7d12346",
+    firmId: "64f9c1a7b3f5c1a2e7d00001",
+    name: "Jane Smith",
+    position: "Associate Partner",
+    email: "jane.smith@example.com",
+    phone: "+8801912345678",
+    barAssociation: "Dhaka Bar Association",
+    licenseNo: "LIC654321",
+    createdAt: new Date("2025-09-16T06:10:00.000Z"),
+    updatedAt: new Date("2025-09-16T06:10:00.000Z")
+  },
+  {
+    _id: "64f9c1a7b3f5c1a2e7d12347",
+    firmId: "64f9c1a7b3f5c1a2e7d00002",
+    name: "Michael Johnson",
+    position: "Junior Partner",
+    email: "michael.johnson@example.com",
+    phone: "+8801812345678",
+    barAssociation: "Chittagong Bar Council",
+    licenseNo: "LIC789012",
+    createdAt: new Date("2025-09-16T06:20:00.000Z"),
+    updatedAt: new Date("2025-09-16T06:20:00.000Z")
+  }
+];
+
+
+
+
+
+
+
+
 
 export default function ManagingPartner() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState(null);
-  // const {
-  //   data: userInfo,
-  //   isLoading,
-  //   isError,
-  //   error,
-  //   refetch,
-  // } = useAuthUserInfoQuery(undefined, {
-  //   refetchOnMountOrArgChange: true, // keep data fresh
-  // });
 
-
-  // if (isLoading)
-  //   return (
-  //     <div>
-  //       <span className="flex items-center justify-center gap-2">
-  //         <Loader className="w-4 h-4 animate-spin" />
-  //         loading...
-  //       </span>
-  //     </div>
-  //   );
 
   const handleEditClick = (service) => {
     setSelectedPartner(service);
     setIsEditModalOpen(true);
   };
 
-  // const profile = userInfo?.data?.profile;
+
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center gap-5">
@@ -58,11 +83,11 @@ export default function ManagingPartner() {
           refetch={false}
         />
       </div>
-    {/* <PartnerList
-        profile={profile}
+    <PartnerList
+       partners={partnerData}
         handleEditClick={handleEditClick}
-        refetch={refetch}
-      /> */}
+        refetch={false}
+      />
       <EditParterModal
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
