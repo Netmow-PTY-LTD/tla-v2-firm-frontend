@@ -40,3 +40,26 @@ export default function SettingsTabs({ tabs = [] }) {
     </div>
   );
 }
+
+
+
+/* 
+
+Example
+
+// const tabs = [
+//   {
+//     label: "Firm",
+//     href: "/dashboard/settings/firm",
+//     icon: <Building2 className="w-4 h-4" />, 
+//   },
+//   {
+//     label: "Licenses",
+//     href: "/dashboard/settings/licenses",
+//     icon: <BadgeCheck className="w-4 h-4" />, 
+//   },
+// ];
+
+
+
+*/
