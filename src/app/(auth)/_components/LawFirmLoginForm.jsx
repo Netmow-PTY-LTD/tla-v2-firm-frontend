@@ -119,16 +119,13 @@ const LawFirmLoginForm = () => {
 
         <div className="tla-auth-footer text-center">
           <span>Manage your firm? </span>
-          <Link href="/law-firm/register">
+          <Link href="/register">
             <b>Register your law firm</b>
           </Link>
         </div>
         <div className="text-center mt-3 text-sm text-[var(--color-text)]">
           <span>Lost your account? </span>
-          <Link
-            href="/law-firm/claim-account"
-            className="text-[#00C3C0] underline"
-          >
+          <Link href="/claim-account" className="text-[#00C3C0] underline">
             <b>Claim Account</b>
           </Link>
         </div>
