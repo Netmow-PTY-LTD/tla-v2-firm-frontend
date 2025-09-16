@@ -62,6 +62,7 @@ export default function CompanyAbout() {
           name="description"
           placeholder="What sets you apart from businesses?"
           textColor="text-[#4b4949]"
+          rows={6}
         />
       </div>
     </div>
