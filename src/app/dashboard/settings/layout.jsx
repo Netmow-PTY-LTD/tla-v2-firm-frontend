@@ -1,8 +1,7 @@
 import React from 'react';
 
 
-import SettingsTabs from './components/Settings/SettingTab';
-import { BadgeCheck, Building2 } from 'lucide-react';
+
 
 const SettingsLayout = ({ children }) => {
 

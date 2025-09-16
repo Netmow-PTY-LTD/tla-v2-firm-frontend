@@ -129,7 +129,7 @@ const requests = [
     <div className="p-4 max-w-[1100px] mx-auto">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800">All Requests</h2>
-        <div className="h-1 w-[20%] bg-[#00C3C0] mt-2 rounded"></div>
+        <div className="h-1 w-[20%] bg-[#e79d13] mt-2 rounded"></div>
       </div>
       <div>
         {requests?.length === 0 && (
