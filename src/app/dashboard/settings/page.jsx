@@ -11,22 +11,22 @@ import Locations from "./components/locations/Locations";
 
 
 export default function DashboardSettings() {
-const accordionItems = [
-  { id: "firm", title: "Firm", content: <Firm /> },
-  { id: "licenses", title: "Licenses & Credentials", content: <Licenses /> },
-  { id: "managing-partner", title: "Managing Partner", content: <ManagingPartner /> },
-  { id: "billing-tax", title: "Billing & Tax Info", content: <BillingAndTax /> },
-  { id: "media", title: "Photos & Videos", content: <Media /> },
-  { id: "locations", title: "Locations", content: <Locations /> },
-];
+  const accordionItems = [
+    { id: "company-details", title: "Company Details", content: <Firm /> },
+    { id: "licenses", title: "Licenses & Credentials", content: <Licenses /> },
+    { id: "managing-partner", title: "Managing Partner", content: <ManagingPartner /> },
+    { id: "billing-tax", title: "Billing & Tax Info", content: <BillingAndTax /> },
+    { id: "media", title: "Photos & Videos", content: <Media /> },
+    { id: "locations", title: "Locations", content: <Locations /> },
+  ];
 
   return (
     <div>
-    
+
       <Suspense
         fallback={
           <div className="flex justify-center items-center py-10">
-            <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+
             <span className="ml-2 text-sm text-gray-500">
               <Loader /> Loading...
             </span>
