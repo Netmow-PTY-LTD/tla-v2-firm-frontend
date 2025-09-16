@@ -46,7 +46,7 @@ export default function LawFirmDashboardLayout({ children }) {
           }`}
         >
           <div className="flex flex-col h-full">
-            <div className="flex-1 py-4 px-5">{children}</div>
+            <div className="flex-1 py-6 px-6">{children}</div>
             <LawFirmDashboardFooter />
           </div>
         </div>

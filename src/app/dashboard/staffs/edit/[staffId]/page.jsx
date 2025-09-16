@@ -98,7 +98,7 @@ export default function EditStaffPage() {
             {/* Left Column */}
             <div className="w-full md:w-1/2">
               <Card className="h-full">
-                <CardTitle className="pb-4 border-b px-4">
+                <CardTitle className="pb-4 border-b px-6">
                   Personal Information
                 </CardTitle>
                 <CardContent className="h-full">
@@ -188,7 +188,7 @@ export default function EditStaffPage() {
             {/* Right Column */}
             <div className="w-full md:w-1/2">
               <Card className="h-full">
-                <CardTitle className="pb-4 border-b px-4">
+                <CardTitle className="pb-4 border-b px-6">
                   Permissions
                 </CardTitle>
                 <CardContent className="h-full">
