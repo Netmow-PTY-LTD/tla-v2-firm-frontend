@@ -284,6 +284,7 @@ import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 import InputCombobox from "@/components/form/ComboboxInput";
+import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 
 export const demoLocations = [
   {
@@ -441,7 +442,11 @@ console.log('cities ===>',cities)
             Create your firm’s account to add lawyers and oversee their activities
           </p>
 
-          <FormWrapper onSubmit={onSubmit}>
+          <FormWrapper 
+          onSubmit={onSubmit}
+          schema={lawFirmRegStepOneSchema}
+          
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
                 name="name"
