@@ -2,7 +2,7 @@
 
 import React from 'react';
 import TextInput from '@/components/form/TextInput';
-import FormWrapper from '@/components/form/FromWrapper';
+import FormWrapper from '@/components/form/FormWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { z } from 'zod';
 import { Modal } from '@/components/common/components/Modal';
