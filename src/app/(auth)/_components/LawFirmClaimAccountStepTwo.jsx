@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { prevStep } from "@/store/features/auth/lawFirmRegistrationSlice";
+import { previousStep } from "@/store/features/auth/lawFirmRegistrationSlice";
 import { CloudUpload, Download, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -201,7 +201,7 @@ export default function LawFirmClaimAccountStepTwo() {
               <button
                 type="button"
                 className="btn-default btn-outline-black cursor-pointer"
-                onClick={() => dispatch(prevStep())}
+                onClick={() => dispatch(previousStep())}
                 // disabled={isLoading}
               >
                 Back
