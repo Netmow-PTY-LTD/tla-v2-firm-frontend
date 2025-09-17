@@ -19,4 +19,3 @@ function Textarea({
 
 export { Textarea }
 
-// field-sizing-content min-h-16 w-full

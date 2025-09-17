@@ -1,5 +1,6 @@
 "use client";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import CheckboxInput from "@/components/form/CheckboxInput";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,33 +18,31 @@ import { useDispatch } from "react-redux";
 
 const LawFirmLoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState();
-  const [rememberMe, setRememberMe] = useState(false);
-  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  const form = useForm({
-    //resolver: zodResolver(loginValidationSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
+  
   const onSubmit = async (data) => {
-    console.log(data);
-    router.push("/dashboard");
-  };
+    setLoading(true);
 
-  useEffect(() => {
-    const remembered = localStorage.getItem("rememberMe") === "true";
-    const email = localStorage.getItem("userEmail");
+    try {
+      // ✅ read directly from react-hook-form data
+      if (data.rememberMe) {
+        localStorage.setItem("rememberMe", "true");
+        localStorage.setItem("userEmail", data.email);
+      } else {
+        localStorage.removeItem("rememberMe");
+        localStorage.removeItem("userEmail");
+      }
 
-    if (remembered && email) {
-      form.setValue("email", email);
-      setRememberMe(true);
+      console.log("Login Data:", data);
+
+      // router.push("/dashboard");
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
 
   return (
     <>
@@ -57,7 +56,15 @@ const LawFirmLoginForm = () => {
         </p>
 
         {/* Form Wrapper */}
-        <FormWrapper onSubmit={onSubmit}>
+        <FormWrapper
+          onSubmit={onSubmit}
+          schema={loginValidationSchema}
+          defaultValues={{
+            email: localStorage.getItem("userEmail") || "",
+            password: "",
+            rememberMe: localStorage.getItem("rememberMe") === "true",
+          }}
+        >
           <div className="space-y-5">
             <TextInput
               label="Email"
@@ -87,17 +94,10 @@ const LawFirmLoginForm = () => {
             </div>
 
             <div className="flex flex-wrap justify-between">
-              <label
-                htmlFor="remember"
-                className="flex gap-2 items-center cursor-pointer"
-              >
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(!!checked)}
-                />
-                Remember Me
-              </label>
+              <CheckboxInput
+                name={"rememberMe"}
+                label={'Remember Me'}
+              />
 
               <Link
                 href="/forget-password"
@@ -111,7 +111,7 @@ const LawFirmLoginForm = () => {
               type="submit"
               className="btn-auth-login bg-[var(--primary-color)] w-full hover:bg-[--secondary-color] transition-all duration-300"
               style={{ cursor: "pointer" }}
-              // disabled={loading || isLoading}
+            // disabled={loading || isLoading}
             >
               <span>Log In</span>
             </button>
