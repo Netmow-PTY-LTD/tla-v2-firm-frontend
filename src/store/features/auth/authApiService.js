@@ -37,7 +37,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     authUserInfo: builder.query({
       query: () => ({
-        url: "/user/userInfo",
+        url: "/auth/user/userInfo",
         method: "GET",
       }),
       providesTags: ["userInfo"],

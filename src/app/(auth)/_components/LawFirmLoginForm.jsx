@@ -5,7 +5,9 @@ import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form } from "@/components/ui/form";
+import { verifyToken } from "@/helpers/verifyToken";
 import { loginValidationSchema } from "@/schema/auth/authValidation.schema";
+import { useAuthLoginMutation } from "@/store/features/auth/authApiService";
 import { setUser } from "@/store/features/auth/authSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
@@ -21,28 +23,69 @@ const LawFirmLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [authLogin, { isLoading }] = useAuthLoginMutation();
 
-  
+
   const onSubmit = async (data) => {
     setLoading(true);
 
+
     try {
-      // ✅ read directly from react-hook-form data
-      if (data.rememberMe) {
-        localStorage.setItem("rememberMe", "true");
-        localStorage.setItem("userEmail", data.email);
-      } else {
-        localStorage.removeItem("rememberMe");
-        localStorage.removeItem("userEmail");
+      // 🔹 Call login API
+      const res = await authLogin(data).unwrap();
+      console.log("res ===>", res);
+      if (res?.success) {
+        showSuccessToast(res?.message || "Login successful");
+        // 🔹 Verify token
+        const user = await verifyToken(res?.token);
+        console.log("user", user);
+
+        if (user) {
+          // 🔹 Dispatch user to Redux
+          dispatch(
+            setUser({
+              user: res?.data,
+              token: res?.token,
+            })
+          );
+
+          // 🔹 Handle remember me from form data
+          if (data.rememberMe) {
+            localStorage.setItem("rememberMe", "true");
+            localStorage.setItem("userEmail", data.email);
+          } else {
+            localStorage.removeItem("rememberMe");
+            localStorage.removeItem("userEmail");
+          }
+
+          // 🔹 Redirect if login worked
+
+          router.push(`/dashboard`);
+
+        }
       }
-
-      console.log("Login Data:", data);
-
-      // router.push("/dashboard");
+    } catch (error) {
+      const errorMessage = error?.data?.message || "An error occurred";
+      showErrorToast(errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -59,11 +102,11 @@ const LawFirmLoginForm = () => {
         <FormWrapper
           onSubmit={onSubmit}
           schema={loginValidationSchema}
-          defaultValues={{
-            email: localStorage.getItem("userEmail") || "",
-            password: "",
-            rememberMe: localStorage.getItem("rememberMe") === "true",
-          }}
+        // defaultValues={{
+        //   email: localStorage.getItem("userEmail") || "",
+        //   password: "",
+        //   rememberMe: localStorage.getItem("rememberMe") === "true",
+        // }}
         >
           <div className="space-y-5">
             <TextInput
@@ -111,7 +154,7 @@ const LawFirmLoginForm = () => {
               type="submit"
               className="btn-auth-login bg-[var(--primary-color)] w-full hover:bg-[--secondary-color] transition-all duration-300"
               style={{ cursor: "pointer" }}
-            // disabled={loading || isLoading}
+              disabled={loading || isLoading}
             >
               <span>Log In</span>
             </button>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
+
 import { userDummyImage } from "@/data/data";
 import { BadgeAlert } from "lucide-react";
 export default function CompanyProfileCard() {
