@@ -493,7 +493,7 @@ input:focus {
 }
 
 .btn-auth-register {
-  background-color: var(--color-special);
+  background-color: var(--primary-color);
   padding: 15px 40px;
   border: none;
   border-radius: 8px;

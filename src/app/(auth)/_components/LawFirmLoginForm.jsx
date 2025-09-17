@@ -1,10 +1,13 @@
 "use client";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import CheckboxInput from "@/components/form/CheckboxInput";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form } from "@/components/ui/form";
+import { verifyToken } from "@/helpers/verifyToken";
 import { loginValidationSchema } from "@/schema/auth/authValidation.schema";
+import { useAuthLoginMutation } from "@/store/features/auth/authApiService";
 import { setUser } from "@/store/features/auth/authSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
@@ -17,33 +20,72 @@ import { useDispatch } from "react-redux";
 
 const LawFirmLoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState();
-  const [rememberMe, setRememberMe] = useState(false);
-  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [authLogin, { isLoading }] = useAuthLoginMutation();
 
-  const form = useForm({
-    //resolver: zodResolver(loginValidationSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
 
   const onSubmit = async (data) => {
-    console.log(data);
-    router.push("/dashboard");
+    setLoading(true);
+
+
+    try {
+      // 🔹 Call login API
+      const res = await authLogin(data).unwrap();
+      console.log("res ===>", res);
+      if (res?.success) {
+        showSuccessToast(res?.message || "Login successful");
+        // 🔹 Verify token
+        const user = await verifyToken(res?.token);
+        console.log("user", user);
+
+        if (user) {
+          // 🔹 Dispatch user to Redux
+          dispatch(
+            setUser({
+              user: res?.data,
+              token: res?.token,
+            })
+          );
+
+          // 🔹 Handle remember me from form data
+          if (data.rememberMe) {
+            localStorage.setItem("rememberMe", "true");
+            localStorage.setItem("userEmail", data.email);
+          } else {
+            localStorage.removeItem("rememberMe");
+            localStorage.removeItem("userEmail");
+          }
+
+          // 🔹 Redirect if login worked
+
+          router.push(`/dashboard`);
+
+        }
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || "An error occurred";
+      showErrorToast(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
-    const remembered = localStorage.getItem("rememberMe") === "true";
-    const email = localStorage.getItem("userEmail");
 
-    if (remembered && email) {
-      form.setValue("email", email);
-      setRememberMe(true);
-    }
-  }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -57,7 +99,15 @@ const LawFirmLoginForm = () => {
         </p>
 
         {/* Form Wrapper */}
-        <FormWrapper onSubmit={onSubmit}>
+        <FormWrapper
+          onSubmit={onSubmit}
+          schema={loginValidationSchema}
+        defaultValues={{
+          email: localStorage.getItem("userEmail") || "",
+          password: "",
+          rememberMe: localStorage.getItem("rememberMe") === "true",
+        }}
+        >
           <div className="space-y-5">
             <TextInput
               label="Email"
@@ -87,17 +137,10 @@ const LawFirmLoginForm = () => {
             </div>
 
             <div className="flex flex-wrap justify-between">
-              <label
-                htmlFor="remember"
-                className="flex gap-2 items-center cursor-pointer"
-              >
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(!!checked)}
-                />
-                Remember Me
-              </label>
+              <CheckboxInput
+                name={"rememberMe"}
+                label={'Remember Me'}
+              />
 
               <Link
                 href="/forget-password"
@@ -111,7 +154,7 @@ const LawFirmLoginForm = () => {
               type="submit"
               className="btn-auth-login bg-[var(--primary-color)] w-full hover:bg-[--secondary-color] transition-all duration-300"
               style={{ cursor: "pointer" }}
-              // disabled={loading || isLoading}
+              disabled={loading || isLoading}
             >
               <span>Log In</span>
             </button>

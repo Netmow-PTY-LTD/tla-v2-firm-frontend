@@ -5,7 +5,7 @@ import { logOut, setUser } from "../features/auth/authSlice";
 
 // Basic baseQuery with auth header
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`,
+  baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/firm`,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const state = getState();
@@ -37,7 +37,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
   if (result.error?.status === 401) {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/refresh-token`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/firm/auth/refresh-token`,
         {
           credentials: "include",
           method: "POST",
@@ -51,7 +51,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         result = await baseQuery(arg, api, extraOptions);
       } else {
         api.dispatch(logOut());
-        //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
+        //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/firm/auth/logout`, {
         //     credentials: 'include',
         //     method: 'POST',
         //   }).catch(console.error);
