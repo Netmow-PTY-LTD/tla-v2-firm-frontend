@@ -61,7 +61,7 @@ export default function LawFirmRegisterStepTwo() {
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepTwoSchema}
-            defaultValues={defaultValues}
+            // defaultValues={defaultValues}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
@@ -85,6 +85,7 @@ export default function LawFirmRegisterStepTwo() {
                   { value: "legal-services-commission", label: "Legal Services Commission" },
                 ]}
                 triggerClassName="w-full"
+                
               />
 
               <TextInput
