@@ -1,103 +1,173 @@
+
 import React, { useState } from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Link from "next/link";
-import countries from "@/data/countries.json";
-import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-} from "@headlessui/react";
-import { Check, ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { safeJsonParse } from "@/helpers/safeJsonParse";
-import Cookies from "js-cookie";
-import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
-import { nextStep } from "@/store/features/auth/lawyerRegistrationSlice";
-import { useDispatch } from "react-redux";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
-
 import InputCombobox from "@/components/form/ComboboxInput";
+import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
+import { useDispatch, useSelector } from "react-redux";
+import { nextStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
 
-const germanCities = [
-  { id: 1, name: "Berlin" },
-  { id: 2, name: "Hamburg" },
-  { id: 3, name: "Munich" },
-  { id: 4, name: "Cologne" },
-  { id: 5, name: "Frankfurt" },
-  { id: 6, name: "Stuttgart" },
-  { id: 7, name: "Düsseldorf" },
-  { id: 8, name: "Dortmund" },
-  { id: 9, name: "Leipzig" },
-  { id: 10, name: "Bremen" },
+export const demoLocations = [
+  {
+    countryId: "1",
+    slug: "germany",
+    name: "Germany",
+    cities: [
+      {
+        id: "c1",
+        name: "Berlin",
+        zipcodes: [
+          {
+            _id: "z1",
+            zipcode: "10115",
+            postalCode: "10115",
+            latitude: 52.532,
+            longitude: 13.384,
+            address: "Berlin Central",
+          },
+          {
+            _id: "z2",
+            zipcode: "10117",
+            postalCode: "10117",
+            latitude: 52.52,
+            longitude: 13.404,
+            address: "Berlin Mitte",
+          },
+        ],
+      },
+      {
+        id: "c2",
+        name: "Hamburg",
+        zipcodes: [
+          {
+            _id: "z3",
+            zipcode: "20095",
+            postalCode: "20095",
+            latitude: 53.55,
+            longitude: 10.0,
+            address: "Hamburg Altstadt",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    countryId: "2",
+    slug: "usa",
+    name: "United States",
+    cities: [
+      {
+        id: "c3",
+        name: "New York",
+        zipcodes: [
+          {
+            _id: "z4",
+            zipcode: "10001",
+            postalCode: "10001",
+            latitude: 40.75,
+            longitude: -73.997,
+            address: "Manhattan",
+          },
+        ],
+      },
+      {
+        id: "c4",
+        name: "San Francisco",
+        zipcodes: [
+          {
+            _id: "z5",
+            zipcode: "94103",
+            postalCode: "94103",
+            latitude: 37.774,
+            longitude: -122.419,
+            address: "SoMa District",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    countryId: "3",
+    slug: "canada",
+    name: "Canada",
+    cities: [
+      {
+        id: "c5",
+        name: "Toronto",
+        zipcodes: [
+          {
+            _id: "z6",
+            zipcode: "M5H 2N2",
+            postalCode: "M5H 2N2",
+            latitude: 43.653,
+            longitude: -79.383,
+            address: "Downtown Toronto",
+          },
+        ],
+      },
+      {
+        id: "c6",
+        name: "Vancouver",
+        zipcodes: [
+          {
+            _id: "z7",
+            zipcode: "V6B 1V2",
+            postalCode: "V6B 1V2",
+            latitude: 49.282,
+            longitude: -123.117,
+            address: "Gastown",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default function LawFirmRegisterStepOne() {
-  const [city, setCity] = useState(germanCities[0].name);
-  const [zipcode, setZipcode] = useState("");
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitude] = useState(0);
-  const [postalCode, setPostalCode] = useState("");
-  const [address, setAddress] = useState("");
-  const [query, setQuery] = useState("");
-
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
   const dispatch = useDispatch();
+  const formData = useSelector((state) => state.lawFirmRegistration.formData);
+  const countries = demoLocations.map((c) => ({
+    value: c.slug,
+    label: c.name,
+  }));
 
-  const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
+  const cities =
+    demoLocations
+      .find((c) => c.slug === selectedCountry)
+      ?.cities.map((city) => ({ value: city.id, label: city.name })) || [];
 
-  //const { data: countryList } = useGetCountryListQuery();
+  const zipcodes =
+    demoLocations
+      .find((c) => c.slug === selectedCountry)
+      ?.cities.find((city) => city.id === selectedCity)
+      ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
 
-  const defaultCountry = countries?.find(
-    (country) => country?.slug === cookieCountry?.slug
-  );
 
-  console.log("defaultCountry in step 2", defaultCountry);
 
-  const paramsPayload = {
-    countryId: defaultCountry?.countryId,
-    search: query || "",
-  };
+  const defaultValues = {
+    name: formData.name,
+    country: formData.country,
+    city: formData.city,
+    AreaZipcode: formData.AreaZipcode,
+    phone: formData.phone,
+    email: formData.email,
+    website: formData.website,
+    registrationNumber: formData.registrationNumber,
+    yearOfEstablishment: formData.yearOfEstablishment,
+  }
 
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery(paramsPayload, {
-      skip: !defaultCountry?.countryId,
-    });
 
-  const filteredZipCodes = allZipCodes?.data?.filter((z) =>
-    z.zipcode?.toLowerCase()?.includes(query.toLowerCase())
-  );
-
-  const form = useForm({
-    defaultValues: {
-      name: "",
-    },
-  });
-
-  const { control, handleSubmit } = form;
   const onSubmit = (data) => {
-    console.log("data ==========>",data);
-    // dispatch(nextStep());
+
+    console.log('check step one data ==>',data)
+    // 1️ Save step data to Redux
+    dispatch(setFormData(data));
+    // 2 Move to next step
+    dispatch(nextStep());
   };
 
   return (
@@ -107,468 +177,92 @@ export default function LawFirmRegisterStepOne() {
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
-          <h3 className="tla-auth-title mb-3 text-center">
-            List Your Law Firm
-          </h3>
+          <h3 className="tla-auth-title mb-3 text-center">List Your Law Firm</h3>
           <p className="tla-auth-subtitle mb-8 text-center">
-            Create your firm’s account to add lawyers and oversee their
-            activities
+            Create your firm’s account to add lawyers and oversee their activities
           </p>
 
-          {/* <h5 className="text-[var(--color-black)] text-[24px] uppercase text-center font-semibold mb-5">
-            Register as Law-firm
-          </h5> */}
+          <FormWrapper
+            onSubmit={onSubmit}
+            schema={lawFirmRegStepOneSchema}
+            // defaultValues={defaultValues}
 
-          <Form {...form}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-5">
-                <div className="flex flex-wrap">
-                  <div className="w-full">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Law Firm Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="i.e. ABC LLC"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-wrap">
-                  <div className="w-full md:w-1/2 md:pr-5">
-                    <FormField
-                      control={control}
-                      name="country"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Country</FormLabel>
-                          <FormControl>
-                            <Select
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            >
-                              <SelectTrigger className="w-full h-[44px] bg-[#F2F2F2]">
-                                <SelectValue placeholder="Select a country" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Countries</SelectLabel>
-                                  {countries.map((country) => (
-                                    <SelectItem
-                                      value={country?.slug}
-                                      key={country?.countryId}
-                                    >
-                                      {country?.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 md:pl-5">
-                    <FormField
-                      control={form.control}
-                      name="city"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>City</FormLabel>
-                          <Combobox
-                            value={field.value}
-                            onChange={(e) => {
-                              //console.log('val', val);
-                              field.onChange(e);
-                            }}
-                          >
-                            <div className="relative">
-                              <ComboboxInput
-                                className="tla-form-control w-full"
-                                onChange={(e) => console.log(e.target.value)}
-                                placeholder="Select a city"
-                              />
-                              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                                <ChevronDown className="h-4 w-4 text-gray-500" />
-                              </ComboboxButton>
-                              {germanCities?.length > 0 && (
-                                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                  {germanCities?.slice(0, 10)?.map((item) => (
-                                    <ComboboxOption
-                                      key={item.id}
-                                      value={item.id}
-                                      className={({ active }) =>
-                                        cn(
-                                          "cursor-pointer select-none relative py-2 pl-10 pr-4",
-                                          active
-                                            ? "bg-blue-100 text-blue-900"
-                                            : "text-gray-900"
-                                        )
-                                      }
-                                    >
-                                      {({ selected }) => (
-                                        <>
-                                          <span
-                                            className={cn("block truncate", {
-                                              "font-medium": selected,
-                                              "font-normal": !selected,
-                                            })}
-                                          >
-                                            {item.zipcode}
-                                          </span>
-                                          {selected && (
-                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                              <Check className="h-4 w-4" />
-                                            </span>
-                                          )}
-                                        </>
-                                      )}
-                                    </ComboboxOption>
-                                  ))}
-                                </ComboboxOptions>
-                              )}
-                            </div>
-                          </Combobox>
-                          <FormMessage className="text-red-600" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-wrap">
-                  <div className="w-full md:w-1/2 md:pr-5">
-                    <FormField
-                      control={form.control}
-                      name="AreaZipcode"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Address</FormLabel>
-                          <Combobox
-                            value={field.value}
-                            onChange={(val) => {
-                              //console.log('val', val);
-                              field.onChange(val);
-                              setZipcode(val);
-                              const selectedZipcode = allZipCodes?.data?.find(
-                                (z) => z._id === val
-                              );
-                              if (selectedZipcode) {
-                                setLatitude(selectedZipcode.latitude);
-                                setLongitude(selectedZipcode.longitude);
-                                setPostalCode(selectedZipcode.postalCode);
-                                setAddress(selectedZipcode.zipcode);
-                              }
-                            }}
-                          >
-                            <div className="relative">
-                              <ComboboxInput
-                                className="tla-form-control w-full"
-                                onChange={(event) =>
-                                  setQuery(event.target.value)
-                                }
-                                displayValue={(val) =>
-                                  allZipCodes?.data?.find((z) => z._id === val)
-                                    ?.zipcode || ""
-                                }
-                                placeholder="Select a Zipcode"
-                              />
-                              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                                <ChevronDown className="h-4 w-4 text-gray-500" />
-                              </ComboboxButton>
-                              {filteredZipCodes?.length > 0 && (
-                                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                  {filteredZipCodes
-                                    ?.slice(0, 10)
-                                    .map((item) => (
-                                      <ComboboxOption
-                                        key={item._id}
-                                        value={item._id}
-                                        className={({ active }) =>
-                                          cn(
-                                            "cursor-pointer select-none relative py-2 pl-10 pr-4",
-                                            active
-                                              ? "bg-blue-100 text-blue-900"
-                                              : "text-gray-900"
-                                          )
-                                        }
-                                      >
-                                        {({ selected }) => (
-                                          <>
-                                            <span
-                                              className={cn("block truncate", {
-                                                "font-medium": selected,
-                                                "font-normal": !selected,
-                                              })}
-                                            >
-                                              {item.zipcode}
-                                            </span>
-                                            {selected && (
-                                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                                <Check className="h-4 w-4" />
-                                              </span>
-                                            )}
-                                          </>
-                                        )}
-                                      </ComboboxOption>
-                                    ))}
-                                </ComboboxOptions>
-                              )}
-                            </div>
-                          </Combobox>
-                          <FormMessage className="text-red-600" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 md:pl-5">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="i.e. +1 (123) 456-7890"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-wrap">
-                  <div className="w-full md:w-1/2 md:pr-5">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="i.e. abc@example.com"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 md:pl-5">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Website</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="url"
-                              placeholder="i.e. https://example.com"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  
-                </div>
-                <div className="flex flex-wrap">
-                  <div className="w-full md:w-1/2 md:pr-5">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Registration Number</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="i.e. 1234567890"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 md:pl-5">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Year of Establishment</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="i.e. 2003"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <button type="submit" className="btn-auth-register mt-8">
-                Next
-              </button>
-            </form>
-          </Form>
-
-          {/*  Reusable form */}
-
-          {/* <FormWrapper onSubmit={onSubmit}>
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-
               <TextInput
                 name="name"
                 label="Law Firm Name"
                 placeholder="i.e. ABC LLC"
-                control={form.control}
               />
 
-
+              {/* Country */}
               <SelectInput
                 name="country"
                 label="Country"
-                options={countries.map(c => ({ value: c.slug, label: c.name }))}
-                control={form.control}
+                options={countries}
                 placeholder="Select a country"
-                triggerClassName={'w-full'}
-              />
-
-              <InputCombobox
-                name="city"
-                label="City"
-                options={germanCities?.map(c => ({ value: c.id, label: c.zipcode }))}
-                control={form.control}
-                placeholder="Select a city"
-              />
-
-
-              <InputCombobox
-                name="AreaZipcode"
-                control={form.control}
-                label="Address"
-                placeholder="Select a Zipcode"
-                options={filteredZipCodes?.map((z) => ({
-                  value: z._id,
-                  label: z.zipcode,
-                }))}
-                onSelect={(val) => {
-                  const selected = allZipCodes?.data?.find((z) => z._id === val);
-                  if (selected) {
-                    setLatitude(selected.latitude);
-                    setLongitude(selected.longitude);
-                    setPostalCode(selected.postalCode);
-                    setAddress(selected.zipcode);
-                  }
+                triggerClassName={"w-full"}
+                onValueChange={(val) => {
+                  setSelectedCountry(val);
+                  setSelectedCity(null);
                 }}
               />
 
+              {/* City */}
+              <InputCombobox
+                name="city"
+                label="City"
+                options={cities}
+                placeholder="Select a city"
+                onSelect={(val) => setSelectedCity(val)}
+              />
+
+              {/* Address / Zipcode */}
+              <InputCombobox
+                name="AreaZipcode"
+                label="Address"
+                placeholder="Select a Zipcode"
+                options={zipcodes}
+              />
 
               <TextInput
                 name="phone"
                 label="Phone Number"
                 placeholder="i.e. +1 (123) 456-7890"
-                control={form.control}
               />
-
 
               <TextInput
                 name="email"
                 label="Email"
                 placeholder="i.e. abc@example.com"
-                type="email"
-                control={form.control}
               />
-
 
               <TextInput
                 name="website"
                 label="Website"
                 placeholder="i.e. https://example.com"
-                type="url"
-                control={form.control}
               />
-
 
               <TextInput
                 name="registrationNumber"
                 label="Registration Number"
                 placeholder="i.e. 1234567890"
-                control={form.control}
               />
-
 
               <TextInput
                 name="yearOfEstablishment"
                 label="Year of Establishment"
                 placeholder="i.e. 2003"
-                type="number"
-                control={form.control}
               />
-
             </div>
 
             <button
               type="submit"
-              className="mt-8 w-full md:w-auto btn-auth-register"
+              className="mt-8 w-full md:w-auto btn-auth-register bg-[#ff8f14]"
             >
               Next
             </button>
-          </FormWrapper> */}
-
+          </FormWrapper>
 
           <div className="flex flex-wrap justify-between gap-4">
             <div className="tla-auth-footer">
@@ -586,15 +280,6 @@ export default function LawFirmRegisterStepOne() {
           </div>
         </div>
       </div>
-      {/* <div className="hidden lg:block lg:max-w-[31.25rem] overflow-hidden">
-        <Image
-          src="/assets/img/register.webp"
-          width={500}
-          height={627}
-          alt="Auth"
-          className="h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"
-        />
-      </div> */}
-    </div >
+    </div>
   );
 }

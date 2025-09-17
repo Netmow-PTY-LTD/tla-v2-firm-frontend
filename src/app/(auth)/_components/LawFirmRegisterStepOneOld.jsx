@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import {
   Form,
@@ -35,7 +34,6 @@ import Cookies from "js-cookie";
 import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
 import { nextStep } from "@/store/features/auth/lawFirmRegistrationSlice";
 import { useDispatch } from "react-redux";
-import MultipleTagSelector from "@/components/form/MultipleTagSelector";
 
 const germanCities = [
   { id: 1, name: "Berlin" },
@@ -50,20 +48,7 @@ const germanCities = [
   { id: 10, name: "Bremen" },
 ];
 
-const companies = [
-  { id: 1, name: "Siemens" },
-  { id: 2, name: "BMW" },
-  { id: 3, name: "Volkswagen" },
-  { id: 4, name: "SAP" },
-  { id: 5, name: "BASF" },
-  { id: 6, name: "Allianz" },
-  { id: 7, name: "Deutsche Bank" },
-  { id: 8, name: "Adidas" },
-  { id: 9, name: "Lufthansa" },
-  { id: 10, name: "Bosch" },
-];
-
-export default function LawFirmClaimAccountStepOne() {
+export default function LawFirmRegisterStepOne() {
   const [city, setCity] = useState(germanCities[0].name);
   const [zipcode, setZipcode] = useState("");
   const [latitude, setLatitude] = useState(0);
@@ -118,7 +103,7 @@ export default function LawFirmClaimAccountStepOne() {
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
           <h3 className="tla-auth-title mb-3 text-center">
-            Claim Your Law Firm Account
+            List Your Law Firm
           </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
             Create your firm’s account to add lawyers and oversee their
@@ -134,6 +119,30 @@ export default function LawFirmClaimAccountStepOne() {
               <div className="space-y-5">
                 <div className="flex flex-wrap">
                   <div className="w-full">
+                    <FormField
+                      control={control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Law Firm Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="i.e. ABC LLC"
+                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-wrap">
+                  <div className="w-full md:w-1/2 md:pr-5">
                     <FormField
                       control={control}
                       name="country"
@@ -170,15 +179,81 @@ export default function LawFirmClaimAccountStepOne() {
                       )}
                     />
                   </div>
+                  <div className="w-full md:w-1/2 md:pl-5">
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>City</FormLabel>
+                          <Combobox
+                            value={field.value}
+                            onChange={(e) => {
+                              //console.log('val', val);
+                              field.onChange(e);
+                            }}
+                          >
+                            <div className="relative">
+                              <ComboboxInput
+                                className="tla-form-control w-full"
+                                onChange={(e) => console.log(e.target.value)}
+                                placeholder="Select a city"
+                              />
+                              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                              </ComboboxButton>
+                              {germanCities?.length > 0 && (
+                                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                  {germanCities?.slice(0, 10)?.map((item) => (
+                                    <ComboboxOption
+                                      key={item.id}
+                                      value={item.id}
+                                      className={({ active }) =>
+                                        cn(
+                                          "cursor-pointer select-none relative py-2 pl-10 pr-4",
+                                          active
+                                            ? "bg-blue-100 text-blue-900"
+                                            : "text-gray-900"
+                                        )
+                                      }
+                                    >
+                                      {({ selected }) => (
+                                        <>
+                                          <span
+                                            className={cn("block truncate", {
+                                              "font-medium": selected,
+                                              "font-normal": !selected,
+                                            })}
+                                          >
+                                            {item.zipcode}
+                                          </span>
+                                          {selected && (
+                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                              <Check className="h-4 w-4" />
+                                            </span>
+                                          )}
+                                        </>
+                                      )}
+                                    </ComboboxOption>
+                                  ))}
+                                </ComboboxOptions>
+                              )}
+                            </div>
+                          </Combobox>
+                          <FormMessage className="text-red-600" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-wrap">
                   <div className="w-full md:w-1/2 md:pr-5">
                     <FormField
                       control={form.control}
-                      name="company_name"
+                      name="AreaZipcode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Law Firm Name</FormLabel>
+                          <FormLabel>Address</FormLabel>
                           <Combobox
                             value={field.value}
                             onChange={(val) => {
@@ -208,6 +283,9 @@ export default function LawFirmClaimAccountStepOne() {
                                 }
                                 placeholder="Select a Zipcode"
                               />
+                              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                              </ComboboxButton>
                               {filteredZipCodes?.length > 0 && (
                                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                   {filteredZipCodes
@@ -259,11 +337,10 @@ export default function LawFirmClaimAccountStepOne() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Phone Number</FormLabel>
                           <FormControl>
                             <Input
-                              type="email"
-                              placeholder="i.e. abc@example.com"
+                              placeholder="i.e. +1 (123) 456-7890"
                               className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
                               {...field}
                               onChange={(e) => {
@@ -284,9 +361,10 @@ export default function LawFirmClaimAccountStepOne() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Law Firm Registration Number</FormLabel>
+                          <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input
+                              type="email"
                               placeholder="i.e. abc@example.com"
                               className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
                               {...field}
@@ -323,15 +401,77 @@ export default function LawFirmClaimAccountStepOne() {
                       )}
                     />
                   </div>
+
+                  {/* <div className="w-full md:w-1/2 md:pl-5">
+                    <FormField
+                      control={control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Vat Number</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="i.e. 1234567890"
+                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div> */}
                 </div>
-                <div className="w-full">
-                  <FormLabel className="mb-3 inline-block">
-                    Known Admin Emails
-                  </FormLabel>
-                  <MultipleTagSelector
-                    name="known_admins"
-                    placeholder="Type and press Enter"
-                  />
+                <div className="flex flex-wrap">
+                  <div className="w-full md:w-1/2 md:pr-5">
+                    <FormField
+                      control={control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Registration Number</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="i.e. 1234567890"
+                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="w-full md:w-1/2 md:pl-5">
+                    <FormField
+                      control={control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Year of Establishment</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="i.e. 2003"
+                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -341,17 +481,17 @@ export default function LawFirmClaimAccountStepOne() {
             </form>
           </Form>
 
-          <div className="flex flex-wrap justify-between px-2">
-            <div className="mt-8 md:mt-5 text-sm text-[var(--color-text)] text-center w-full md:w-auto md:text-left">
+          <div className="flex flex-wrap justify-between gap-4">
+            <div className="tla-auth-footer">
               <span>Already have an account? </span>
-              <Link href="/login" className="text-[#00C3C0] underline">
+              <Link href="/login">
                 <b>Log In</b>
               </Link>
             </div>
-            <div className="mt-3 md:mt-5 text-sm text-[var(--color-text)] text-center w-full md:w-auto md:text-left">
-              <span>Is your law firm not listed? </span>
-              <Link href="/register" className="text-[#00C3C0] underline">
-                <b>Submit a Listing Request</b>
+            <div className="tla-auth-footer">
+              <span>Lost your account? </span>
+              <Link href="/claim-account">
+                <b>Claim Your Account</b>
               </Link>
             </div>
           </div>
