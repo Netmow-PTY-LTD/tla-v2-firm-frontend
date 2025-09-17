@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import LawyerPhotoGallery from "../_components/LawyerPhotoGallery";
 import { Skeleton } from "@/components/ui/skeleton";
-import CompanyProfile from "../../settings/components/firm/components/CompanyProfile";
 import CompanyProfileServices from "../_components/CompanyProfileServices";
 
 export default function LawyerDetailsPage() {
@@ -112,23 +111,23 @@ export default function LawyerDetailsPage() {
         {/* Profile Image */}
         <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-gray-200 mb-4">
           <img
-            src={lawyer.img || lawyer?.profilePicture}
-            alt={lawyer.name}
+            src={lawyer?.img || lawyer?.profilePicture}
+            alt={lawyer?.name}
             className="w-full h-full object-cover"
           />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">{lawyer.name}</h2>
-        <div className="text-lg text-gray-600">{lawyer.designation}</div>
+        <h2 className="text-3xl font-bold text-gray-900">{lawyer?.name}</h2>
+        <div className="text-lg text-gray-600">{lawyer?.designation}</div>
         <div className="flex flex-col items-start gap-2 mt-4">
           <div className="text-lg text-gray-600">
             <b>Address:</b>
-            <span> {lawyer.address}</span>
+            <span> {lawyer?.address}</span>
           </div>
           <div className="text-gray-700">
-            <b>Email:</b> <span>{lawyer.email}</span>
+            <b>Email:</b> <span>{lawyer?.email}</span>
           </div>
           <div className="text-gray-700 mt-1">
-            <b>Phone:</b> <span>{lawyer.phone}</span>
+            <b>Phone:</b> <span>{lawyer?.phone}</span>
           </div>
         </div>
       </div>
@@ -157,7 +156,7 @@ export default function LawyerDetailsPage() {
         </h2>
         <div
           className="text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: lawyer.bio }}
+          dangerouslySetInnerHTML={{ __html: lawyer?.bio }}
         ></div>
       </div>
 

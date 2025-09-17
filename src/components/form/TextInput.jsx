@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import clsx from 'clsx'; // for conditional class merging
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import clsx from "clsx"; // for conditional class merging
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export default function TextInput({
   name,
   label,
-  placeholder = '',
-  type = 'text',
+  placeholder = "",
+  type = "text",
   disabled = false,
-  inputClassName = '',
-  itemClassName = '',
-  labelClassName = '',
-  textColor = 'text-black',
+  inputClassName = "",
+  itemClassName = "",
+  labelClassName = "",
+  textColor = "text-black",
   ...props
 }) {
   const { control } = useFormContext();
@@ -36,10 +36,7 @@ export default function TextInput({
         return (
           <FormItem className={itemClassName}>
             {label && (
-              <FormLabel
-                className={`${labelClassName} label-text`}
-                htmlFor={name}
-              >
+              <FormLabel className={`${labelClassName}`} htmlFor={name}>
                 {label}
               </FormLabel>
             )}
@@ -54,9 +51,9 @@ export default function TextInput({
                 disabled={disabled}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value ?? ''}
+                value={value ?? ""}
                 className={clsx(
-                  'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]',
+                  "bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]",
                   textColor,
                   inputClassName
                 )}
