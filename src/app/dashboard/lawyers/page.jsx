@@ -80,7 +80,7 @@ export default function LawyersList() {
                     </div>
                     <div>
                       <Link
-                        href={`/dashboard/lawyers/${lawyer.id}`}
+                        href={`/dashboard/lawyers/${lawyer.slug}`}
                         className="hover:underline"
                       >
                         <h5 className="text-base font-semibold">
@@ -121,7 +121,7 @@ export default function LawyersList() {
                   {/* View Button */}
                   <div className="w-full flex justify-center">
                     <Link
-                      href={`/dashboard/lawyers/${lawyer.id}`}
+                      href={`/dashboard/lawyers/${lawyer.slug}`}
                       className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md"
                     >
                       View Profile
