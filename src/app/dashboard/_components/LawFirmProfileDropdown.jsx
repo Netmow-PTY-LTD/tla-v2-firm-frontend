@@ -15,7 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { userDummyImage } from "@/data/data";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useAuthLogOutMutation } from "@/store/features/auth/authApiService";
 import { logOut } from "@/store/features/auth/authSlice";
@@ -26,6 +26,9 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
 
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+
+  const currentUser = useSelector((state) => state.auth.user);
+  console.log("currentUser from dropdown", currentUser);
 
   useEffect(() => {
     setIsClient(true);
