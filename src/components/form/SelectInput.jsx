@@ -28,6 +28,7 @@ export default function SelectInput({
   itemClassName = '',
   labelClassName = '',
   textColor = 'text-black',
+  onValueChange, // new prop
 }) {
   const { control } = useFormContext();
 
@@ -42,7 +43,11 @@ export default function SelectInput({
             <FormControl>
               <Select
                 disabled={disabled}
-                onValueChange={field.onChange}
+                // onValueChange={field.onChange}
+                onValueChange={(val) => {
+                  field.onChange(val); // maintain react-hook-form behavior
+                  if (onValueChange) onValueChange(val); // call external handler
+                }}
                 value={field.value ?? ''}
               >
                 <SelectTrigger
