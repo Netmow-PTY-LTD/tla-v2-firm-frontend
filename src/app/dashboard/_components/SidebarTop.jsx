@@ -64,7 +64,7 @@ export default function SidebarTop() {
           {userInfo?.data?.profile?.name.split(" ")[0] ?? "Lawyer"}!{" "}
         </span>
         <br />
-        Welcome To <span className="dashboard">TLA Dashboard</span>
+        Welcome To <span className="dashboard">TLA Company Dashboard</span>
       </h2>
     </div>
   );
