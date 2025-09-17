@@ -19,7 +19,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
   const [query, setQuery] = useState("");
 
 
-  console.log('options ==>',options)
+
 
   // filter options based on query
   const filteredOptions =

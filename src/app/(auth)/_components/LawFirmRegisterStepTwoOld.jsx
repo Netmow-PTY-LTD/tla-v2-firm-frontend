@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { prevStep } from "@/store/features/auth/lawyerRegistrationSlice";
+import { prevStep } from "@/store/features/auth/lawFirmRegistrationSlice";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";

@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 import { safeJsonParse } from "@/helpers/safeJsonParse";
 import Cookies from "js-cookie";
 import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
-import { nextStep } from "@/store/features/auth/lawyerRegistrationSlice";
+import { nextStep } from "@/store/features/auth/lawFirmRegistrationSlice";
 import { useDispatch } from "react-redux";
 import MultipleTagSelector from "@/components/form/MultipleTagSelector";
 

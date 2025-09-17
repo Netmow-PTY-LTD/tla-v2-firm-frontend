@@ -271,7 +271,7 @@
 //           </div>
 //         </div>
 //       </div>
-      
+
 //     </div >
 //   );
 // }
@@ -285,6 +285,8 @@ import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
+import { useDispatch } from "react-redux";
+import { nextStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
 
 export const demoLocations = [
   {
@@ -405,8 +407,8 @@ export const demoLocations = [
 export default function LawFirmRegisterStepOne() {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
+  const dispatch = useDispatch();
 
-  console.log('selectedCountry ',selectedCountry)
   const countries = demoLocations.map((c) => ({
     value: c.slug,
     label: c.name,
@@ -424,10 +426,13 @@ export default function LawFirmRegisterStepOne() {
       ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
 
 
-console.log('cities ===>',cities)
+
 
   const onSubmit = (data) => {
-    console.log("Form data ==========>", data);
+    // 1️ Save step data to Redux
+    dispatch(setFormData(data));
+    // 2 Move to next step
+    dispatch(nextStep());
   };
 
   return (
@@ -442,10 +447,10 @@ console.log('cities ===>',cities)
             Create your firm’s account to add lawyers and oversee their activities
           </p>
 
-          <FormWrapper 
-          onSubmit={onSubmit}
-          schema={lawFirmRegStepOneSchema}
-          
+          <FormWrapper
+            onSubmit={onSubmit}
+            schema={lawFirmRegStepOneSchema}
+
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
@@ -517,7 +522,7 @@ console.log('cities ===>',cities)
 
             <button
               type="submit"
-              className="mt-8 w-full md:w-auto btn-auth-register"
+              className="mt-8 w-full md:w-auto btn-auth-register bg-[#ff8f14]"
             >
               Next
             </button>

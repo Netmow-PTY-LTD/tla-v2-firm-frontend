@@ -6,6 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -16,7 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { prevStep } from "@/store/features/auth/lawyerRegistrationSlice";
+import { previousStep } from "@/store/features/auth/lawFirmRegistrationSlice";
+
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -164,7 +166,7 @@ export default function LawFirmRegisterStepTwo() {
               <button
                 type="button"
                 className="btn-default btn-outline-black"
-                onClick={() => dispatch(prevStep())}
+                onClick={() => dispatch(previousStep())}
                 // disabled={isLoading}
               >
                 Back
