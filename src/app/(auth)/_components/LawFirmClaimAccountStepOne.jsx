@@ -344,13 +344,19 @@ export default function LawFirmClaimAccountStepOne() {
           <div className="flex flex-wrap justify-between px-2">
             <div className="mt-8 md:mt-5 text-sm text-[var(--color-text)] text-center w-full md:w-auto md:text-left">
               <span>Already have an account? </span>
-              <Link href="/login" className="text-[#00C3C0] underline">
+              <Link
+                href="/login"
+                className="text-[var(--primary-color)] underline"
+              >
                 <b>Log In</b>
               </Link>
             </div>
             <div className="mt-3 md:mt-5 text-sm text-[var(--color-text)] text-center w-full md:w-auto md:text-left">
               <span>Is your law firm not listed? </span>
-              <Link href="/register" className="text-[#00C3C0] underline">
+              <Link
+                href="/register"
+                className="text-[var(--primary-color)] underline"
+              >
                 <b>Submit a Listing Request</b>
               </Link>
             </div>

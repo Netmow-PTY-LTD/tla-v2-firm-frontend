@@ -208,7 +208,7 @@ export default function LawFirmClaimAccountStepTwo() {
               </button>
               <button
                 type="submit"
-                className="btn-default bg-[var(--color-special)] flex items-center justify-center gap-2 cursor-pointer"
+                className="btn-default bg-[var(--primary-color)] flex items-center justify-center gap-2 cursor-pointer"
                 // disabled={isLoading} // optional: prevent double submit
               >
                 {/* {isLoading ? (

@@ -25,10 +25,8 @@ const LawFirmLoginForm = () => {
   const router = useRouter();
   const [authLogin, { isLoading }] = useAuthLoginMutation();
 
-
   const onSubmit = async (data) => {
     setLoading(true);
-
 
     try {
       // 🔹 Call login API
@@ -61,7 +59,6 @@ const LawFirmLoginForm = () => {
           // 🔹 Redirect if login worked
 
           router.push(`/dashboard`);
-
         }
       }
     } catch (error) {
@@ -71,21 +68,6 @@ const LawFirmLoginForm = () => {
       setLoading(false);
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <>
@@ -102,11 +84,11 @@ const LawFirmLoginForm = () => {
         <FormWrapper
           onSubmit={onSubmit}
           schema={loginValidationSchema}
-        defaultValues={{
-          email: localStorage.getItem("userEmail") || "",
-          password: "",
-          rememberMe: localStorage.getItem("rememberMe") === "true",
-        }}
+          // defaultValues={{
+          //   email: localStorage.getItem("userEmail") || "",
+          //   password: "",
+          //   rememberMe: localStorage.getItem("rememberMe") === "true",
+          // }}
         >
           <div className="space-y-5">
             <TextInput
@@ -137,10 +119,7 @@ const LawFirmLoginForm = () => {
             </div>
 
             <div className="flex flex-wrap justify-between">
-              <CheckboxInput
-                name={"rememberMe"}
-                label={'Remember Me'}
-              />
+              <CheckboxInput name={"rememberMe"} label={"Remember Me"} />
 
               <Link
                 href="/forget-password"
