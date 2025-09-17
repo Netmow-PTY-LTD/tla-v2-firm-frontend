@@ -58,3 +58,21 @@ export const lawFirmRegStepOneSchema = z.object({
 
 
 
+
+
+// -------------------- Step Two --------------------
+export const lawFirmRegStepTwoSchema = z.object({
+  licenseType: z
+    .string()
+    .min(2, "License Type is required")
+    .max(100, "License Type is too long"),
+  licenseNumber: z
+    .string()
+    .min(2, "License Number is required")
+    .max(50, "License Number is too long"),
+  issuedBy: z.string().min(1, "Issuing body is required"),
+  validUntil: z
+    .string()
+    .min(1, "Valid Until date is required")
+    .refine((date) => !isNaN(Date.parse(date)), "Enter a valid date"),
+});

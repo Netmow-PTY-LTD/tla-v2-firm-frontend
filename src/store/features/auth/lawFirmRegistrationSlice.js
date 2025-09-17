@@ -14,10 +14,13 @@ const initialState = {
     registrationNumber: '',
     yearOfEstablishment: '',
     // Step 2
-
+    licenseType: '',
+    licenseNumber: '',
+    issuedBy: '',
+    validUntil: '',
     // Add more fields for future steps
   },
-  totalSteps: 3, // set total steps here
+  totalSteps: 2, // set total steps here
 };
 
 const lawFirmRegistrationSlice = createSlice({
