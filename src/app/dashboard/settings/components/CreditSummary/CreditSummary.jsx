@@ -58,8 +58,6 @@ const transactionData = {
 
 
 
-
-
 export const CreditSummary = () => {
 //   const {
 //     data: transactionData,
