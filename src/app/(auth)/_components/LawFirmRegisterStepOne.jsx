@@ -34,6 +34,11 @@ import Cookies from "js-cookie";
 import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
 import { nextStep } from "@/store/features/auth/lawyerRegistrationSlice";
 import { useDispatch } from "react-redux";
+import FormWrapper from "@/components/form/FormWrapper";
+import TextInput from "@/components/form/TextInput";
+import SelectInput from "@/components/form/SelectInput";
+
+import InputCombobox from "@/components/form/ComboboxInput";
 
 const germanCities = [
   { id: 1, name: "Berlin" },
@@ -91,8 +96,8 @@ export default function LawFirmRegisterStepOne() {
 
   const { control, handleSubmit } = form;
   const onSubmit = (data) => {
-    console.log(data);
-    dispatch(nextStep());
+    console.log("data ==========>",data);
+    // dispatch(nextStep());
   };
 
   return (
@@ -402,29 +407,7 @@ export default function LawFirmRegisterStepOne() {
                     />
                   </div>
 
-                  {/* <div className="w-full md:w-1/2 md:pl-5">
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Vat Number</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="i.e. 1234567890"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div> */}
+                  
                 </div>
                 <div className="flex flex-wrap">
                   <div className="w-full md:w-1/2 md:pr-5">
@@ -481,6 +464,112 @@ export default function LawFirmRegisterStepOne() {
             </form>
           </Form>
 
+          {/*  Reusable form */}
+
+          {/* <FormWrapper onSubmit={onSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+
+              <TextInput
+                name="name"
+                label="Law Firm Name"
+                placeholder="i.e. ABC LLC"
+                control={form.control}
+              />
+
+
+              <SelectInput
+                name="country"
+                label="Country"
+                options={countries.map(c => ({ value: c.slug, label: c.name }))}
+                control={form.control}
+                placeholder="Select a country"
+                triggerClassName={'w-full'}
+              />
+
+              <InputCombobox
+                name="city"
+                label="City"
+                options={germanCities?.map(c => ({ value: c.id, label: c.zipcode }))}
+                control={form.control}
+                placeholder="Select a city"
+              />
+
+
+              <InputCombobox
+                name="AreaZipcode"
+                control={form.control}
+                label="Address"
+                placeholder="Select a Zipcode"
+                options={filteredZipCodes?.map((z) => ({
+                  value: z._id,
+                  label: z.zipcode,
+                }))}
+                onSelect={(val) => {
+                  const selected = allZipCodes?.data?.find((z) => z._id === val);
+                  if (selected) {
+                    setLatitude(selected.latitude);
+                    setLongitude(selected.longitude);
+                    setPostalCode(selected.postalCode);
+                    setAddress(selected.zipcode);
+                  }
+                }}
+              />
+
+
+              <TextInput
+                name="phone"
+                label="Phone Number"
+                placeholder="i.e. +1 (123) 456-7890"
+                control={form.control}
+              />
+
+
+              <TextInput
+                name="email"
+                label="Email"
+                placeholder="i.e. abc@example.com"
+                type="email"
+                control={form.control}
+              />
+
+
+              <TextInput
+                name="website"
+                label="Website"
+                placeholder="i.e. https://example.com"
+                type="url"
+                control={form.control}
+              />
+
+
+              <TextInput
+                name="registrationNumber"
+                label="Registration Number"
+                placeholder="i.e. 1234567890"
+                control={form.control}
+              />
+
+
+              <TextInput
+                name="yearOfEstablishment"
+                label="Year of Establishment"
+                placeholder="i.e. 2003"
+                type="number"
+                control={form.control}
+              />
+
+            </div>
+
+            <button
+              type="submit"
+              className="mt-8 w-full md:w-auto btn-auth-register"
+            >
+              Next
+            </button>
+          </FormWrapper> */}
+
+
           <div className="flex flex-wrap justify-between gap-4">
             <div className="tla-auth-footer">
               <span>Already have an account? </span>
@@ -506,6 +595,6 @@ export default function LawFirmRegisterStepOne() {
           className="h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"
         />
       </div> */}
-    </div>
+    </div >
   );
 }

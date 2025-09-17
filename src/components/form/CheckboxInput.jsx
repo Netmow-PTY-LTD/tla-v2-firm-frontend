@@ -31,7 +31,7 @@ export default function CheckboxInput({
         >
           <FormControl>
             <Checkbox
-              checked={field.value ?? ''}
+              checked={field.value ?? false}
               onCheckedChange={field.onChange}
               disabled={disabled}
             />

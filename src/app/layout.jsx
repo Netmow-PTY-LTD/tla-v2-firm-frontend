@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "../store/provider";
 import Header from "@/components/common/header/Header";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>{children}</ReduxProvider>
+        <Toaster/>
       </body>
     </html>
   );
