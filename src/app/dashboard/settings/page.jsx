@@ -7,6 +7,7 @@ import ManagingPartner from "./components/managingPartner/ManagingPartner";
 import BillingAndTax from "./components/billingTax/BillingAndTax";
 import Media from "./components/media/Media";
 import Locations from "./components/locations/Locations";
+import { CreditSummary } from "./components/CreditSummary/CreditSummary";
 
 
 
@@ -18,8 +19,15 @@ export default function DashboardSettings() {
     { id: "billing-tax", title: "Billing & Tax Info", content: <BillingAndTax /> },
     { id: "media", title: "Photos & Videos", content: <Media /> },
     { id: "locations", title: "Locations", content: <Locations /> },
+    { id: "locations", title: "Locations", content: <Locations /> },
+    { id: "credit-summary", title: "Credit Summary", content: <CreditSummary /> },
+
   ];
 
+
+
+
+  
   return (
     <div>
 
