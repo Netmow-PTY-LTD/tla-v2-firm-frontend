@@ -10,9 +10,18 @@ import { previousStep, setFormData } from "@/store/features/auth/lawFirmRegistra
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
 
 export default function LawFirmRegisterStepTwo() {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData); // get previous step data
   const [isLoading, setIsLoading] = useState(false);
+
+
+  const defaultValues = {
+    licenseType: formData.licenseType,
+    licenseNumber: formData.licenseNumber,
+    issuedBy: formData.issuedBy,
+    validUntil: formData.validUntil,
+  }
+
 
   const onSubmit = async (data) => {
     try {
@@ -23,7 +32,7 @@ const dispatch = useDispatch();
       // 2️ Combine all steps data
       const finalData = { ...formData, ...data };
 
-      console.log('finalData',finalData)
+      console.log('finalData', finalData)
 
       // 3️ API call to finish registration
 
@@ -52,6 +61,7 @@ const dispatch = useDispatch();
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepTwoSchema}
+            defaultValues={defaultValues}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput

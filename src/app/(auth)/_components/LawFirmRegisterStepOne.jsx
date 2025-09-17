@@ -285,7 +285,7 @@ import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
 
 export const demoLocations = [
@@ -408,7 +408,7 @@ export default function LawFirmRegisterStepOne() {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const dispatch = useDispatch();
-
+  const formData = useSelector((state) => state.lawFirmRegistration.formData);
   const countries = demoLocations.map((c) => ({
     value: c.slug,
     label: c.name,
@@ -427,8 +427,22 @@ export default function LawFirmRegisterStepOne() {
 
 
 
+  const defaultValues = {
+    name: formData.name,
+    country: formData.country,
+    city: formData.city,
+    AreaZipcode: formData.AreaZipcode,
+    phone: formData.phone,
+    email: formData.email,
+    website: formData.website,
+    registrationNumber: formData.registrationNumber,
+    yearOfEstablishment: formData.yearOfEstablishment,
+  }
+
 
   const onSubmit = (data) => {
+
+    console.log('check step one data ==>',data)
     // 1️ Save step data to Redux
     dispatch(setFormData(data));
     // 2 Move to next step
@@ -450,6 +464,7 @@ export default function LawFirmRegisterStepOne() {
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepOneSchema}
+            defaultValues={defaultValues}
 
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
