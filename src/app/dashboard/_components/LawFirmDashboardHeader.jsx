@@ -18,6 +18,8 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
       skip: !token,
     });
 
+  //console.log("currentUser from header", currentUser);
+
   return (
     <header className="db-header">
       <div className="db-header-container flex gap-4">
@@ -45,7 +47,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
           <BellRing className="w-5 h-5 text-gray-500" />
         </Link>
         <LawFirmProfileDropDown
-          data={currentUser?.data ?? []}
+          currentUser={currentUser?.data ?? []}
           isCurrentUserLoading={isCurrentUserLoading}
         />
       </div>

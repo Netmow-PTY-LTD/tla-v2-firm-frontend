@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import FormWrapper from "@/components/form/FormWrapper";
 import TextareaInput from "@/components/form/TextArea";
@@ -6,7 +6,6 @@ import TextInput from "@/components/form/TextInput";
 import { useState } from "react";
 import BillingTaxFormAction from "../billingTax/BillingTaxFormAction";
 import SelectInput from "@/components/form/SelectInput";
-
 
 export default function License() {
   const [logo, setLogo] = useState(null);
@@ -17,7 +16,6 @@ export default function License() {
     issuedBy: "",
     validUntil: "",
     notes: "",
-
   };
 
   const onSubmit = (data) => {
@@ -26,16 +24,17 @@ export default function License() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-
-      <div className="mb-6 ">
-        <h3 className="text-black font-semibold heading-lg mb-2">
-          License Details
-        </h3>
-        <p className="text-gray-600">
-          Provide accurate licensing information to verify your firm’s legal credentials.
-        </p>
-      </div>
       <FormWrapper onSubmit={onSubmit} defaultValues={initialValues}>
+        <div className="mb-6 ">
+          <h3 className="text-black font-semibold heading-lg mb-2">
+            Core Legal Certifications
+          </h3>
+          <p className="text-gray-600">
+            Provide accurate licensing information to verify your firm’s legal
+            credentials.
+          </p>
+        </div>
+        <div className="flex justify-end"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <TextInput
             label="License Type"
@@ -49,18 +48,19 @@ export default function License() {
             placeholder="i.e. ABC1234567"
           />
 
-
           <SelectInput
             label="Issued By"
             name="issuedBy"
             placeholder="Issuing body"
             options={[
               { label: "Bar Council of Australia", value: "bar-council" },
-              { label: "Legal Services Commission", value: "legal-services-commission" },
+              {
+                label: "Legal Services Commission",
+                value: "legal-services-commission",
+              },
             ]}
             triggerClassName="w-full " // set custom width here
           />
-
 
           <TextInput
             label="Valid Until"
@@ -77,15 +77,11 @@ export default function License() {
           />
         </div>
 
-        <div className="border-t border-white mt-6" />
+        <div className="border-t border-white mt-10" />
 
         {/* Footer Buttons */}
-        <BillingTaxFormAction
-          isLoading={false}
-          initialValues={initialValues}
-        />
+        <BillingTaxFormAction isLoading={false} initialValues={initialValues} />
       </FormWrapper>
-
     </div>
   );
 }

@@ -69,9 +69,9 @@ export default function LawFirmSidebar({ isCollapsed, setIsCollapsed }) {
       </div>
 
       <nav className="p-3 lg:pt-2 lg:pb-3 lg:px-4 space-y-1 h-[calc(100%-170px)] overflow-y-auto">
-        <h3 className="text-black leading-none font-semibold text-[20px] border-b border-[#f2f2f2] pb-2 mb-3">
+        <h4 className="text-black leading-none font-semibold text-[20px] border-b border-[#f2f2f2] pb-2 mb-3">
           Company Menu
-        </h3>
+        </h4>
         {LawFirmSidebarItems?.navMain?.map((item) => {
           const hasSubItems =
             Array.isArray(item.items) && item.items.length > 0;
