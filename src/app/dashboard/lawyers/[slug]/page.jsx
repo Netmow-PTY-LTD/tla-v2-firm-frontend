@@ -1,12 +1,13 @@
 "use client";
 
 import { lawyers } from "@/data/data";
-import { useGetUserProfileBySlugQuery } from "@/store/features/public/publicApiService";
+
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import LawyerPhotoGallery from "../_components/LawyerPhotoGallery";
 import { Skeleton } from "@/components/ui/skeleton";
 import CompanyProfileServices from "../_components/CompanyProfileServices";
+import { useGetUserProfileBySlugQuery } from "@/store/tlaFeatures/public/publicApiService";
 
 export default function LawyerDetailsPage() {
   const params = useParams();

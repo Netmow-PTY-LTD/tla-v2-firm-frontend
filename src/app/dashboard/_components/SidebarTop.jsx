@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -8,7 +8,7 @@ export default function SidebarTop() {
   const [greeting, setGreeting] = useState("");
   const [dateTime, setDateTime] = useState("");
 
-  const { data: userInfo } = useAuthUserInfoQuery();
+  const { data: userInfo } = useGetFirmUserInfoQuery();
 
   useEffect(() => {
     const updateDateTime = () => {

@@ -17,17 +17,19 @@ import Link from "next/link";
 import { userDummyImage } from "@/data/data";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { useAuthLogOutMutation } from "@/store/features/auth/authApiService";
-import { logOut } from "@/store/features/auth/authSlice";
+import { logOut } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthLogoutMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
-export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
+export default function LawFirmProfileDropDown({
+  currentUser,
+  isCurrentUserLoading,
+}) {
   const dispatch = useDispatch();
 
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
-  const currentUser = useSelector((state) => state.auth.user);
   console.log("currentUser from dropdown", currentUser);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
    * - Dispatches the logOut action to update the Redux store and clear user state.
    * - Redirects the user to the login page using the Next.js router.
    */
-  const [authLogout] = useAuthLogOutMutation();
+  const [authLogout] =  useAuthLogoutMutation();
   const handleLogout = () => {
     authLogout();
     dispatch(logOut());
@@ -70,15 +72,17 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
             </div>
           ) : (
             <div className="flex items-center group gap-[10px]">
-              <Avatar>
+              <Avatar className="w-8 h-8 border border-gray-300">
                 <AvatarImage
-                  src={data?.profile?.profilePicture ?? userDummyImage}
-                  alt={data?.profile?.name || "Admin"}
+                  src={
+                    currentUser?.firmProfile?.profilePicture ?? userDummyImage
+                  }
+                  alt={currentUser?.firmProfile?.name || "Admin"}
                 />
                 <AvatarFallback>USER</AvatarFallback>
               </Avatar>
               <span className="font-medium text-[14px]">
-                {data?.profile?.name.split(" ")[0] || "Admin"}
+                {currentUser?.firmProfile?.firmName?.split(" ")[0] || "Admin"}
               </span>
               <ChevronDown className="w-5 h-5" />
             </div>

@@ -1,5 +1,5 @@
 "use client";
-import { selectCurrentUser } from "@/store/features/auth/authSlice";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";

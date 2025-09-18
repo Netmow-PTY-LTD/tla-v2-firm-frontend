@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -8,9 +8,9 @@ import {
   DialogOverlay,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { X } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { X } from "lucide-react";
 
 export function Modal({
   buttonName,
@@ -19,14 +19,14 @@ export function Modal({
   children,
   open,
   onOpenChange,
-  width = 'max-w-[500px]',
-  height = '',
-  overflowY = '',
-  overlayBg = '',
-  paddingTop = '',
-  paddingLeft = '',
-  paddingRight = '',
-  border = '',
+  width = "max-w-[500px]",
+  height = "",
+  overflowY = "",
+  overlayBg = "",
+  paddingTop = "",
+  paddingLeft = "",
+  paddingRight = "",
+  border = "",
   showCloseButton = false,
 }) {
   return (
@@ -37,7 +37,7 @@ export function Modal({
         <DialogTrigger asChild>
           <Button
             variant="outline"
-            className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5 "
+            className="bg-[var(--primary-color)] hover:bg-[var(--color-black)] px-4 py-3 text-sm rounded-lg text-white mt-5 hover:text-white cursor-pointer transition-all duration-300"
           >
             {buttonName}
           </Button>
@@ -45,7 +45,7 @@ export function Modal({
       )}
       <DialogContent
         className={`${width} ${height} w-full z-[9999] ${paddingTop} ${paddingLeft} ${paddingRight} ${border} ${
-          showCloseButton ? '[&>button.absolute.top-4.right-4]:hidden' : ''
+          showCloseButton ? "[&>button.absolute.top-4.right-4]:hidden" : ""
         }`}
       >
         {showCloseButton && (
@@ -56,7 +56,7 @@ export function Modal({
           </DialogClose>
         )}
         {/* Dialog Header */}
-        <DialogHeader className="hidden">
+        <DialogHeader hidden>
           <DialogTitle>
             {title ? title : <VisuallyHidden>Dialog</VisuallyHidden>}
           </DialogTitle>

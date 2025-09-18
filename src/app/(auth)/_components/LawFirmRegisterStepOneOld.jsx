@@ -31,8 +31,8 @@ import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { safeJsonParse } from "@/helpers/safeJsonParse";
 import Cookies from "js-cookie";
-import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
-import { nextStep } from "@/store/features/auth/lawFirmRegistrationSlice";
+import { useGetZipCodeListQuery } from "@/store/firmFeatures/public/publicApiService";
+import { nextStep } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { useDispatch } from "react-redux";
 
 const germanCities = [
