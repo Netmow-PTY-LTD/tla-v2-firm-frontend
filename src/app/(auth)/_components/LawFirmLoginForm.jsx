@@ -2,25 +2,20 @@
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import CheckboxInput from "@/components/form/CheckboxInput";
 import FormWrapper from "@/components/form/FormWrapper";
+import PasswordInput from "@/components/form/PasswordInput";
 import TextInput from "@/components/form/TextInput";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Form } from "@/components/ui/form";
 import { verifyToken } from "@/helpers/verifyToken";
 import { loginValidationSchema } from "@/schema/auth/authValidation.schema";
 import { useAuthLoginMutation } from "@/store/features/auth/authApiService";
 import { setUser } from "@/store/features/auth/authSlice";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Cookies from "js-cookie";
-import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+
 import { useDispatch } from "react-redux";
 
 const LawFirmLoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const [authLogin, { isLoading }] = useAuthLoginMutation();
@@ -84,11 +79,11 @@ const LawFirmLoginForm = () => {
         <FormWrapper
           onSubmit={onSubmit}
           schema={loginValidationSchema}
-          // defaultValues={{
-          //   email: localStorage.getItem("userEmail") || "",
-          //   password: "",
-          //   rememberMe: localStorage.getItem("rememberMe") === "true",
-          // }}
+        // defaultValues={{
+        //   email: localStorage.getItem("userEmail") || "",
+        //   password: "",
+        //   rememberMe: localStorage.getItem("rememberMe") === "true",
+        // }}
         >
           <div className="space-y-5">
             <TextInput
@@ -98,25 +93,13 @@ const LawFirmLoginForm = () => {
               placeholder="John@example.com"
             />
 
-            <div className="relative">
-              <TextInput
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="********"
-              />
-              {showPassword ? (
-                <EyeOff
-                  className="absolute right-[12px] top-[36px] text-[var(--color-text)] cursor-pointer"
-                  onClick={() => setShowPassword(false)}
-                />
-              ) : (
-                <Eye
-                  className="absolute right-[12px] top-[36px] text-[var(--color-text)] cursor-pointer"
-                  onClick={() => setShowPassword(true)}
-                />
-              )}
-            </div>
+
+            <PasswordInput
+              label="Password"
+              type={"password"}
+              name="password"
+              placeholder="********"
+            />
 
             <div className="flex flex-wrap justify-between">
               <CheckboxInput name={"rememberMe"} label={"Remember Me"} />
