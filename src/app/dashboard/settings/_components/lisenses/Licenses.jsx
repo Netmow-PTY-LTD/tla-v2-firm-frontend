@@ -28,24 +28,27 @@ export default function License() {
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper onSubmit={onSubmit} defaultValues={initialValues}>
-        <div className="mb-4">
-          <h3 className="text-black font-semibold heading-lg mb-2">
-            Core Legal Certifications
-          </h3>
-          <p className="text-gray-600">
-            Provide accurate licensing information to verify your firm’s legal
-            credentials.
-          </p>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h3 className="text-black font-semibold heading-lg mb-2">
+              Core Legal Certifications
+            </h3>
+            <p className="text-gray-600">
+              Provide accurate licensing information to verify your firm’s legal
+              credentials.
+            </p>
+          </div>
+          <div className="flex justify-end">
+            <AddCoreLicenseModal />
+          </div>
         </div>
-        <div className="flex justify-end">
-          <AddCoreLicenseModal />
-        </div>
+
         <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-200 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start gap-4">
             <div className="flex flex-col">
-              <h4 className="heading-lg font-semibold text-gray-800 mb-2">
+              <h5 className="heading-base font-semibold text-gray-800 mb-2">
                 Bar Certification / License
-              </h4>
+              </h5>
               <div className="space-y-1">
                 <p className="text-sm text-[#6e6e6e]">
                   <b>License Number</b>: ABC1234567 | <b> Valid Until: </b> 31
@@ -73,26 +76,29 @@ export default function License() {
           </div>
         </div>
 
-        <div className="border-t border-white mt-8" />
+        <div className="border-t border-white my-14" />
 
-        <div className="mb-4">
-          <h3 className="text-black font-semibold heading-lg mb-2">
-            Optional Legal Certifications
-          </h3>
-          <p className="text-gray-600">
-            Provide accurate licensing information to verify your firm’s legal
-            credentials.
-          </p>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h3 className="text-black font-semibold heading-lg mb-2">
+              Optional Legal Certifications
+            </h3>
+            <p className="text-gray-600">
+              Provide accurate licensing information to verify your firm’s legal
+              credentials.
+            </p>
+          </div>
+          <div className="flex justify-end">
+            <AddOptionalLicenseModal />
+          </div>
         </div>
-        <div className="flex justify-end">
-          <AddOptionalLicenseModal />
-        </div>
+
         <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-200 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start gap-4">
             <div className="flex flex-col">
-              <h4 className="heading-lg font-semibold text-gray-800 mb-2">
+              <h5 className="heading-base font-semibold text-gray-800 mb-2">
                 Bar Certification / License
-              </h4>
+              </h5>
               <div className="space-y-1">
                 <p className="text-sm text-[#6e6e6e]">
                   <b>License Number</b>: ABC1234567 | <b> Valid Until: </b> 31

@@ -52,8 +52,8 @@ export default function CreateStaffPage() {
   }
 
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="py-5 w-full">
+    <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
+      <div className="w-full">
         <h3 className="text-black font-semibold heading-lg">
           Create New Staff
         </h3>
@@ -104,7 +104,7 @@ export default function CreateStaffPage() {
               textColor="text-[#4b4949]"
             />
           </div>
-          <div className="border-t border-[#fff] h-1 mt-10" />
+          <div className="border-t border-[#f2f2f2] h-1 mt-10" />
           <h3 className="text-black font-semibold heading-lg mt-6">
             Set Permissions
           </h3>
