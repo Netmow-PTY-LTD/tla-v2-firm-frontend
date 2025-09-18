@@ -7,10 +7,10 @@ import { BadgeAlert } from "lucide-react";
 export default function CompanyProfileCard() {
   return (
     <>
-      <div className="flex items-center justify-between p-4 bg-white rounded-[10px] relative z-[9] shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-[10px] relative z-[9] shadow-sm">
         {/* Left section: Avatar and text */}
-        <div className="flex items-center gap-4">
-          <Avatar className="h-[70px] w-[70px]">
+        <div className="flex flex-wrap items-center gap-4">
+          <Avatar className="h-[70px] w-[70px] border border-gray-300">
             <AvatarImage src={userDummyImage} alt="Profile" />
             <AvatarFallback>PI</AvatarFallback>
           </Avatar>

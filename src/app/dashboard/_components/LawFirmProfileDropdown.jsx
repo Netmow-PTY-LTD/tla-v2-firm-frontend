@@ -21,13 +21,15 @@ import { logOut } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthLogoutMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
-export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
+export default function LawFirmProfileDropDown({
+  currentUser,
+  isCurrentUserLoading,
+}) {
   const dispatch = useDispatch();
 
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
-  const currentUser = useSelector((state) => state.auth.user);
   console.log("currentUser from dropdown", currentUser);
 
   useEffect(() => {
@@ -70,15 +72,17 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
             </div>
           ) : (
             <div className="flex items-center group gap-[10px]">
-              <Avatar>
+              <Avatar className="w-8 h-8 border border-gray-300">
                 <AvatarImage
-                  src={data?.profile?.profilePicture ?? userDummyImage}
-                  alt={data?.profile?.name || "Admin"}
+                  src={
+                    currentUser?.firmProfile?.profilePicture ?? userDummyImage
+                  }
+                  alt={currentUser?.firmProfile?.name || "Admin"}
                 />
                 <AvatarFallback>USER</AvatarFallback>
               </Avatar>
               <span className="font-medium text-[14px]">
-                {data?.profile?.name.split(" ")[0] || "Admin"}
+                {currentUser?.firmProfile?.firmName?.split(" ")[0] || "Admin"}
               </span>
               <ChevronDown className="w-5 h-5" />
             </div>
