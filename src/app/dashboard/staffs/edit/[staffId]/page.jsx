@@ -104,8 +104,8 @@ export default function EditStaffPage() {
   }
 
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="py-5 w-full">
+    <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
+      <div className="w-full">
         <h3 className="text-black font-semibold heading-lg">Edit Staff</h3>
         <p className="text-[#6e6e6e] mt-2 text-sm">
           This is the first detail clients will see when searching for legal
@@ -154,7 +154,7 @@ export default function EditStaffPage() {
               textColor="text-[#4b4949]"
             />
           </div>
-          <div className="border-t border-[#fff] h-1 mt-10" />
+          <div className="border-t border-[#f2f2f2] h-1 mt-10" />
           <h3 className="text-black font-semibold heading-lg mt-6">
             Set Permissions
           </h3>

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Modal } from '@/components/common/components/Modal';
-import { Input } from '@/components/ui/input';
+import { Modal } from "@/components/common/components/Modal";
+import { Input } from "@/components/ui/input";
 
-import { CloudUpload, Trash2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
-import { getEmbedUrl, videoUrlRegex } from '../mediaValidation';
+import { CloudUpload, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useFormContext, useFieldArray } from "react-hook-form";
+import { getEmbedUrl, videoUrlRegex } from "../mediaValidation";
 
 export default function VideoGallery() {
   const {
@@ -20,16 +20,16 @@ export default function VideoGallery() {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'videos',
+    name: "videos",
   });
 
   const [open, setOpen] = useState(false);
-  const [newLink, setNewLink] = useState('');
+  const [newLink, setNewLink] = useState("");
 
   useEffect(() => {
-    const current = watch('videos');
+    const current = watch("videos");
     if (!Array.isArray(current)) {
-      setValue('videos', []);
+      setValue("videos", []);
     }
   }, [setValue, watch]);
 
@@ -39,7 +39,7 @@ export default function VideoGallery() {
 
     // Clear error immediately if the input becomes valid
     if (videoUrlRegex.test(value)) {
-      clearErrors('videos');
+      clearErrors("videos");
     }
   };
 
@@ -47,9 +47,9 @@ export default function VideoGallery() {
     if (!newLink) return;
 
     if (!videoUrlRegex.test(newLink)) {
-      setError('videos', {
-        type: 'manual',
-        message: 'Invalid video URL. Please enter a YouTube, Vimeo, etc. link.',
+      setError("videos", {
+        type: "manual",
+        message: "Invalid video URL. Please enter a YouTube, Vimeo, etc. link.",
       });
       return;
     }
@@ -57,26 +57,26 @@ export default function VideoGallery() {
     const embed = getEmbedUrl(newLink);
     if (embed) {
       append({ url: newLink });
-      setNewLink('');
+      setNewLink("");
       setOpen(false);
-      clearErrors('videos'); // just in case
+      clearErrors("videos"); // just in case
     } else {
-      setError('videos', {
-        type: 'manual',
-        message: 'This video link cannot be embedded.',
+      setError("videos", {
+        type: "manual",
+        message: "This video link cannot be embedded.",
       });
     }
   };
 
   const onCancel = () => {
-    setNewLink('');
-    clearErrors('videos');
+    setNewLink("");
+    clearErrors("videos");
     setOpen(false);
   };
 
   return (
     <div className="mt-10">
-      <h3 className="text-black font-semibold text-lg">Videos</h3>
+      <h3 className="text-black font-semibold heading-lg">Videos</h3>
       <p className="text-[#6e6e6e] mt-[10px]">
         Add YouTube videos to highlight your legal expertise — share recordings
         of public seminars, legal webinars, client education sessions, or media
