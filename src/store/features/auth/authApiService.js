@@ -11,18 +11,18 @@ const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["userInfo"],
     }),
 
-    authRegister: builder.mutation({
+    authFirmRegister: builder.mutation({
       query: (data) => ({
-        url: "/auth/register/lawyer",
+        url: "/auth/register/firm",
         method: "POST",
         body: data,
       }),
       invalidatesTags: ["userInfo"],
     }),
 
-    authClientRegister: builder.mutation({
+    authStaffRegister: builder.mutation({
       query: (data) => ({
-        url: "/auth/register/client",
+        url: "/auth/register/staff",
         method: "POST",
         body: data,
       }),
@@ -132,8 +132,8 @@ const authApi = baseApi.injectEndpoints({
 
 export const {
   useAuthLoginMutation,
-  useAuthRegisterMutation,
-  useAuthClientRegisterMutation,
+  useAuthFirmRegisterMutation,
+  useAuthStaffRegisterMutation,
   useAuthUserInfoQuery,
   useAuthLogOutMutation,
   useUpdateUserDataMutation,
