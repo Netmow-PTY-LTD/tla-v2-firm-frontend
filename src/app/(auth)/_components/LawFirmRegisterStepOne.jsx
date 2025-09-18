@@ -158,6 +158,8 @@ export default function LawFirmRegisterStepOne() {
     AreaZipcode: formData.contactInfo.AreaZipcode, // optional if needed
     phone: formData.contactInfo.phone,
     email: formData.contactInfo.email,
+    password: formData.password,
+
     website: formData.contactInfo.officialWebsite,
   };
 
@@ -169,6 +171,8 @@ export default function LawFirmRegisterStepOne() {
         firmName: data.firmName,
         registrationNumber: data.registrationNumber,
         yearEstablished: data.yearEstablished,
+        email: data.email,
+        password: data.password,
         contactInfo: {
           officeAddress: data.officeAddress,
           country: data.country,
@@ -204,7 +208,7 @@ export default function LawFirmRegisterStepOne() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
-                name="name"
+                name="firmName"
                 label="Law Firm Name"
                 placeholder="i.e. ABC LLC"
               />
@@ -240,16 +244,24 @@ export default function LawFirmRegisterStepOne() {
               />
 
               <TextInput
+                name="email"
+                label="Email"
+                placeholder="i.e. abc@example.com"
+              />
+              <TextInput
+                name="password"
+                label="Password"
+                placeholder="e.g. AbcFirm@2025"
+                type="password"
+              />
+              <TextInput
                 name="phone"
                 label="Phone Number"
                 placeholder="i.e. +1 (123) 456-7890"
               />
 
-              <TextInput
-                name="email"
-                label="Email"
-                placeholder="i.e. abc@example.com"
-              />
+
+
 
               <TextInput
                 name="website"

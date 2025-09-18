@@ -13,7 +13,7 @@ export const loginValidationSchema = z.object({
 
 
 export const lawFirmRegStepOneSchema = z.object({
-  name: z
+  firmName: z
     .string()
     .min(2, "Law Firm Name must be at least 2 characters")
     .max(100, "Law Firm Name must be less than 100 characters"),
@@ -39,6 +39,10 @@ export const lawFirmRegStepOneSchema = z.object({
   email: z
     .string()
     .email("Invalid email address"),
+
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long"),
 
   website: z
     .string()
