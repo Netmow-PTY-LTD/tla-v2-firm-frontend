@@ -1,8 +1,8 @@
-'use client';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+"use client";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 // import { useDeletePartnerMutation } from '@/store/features/admin/partnerApi'; // example
-import { Edit, Trash } from 'lucide-react';
-import React from 'react';
+import { Edit, Trash } from "lucide-react";
+import React from "react";
 
 export default function PartnerList({ partners, handleEditClick, refetch }) {
   return (
@@ -32,15 +32,15 @@ const PartnerCard = ({ partner, handleEditClick, refetch }) => {
       //   refetch();
       // }
     } catch (error) {
-      console.error('Error deleting partner:', error);
-      showErrorToast(error?.data?.message || 'Failed to delete partner');
+      console.error("Error deleting partner:", error);
+      showErrorToast(error?.data?.message || "Failed to delete partner");
     }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-200 hover:shadow-lg transition-all">
       <div className="flex items-start justify-between mb-3">
-        <h2 className="heading-base font-semibold text-gray-800">{name}</h2>
+        <h5 className="heading-base font-semibold text-gray-800">{name}</h5>
         <div className="flex gap-2">
           <button
             className="text-blue-500 hover:text-blue-700"
