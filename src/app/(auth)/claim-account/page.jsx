@@ -6,7 +6,9 @@ import LawFirmClaimAccountStepTwo from "../_components/LawFirmClaimAccountStepTw
 import { useSelector } from "react-redux";
 
 export default function LawFirmClaimAccount() {
-  const step = useSelector((state) => state.lawyerRegistration.step);
+  const step = useSelector((state) => state.lawFirmRegistration.currentStep);
+
+  //console.log("step", step);
 
   return (
     <section
