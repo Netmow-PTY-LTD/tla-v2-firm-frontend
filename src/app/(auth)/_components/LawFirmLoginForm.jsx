@@ -107,12 +107,12 @@ const LawFirmLoginForm = () => {
               />
               {showPassword ? (
                 <EyeOff
-                  className="absolute right-[12px] top-[36px] text-[var(--color-text)] cursor-pointer"
+                  className="absolute right-[12px] top-[33px] text-[var(--color-text)] cursor-pointer"
                   onClick={() => setShowPassword(false)}
                 />
               ) : (
                 <Eye
-                  className="absolute right-[12px] top-[36px] text-[var(--color-text)] cursor-pointer"
+                  className="absolute right-[12px] top-[33px] text-[var(--color-text)] cursor-pointer"
                   onClick={() => setShowPassword(true)}
                 />
               )}

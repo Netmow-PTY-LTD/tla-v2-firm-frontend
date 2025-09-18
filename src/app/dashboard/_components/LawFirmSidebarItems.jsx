@@ -8,6 +8,7 @@ import {
   FileQuestionMark,
   Kanban,
   LandPlot,
+  Layers,
   LayoutDashboard,
   List,
   Logs,
@@ -42,7 +43,7 @@ export const LawFirmSidebarItems = {
     {
       title: "Lawyers",
       url: "/dashboard/lawyers",
-      icon: Users,
+      icon: Layers,
       isActive: true,
     },
 

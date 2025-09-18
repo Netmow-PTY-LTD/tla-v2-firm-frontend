@@ -1,30 +1,11 @@
 "use client";
 
 import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import FormWrapper from "@/components/form/FormWrapper";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
 import TextInput from "@/components/form/TextInput";
+import CheckboxInput from "@/components/form/CheckboxInput";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -32,21 +13,39 @@ const staffSchema = z.object({
   designation: z.string().min(2, "Designation is required"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 chars"),
-  permissions: z.array(z.string()),
+  permissions: z
+    .object({
+      view_clients: z.boolean(),
+      manage_cases: z.boolean(),
+      access_billing: z.boolean(),
+      admin_rights: z.boolean(),
+    })
+    .refine((val) => Object.values(val).some(Boolean), {
+      message: "At least one permission must be selected",
+    }),
 });
 
-export default function CreateStaffPage() {
-  const form = useForm({
-    resolver: zodResolver(staffSchema),
-    defaultValues: {
-      fullName: "",
-      designation: "",
-      email: "",
-      password: "",
-      permissions: [],
-    },
-  });
+const permissions = [
+  { label: "View Clients", value: "view_clients" },
+  { label: "Manage Cases", value: "manage_cases" },
+  { label: "Access Billing", value: "access_billing" },
+  { label: "Admin Rights", value: "admin_rights" },
+];
 
+const defaultValues = {
+  fullName: "",
+  designation: "",
+  email: "",
+  password: "",
+  permissions: {
+    view_clients: false,
+    manage_cases: false,
+    access_billing: false,
+    admin_rights: false,
+  },
+};
+
+export default function CreateStaffPage() {
   function onSubmit(values) {
     console.log("New staff data:", values);
     // TODO: send values to API (e.g. /api/staff)
@@ -58,13 +57,17 @@ export default function CreateStaffPage() {
         <h3 className="text-black font-semibold heading-lg">
           Create New Staff
         </h3>
-        <p className="text-[#6e6e6e] mt-2">
+        <p className="text-[#6e6e6e] mt-2 text-sm">
           This is the first detail clients will see when searching for legal
           services on TheLawApp. If you're a sole practitioner, simply use your
           full name. If you're part of a firm, enter your official business name
           to ensure consistency and credibility across your profile.
         </p>
-        <FormWrapper onSubmit={onSubmit}>
+        <FormWrapper
+          onSubmit={onSubmit}
+          schema={staffSchema}
+          defaultValues={defaultValues}
+        >
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">
               <AvatarUploader name="companyLogo" />
@@ -72,15 +75,15 @@ export default function CreateStaffPage() {
 
             <div className="w-full md:w-1/2 flex flex-col gap-4">
               <TextInput
-                name="staffName"
+                name="fullName"
                 label="Staff Name"
                 placeholder="Enter Staff Name"
                 textColor="text-[#4b4949]"
               />
               <TextInput
-                name="staffEmail"
-                label="Email Address"
-                placeholder="example@example.com"
+                name="designation"
+                label="Designation"
+                placeholder="i.e. Manager, Lawyer etc"
                 textColor="text-[#4b4949]"
               />
             </div>
@@ -88,15 +91,16 @@ export default function CreateStaffPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
             <TextInput
-              name="phoneNumber"
-              label="Phone Number"
-              placeholder="XXXXXXX"
+              name="email"
+              label="Email Address"
+              placeholder="example@example.com"
               textColor="text-[#4b4949]"
             />
             <TextInput
-              name="designation"
-              label="Designation"
-              placeholder="i.e. Manager, Lawyer etc"
+              type="password"
+              name="password"
+              label="Password"
+              placeholder="********"
               textColor="text-[#4b4949]"
             />
           </div>
@@ -104,67 +108,26 @@ export default function CreateStaffPage() {
           <h3 className="text-black font-semibold heading-lg mt-6">
             Set Permissions
           </h3>
-          <p className="text-[#6e6e6e] mt-2">
+          <p className="text-[#6e6e6e] mt-2 text-sm">
             This is the first detail clients will see when searching for legal
             services on TheLawApp. If you're a sole practitioner, simply use
             your full name. If you're part of a firm, enter your official
             business name to ensure consistency and credibility across your
             profile.
           </p>
-          <FormField
-            control={form.control}
-            name="permissions"
-            render={() => (
-              <FormItem>
-                <div className="space-y-3">
-                  {[
-                    "View Clients",
-                    "Manage Cases",
-                    "Access Billing",
-                    "Admin Rights",
-                  ].map((perm) => (
-                    <FormField
-                      key={perm}
-                      control={form.control}
-                      name="permissions"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={perm}
-                            className="flex flex-row items-start space-y-0"
-                          >
-                            <FormControl>
-                              <input
-                                type="checkbox"
-                                className="h-4 w-4"
-                                checked={field.value?.includes(perm)}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    field.onChange([
-                                      ...(field.value || []),
-                                      perm,
-                                    ]);
-                                  } else {
-                                    field.onChange(
-                                      field.value.filter((val) => val !== perm)
-                                    );
-                                  }
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal cursor-pointer">
-                              {perm}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {permissions.map((perm) => (
+            <CheckboxInput
+              key={perm.value}
+              name={`permissions.${perm.value}`}
+              label={perm.label}
+            />
+          ))}
+
+          <div className="flex justify-center">
+            <Button type="submit" className="cursor-pointer">
+              Create Staff
+            </Button>
+          </div>
         </FormWrapper>
       </div>
       {/* <Form {...form}>
