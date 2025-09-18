@@ -9,6 +9,7 @@ import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
+import { useGetCountryListQuery, useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
 
 export const demoLocations = [
   {
@@ -56,7 +57,7 @@ export const demoLocations = [
   },
   {
     countryId: "2",
-    slug: "usa",
+    slug: "us",
     name: "United States",
     cities: [
       {
@@ -131,10 +132,17 @@ export default function LawFirmRegisterStepOne() {
   const [selectedCity, setSelectedCity] = useState(null);
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
-  const countries = demoLocations.map((c) => ({
+
+  const { data: countriesData } = useGetCountryListQuery();
+  const { data: zipCodeData } = useGetZipCodeListQuery();
+
+
+  const countries = countriesData?.data?.map((c) => ({
     value: c.slug,
     label: c.name,
   }));
+
+
 
   const cities =
     demoLocations
@@ -146,6 +154,11 @@ export default function LawFirmRegisterStepOne() {
       .find((c) => c.slug === selectedCountry)
       ?.cities.find((city) => city.id === selectedCity)
       ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
+
+  // const zipcodes =
+  //   zipCodeData?.data?.find((c) => c.slug === selectedCountry)
+  //     ?.cities.find((city) => city.id === selectedCity)
+  //     ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
 
 
 
