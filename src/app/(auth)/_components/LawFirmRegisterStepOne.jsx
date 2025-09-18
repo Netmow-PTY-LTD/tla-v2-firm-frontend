@@ -7,7 +7,7 @@ import SelectInput from "@/components/form/SelectInput";
 import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
-import { nextStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
+import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
 
 export const demoLocations = [

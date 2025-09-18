@@ -3,9 +3,9 @@ import React from 'react';
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import {
-  useAuthUserInfoQuery,
-  useUpdateUserDataMutation,
-} from '@/store/features/auth/authApiService';
+  useGetFirmUserInfoQuery,
+  useUpdateFirmDataMutation,
+} from '@/store/firmFeatures/firmAuth/firmAuthApiService';
 
 import PhotoGallery from './components/PhotoGallery';
 import VideoGallery from './components/VideoGallery';
@@ -19,14 +19,14 @@ export default function Media() {
     isError,
     error,
     refetch,
-  } = useAuthUserInfoQuery(undefined, {
+  } = useGetFirmUserInfoQuery(undefined, {
   refetchOnMountOrArgChange: false,
   refetchOnReconnect: false,
   refetchOnFocus: false,
   keepUnusedDataFor: 600, // keep data for 10 minutes
 });
   const [updatePhotosData, { isLoading: photosIsLoading }] =
-    useUpdateUserDataMutation();
+    useUpdateFirmDataMutation();
 
 
 

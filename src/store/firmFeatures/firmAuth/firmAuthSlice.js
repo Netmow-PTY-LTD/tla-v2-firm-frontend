@@ -6,8 +6,8 @@ const initialState = {
   token: null,
 };
 
-const authSlice = createSlice({
-  name: "auth",
+const firmAuthSlice = createSlice({
+  name: "firmAuth",
   initialState,
   reducers: {
     setUser: (state, action) => {
@@ -24,9 +24,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, logOut } = authSlice.actions;
+export const { setUser, logOut } = firmAuthSlice.actions;
 
-export default authSlice.reducer;
+export default firmAuthSlice.reducer;
 
-export const useCurrentToken = (state) => state.auth.token;
-export const selectCurrentUser = (state) => state.auth.user;
+
+// Corrected selectors
+export const selectCurrentToken = (state) => state.firmAuth.token;
+export const selectCurrentUser = (state) => state.firmAuth?.user;

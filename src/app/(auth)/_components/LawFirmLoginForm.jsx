@@ -6,8 +6,9 @@ import PasswordInput from "@/components/form/PasswordInput";
 import TextInput from "@/components/form/TextInput";
 import { verifyToken } from "@/helpers/verifyToken";
 import { loginValidationSchema } from "@/schema/auth/authValidation.schema";
-import { useAuthLoginMutation } from "@/store/features/auth/authApiService";
-import { setUser } from "@/store/features/auth/authSlice";
+import { useLoginFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+
+import { setUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -18,7 +19,7 @@ const LawFirmLoginForm = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const [authLogin, { isLoading }] = useAuthLoginMutation();
+  const [authLogin, { isLoading }] =  useLoginFirmMutation();
 
   const onSubmit = async (data) => {
     setLoading(true);
