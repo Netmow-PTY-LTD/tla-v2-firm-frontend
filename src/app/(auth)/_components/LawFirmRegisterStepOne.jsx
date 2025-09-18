@@ -8,6 +8,7 @@ import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
+import PasswordInput from "@/components/form/PasswordInput";
 
 export const demoLocations = [
   {
@@ -149,26 +150,44 @@ export default function LawFirmRegisterStepOne() {
 
 
   const defaultValues = {
-    name: formData.name,
-    country: formData.country,
-    city: formData.city,
-    AreaZipcode: formData.AreaZipcode,
-    phone: formData.phone,
-    email: formData.email,
-    website: formData.website,
+    firmName: formData.firmName,
     registrationNumber: formData.registrationNumber,
-    yearOfEstablishment: formData.yearOfEstablishment,
-  }
+    yearEstablished: formData.yearEstablished,
+    officeAddress: formData.contactInfo.officeAddress,
+    country: formData.contactInfo.country,
+    city: formData.contactInfo.city,
+    AreaZipcode: formData.contactInfo.AreaZipcode, // optional if needed
+    phone: formData.contactInfo.phone,
+    email: formData.contactInfo.email,
+    password: formData.password,
 
+    website: formData.contactInfo.officialWebsite,
+  };
 
   const onSubmit = (data) => {
+    console.log("Step One Submitted ==>", data);
 
-    console.log('check step one data ==>',data)
-    // 1️ Save step data to Redux
-    dispatch(setFormData(data));
-    // 2 Move to next step
+    dispatch(
+      setFormData({
+        firmName: data.firmName,
+        registrationNumber: data.registrationNumber,
+        yearEstablished: data.yearEstablished,
+        email: data.email,
+        password: data.password,
+        contactInfo: {
+          officeAddress: data.officeAddress,
+          country: data.country,
+          city: data.city,
+          phone: data.phone,
+          email: data.email,
+          officialWebsite: data.website,
+        },
+      })
+    );
+
     dispatch(nextStep());
   };
+
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -185,12 +204,12 @@ export default function LawFirmRegisterStepOne() {
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepOneSchema}
-            // defaultValues={defaultValues}
+          // defaultValues={defaultValues}
 
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
-                name="name"
+                name="firmName"
                 label="Law Firm Name"
                 placeholder="i.e. ABC LLC"
               />
@@ -226,15 +245,20 @@ export default function LawFirmRegisterStepOne() {
               />
 
               <TextInput
-                name="phone"
-                label="Phone Number"
-                placeholder="i.e. +1 (123) 456-7890"
-              />
-
-              <TextInput
                 name="email"
                 label="Email"
                 placeholder="i.e. abc@example.com"
+              />
+              <PasswordInput
+                name="password"
+                label="Password"
+                placeholder="e.g. AbcFirm@2025"
+                type="password"
+              />
+              <TextInput
+                name="phone"
+                label="Phone Number"
+                placeholder="i.e. +1 (123) 456-7890"
               />
 
               <TextInput
@@ -283,3 +307,12 @@ export default function LawFirmRegisterStepOne() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+

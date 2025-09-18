@@ -28,7 +28,7 @@ export default function License() {
     <div className="max-w-[900px] mx-auto">
 
       <div className="mb-6 ">
-        <h3 className="text-2xl font-semibold  mb-2">
+        <h3 className="text-black font-semibold heading-lg mb-2">
           License Details
         </h3>
         <p className="text-gray-600">

@@ -45,7 +45,7 @@ export default function Locations() {
             {/* Top Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-semibold">Manage Locations</h2>
+                    <h3 className="text-black font-semibold heading-lg mb-2">Manage Locations</h3>
                     <p className="text-gray-600 text-sm">
                         Add and manage your office or branch locations with map details.
                     </p>

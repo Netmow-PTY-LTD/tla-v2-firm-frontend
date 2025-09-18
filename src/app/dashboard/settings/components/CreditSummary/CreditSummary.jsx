@@ -111,9 +111,9 @@ export const CreditSummary = () => {
     <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+        <h3 className="text-black font-semibold heading-lg">
           Billing Details
-        </h1>
+        </h3>
         <p className="text-gray-600">
           Track your credit usage and transaction history
         </p>

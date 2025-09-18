@@ -1,26 +1,34 @@
+
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   currentStep: 1,
   formData: {
-    // Step 1
-    name: '',
-    country: '',
-    city: '',
-    AreaZipcode: '',
-    phone: '',
+    // Root level
     email: '',
-    website: '',
+    password: '',
+    firmName: '',
     registrationNumber: '',
-    yearOfEstablishment: '',
-    // Step 2
-    licenseType: '',
-    licenseNumber: '',
-    issuedBy: '',
-    validUntil: '',
-    // Add more fields for future steps
+    yearEstablished: '',
+    // Contact Info
+    contactInfo: {
+      officeAddress: '',
+      country: '',
+      city: '',
+      phone: '',
+      email: '',
+      officialWebsite: '',
+    },
+    // License Details
+    licenseDetails: {
+      licenseType: '',
+      licenseNumber: '',
+      issuedBy: '',
+      validUntil: '',
+    },
   },
-  totalSteps: 2, // set total steps here
+  totalSteps: 2, // Step 1 = General info, Step 2 = License info
 };
 
 const lawFirmRegistrationSlice = createSlice({
@@ -28,8 +36,19 @@ const lawFirmRegistrationSlice = createSlice({
   initialState,
   reducers: {
     setFormData: (state, action) => {
-      // Merge step data into formData
-      state.formData = { ...state.formData, ...action.payload };
+      // Merge deeply instead of overwriting entire formData
+      state.formData = {
+        ...state.formData,
+        ...action.payload,
+        contactInfo: {
+          ...state.formData.contactInfo,
+          ...action.payload.contactInfo,
+        },
+        licenseDetails: {
+          ...state.formData.licenseDetails,
+          ...action.payload.licenseDetails,
+        },
+      };
     },
     setCurrentStep: (state, action) => {
       state.currentStep = action.payload;
@@ -44,11 +63,16 @@ const lawFirmRegistrationSlice = createSlice({
         state.currentStep -= 1;
       }
     },
-    resetRegistration: () => initialState, // reset all
+    resetRegistration: () => initialState,
   },
 });
 
-export const { setFormData, setCurrentStep, nextStep, previousStep, resetRegistration } =
-  lawFirmRegistrationSlice.actions;
+export const {
+  setFormData,
+  setCurrentStep,
+  nextStep,
+  previousStep,
+  resetRegistration,
+} = lawFirmRegistrationSlice.actions;
 
 export default lawFirmRegistrationSlice.reducer;
