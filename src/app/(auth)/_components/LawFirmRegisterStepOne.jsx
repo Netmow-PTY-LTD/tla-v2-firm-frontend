@@ -8,6 +8,7 @@ import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
+import PasswordInput from "@/components/form/PasswordInput";
 
 export const demoLocations = [
   {
@@ -248,7 +249,7 @@ export default function LawFirmRegisterStepOne() {
                 label="Email"
                 placeholder="i.e. abc@example.com"
               />
-              <TextInput
+              <PasswordInput
                 name="password"
                 label="Password"
                 placeholder="e.g. AbcFirm@2025"
@@ -259,9 +260,6 @@ export default function LawFirmRegisterStepOne() {
                 label="Phone Number"
                 placeholder="i.e. +1 (123) 456-7890"
               />
-
-
-
 
               <TextInput
                 name="website"

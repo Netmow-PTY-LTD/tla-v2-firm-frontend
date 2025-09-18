@@ -10,13 +10,13 @@ import { previousStep, setFormData } from "@/store/features/auth/lawFirmRegistra
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
 import { useAuthFirmRegisterMutation } from "@/store/features/auth/authApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useRouter } from "next/navigation";
 
 export default function LawFirmRegisterStepTwo() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData); // get previous step data
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [firmRegister] = useAuthFirmRegisterMutation();
+  const router = useRouter()
+  const [firmRegister, { isLoading }] = useAuthFirmRegisterMutation();
 
   const defaultValues = {
     licenseType: formData.licenseDetails.licenseType,
@@ -27,7 +27,7 @@ export default function LawFirmRegisterStepTwo() {
 
   const onSubmit = async (data) => {
     try {
-      setIsLoading(true);
+
 
       // 1️⃣ Save Step 2 data inside licenseDetails
       dispatch(
@@ -57,21 +57,19 @@ export default function LawFirmRegisterStepTwo() {
       console.log("API Response ==>", res);
 
       if (res.success) {
-        showSuccessToast(res?.message || "Firm Register successfully");
-        router.push("/dashboard");  // redirect after success
+        showSuccessToast(res?.message || "Firm registered successfully");
+        router.push("/dashboard"); // ✅ redirect after success
       }
 
-
     } catch (error) {
+      const errorMessage = error?.data?.message || "An error occurred";
+      showErrorToast(errorMessage);
       console.error(
         "Registration failed:",
         error?.response?.data || error.message
       );
 
-      const errorMessage = error?.data?.message || "An error occurred";
-      showErrorToast(errorMessage);
-    } finally {
-      setIsLoading(false);
+
     }
   };
 
@@ -123,6 +121,7 @@ export default function LawFirmRegisterStepTwo() {
                 name="validUntil"
                 label="Valid Until"
                 type="date"
+                inputClassName="h-[44px] inline-block  focus-visible:ring-inset"
               />
             </div>
 
@@ -131,14 +130,16 @@ export default function LawFirmRegisterStepTwo() {
                 type="button"
                 className="btn-default btn-outline-black"
                 onClick={() => dispatch(previousStep())}
+                disabled={isLoading} // ✅ prevent step change while submitting
               >
                 Back
               </button>
               <button
                 type="submit"
                 className="btn-default bg-[var(--color-special)]"
+                disabled={isLoading} // ✅ disable while submitting
               >
-                Finish
+                {isLoading ? "Submitting..." : "Finish"}
               </button>
             </div>
           </FormWrapper>
