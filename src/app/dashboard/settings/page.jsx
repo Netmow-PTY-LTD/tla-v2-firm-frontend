@@ -13,7 +13,7 @@ import { TransactionHistory } from "./_components/TransactionHistory/Transaction
 export default function DashboardSettings() {
   const accordionItems = [
     { id: "company-details", title: "Company Details", content: <Firm /> },
-    { id: "licenses", title: "Licenses & Credentials", content: <Licenses /> },
+    { id: "licenses", title: "Certificates & Licenses", content: <Licenses /> },
     {
       id: "managing-partner",
       title: "Managing Partner",
@@ -25,7 +25,11 @@ export default function DashboardSettings() {
       content: <BillingAndTax />,
     },
     { id: "media", title: "Photos & Videos", content: <Media /> },
-    { id: "locations", title: "Locations", content: <Locations /> },
+    {
+      id: "locations",
+      title: "Other Office Locations",
+      content: <Locations />,
+    },
     // { id: "transaction-history", title: "Transaction History", content: <TransactionHistory /> },
     // { id: "credit-summary", title: "Credit Summary", content: <CreditSummary /> },
   ];
