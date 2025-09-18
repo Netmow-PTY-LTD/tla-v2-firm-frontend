@@ -80,11 +80,11 @@ const LawFirmLoginForm = () => {
         <FormWrapper
           onSubmit={onSubmit}
           schema={loginValidationSchema}
-        // defaultValues={{
-        //   email: localStorage.getItem("userEmail") || "",
-        //   password: "",
-        //   rememberMe: localStorage.getItem("rememberMe") === "true",
-        // }}
+          // defaultValues={{
+          //   email: localStorage.getItem("userEmail") || "",
+          //   password: "",
+          //   rememberMe: localStorage.getItem("rememberMe") === "true",
+          // }}
         >
           <div className="space-y-5">
             <TextInput
@@ -93,7 +93,6 @@ const LawFirmLoginForm = () => {
               name="email"
               placeholder="John@example.com"
             />
-
 
             <PasswordInput
               label="Password"

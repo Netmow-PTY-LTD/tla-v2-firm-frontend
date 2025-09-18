@@ -5,7 +5,7 @@ import styles from "@/components/common/header/Header.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { Gavel } from "lucide-react";
+import { Building2, Gavel } from "lucide-react";
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
@@ -93,7 +93,7 @@ export default function Header() {
                 className={`${styles.btn_register} ${styles.btn_register_mobile}`}
               >
                 <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
-                  <Gavel className="w-4 h-4 text-black" />
+                  <Building2 className="w-4 h-4 text-black" />
                 </div>
                 <span>List Your Law Firm</span>
               </Link>
