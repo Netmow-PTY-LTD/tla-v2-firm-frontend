@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { BellRing, PanelLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -14,7 +14,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
 
   const token = Cookies.get("token");
   const { data: currentUser, isLoading: isCurrentUserLoading } =
-    useAuthUserInfoQuery(undefined, {
+    useGetFirmUserInfoQuery(undefined, {
       skip: !token,
     });
 

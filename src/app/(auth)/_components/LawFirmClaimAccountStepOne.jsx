@@ -32,10 +32,10 @@ import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { safeJsonParse } from "@/helpers/safeJsonParse";
 import Cookies from "js-cookie";
-import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
-import { nextStep } from "@/store/features/auth/lawFirmRegistrationSlice";
+import { nextStep } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { useDispatch } from "react-redux";
 import MultipleTagSelector from "@/components/form/MultipleTagSelector";
+import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
 
 const germanCities = [
   { id: 1, name: "Berlin" },

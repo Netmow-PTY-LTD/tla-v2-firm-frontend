@@ -1,102 +1,115 @@
-import { baseApi } from "@/store/baseApi/baseApi";
+import { firmBaseApi } from "@/store/baseApi/firmBaseApi";
 
-const authApi = baseApi.injectEndpoints({
+const firmAuthApi = firmBaseApi.injectEndpoints({
   endpoints: (builder) => ({
-    authLogin: builder.mutation({
+    // ----------------------------
+    // Firm Authentication
+    // ----------------------------
+    loginFirm: builder.mutation({
       query: (data) => ({
         url: "/auth/login",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
 
-    authFirmRegister: builder.mutation({
+    registerFirm: builder.mutation({
       query: (data) => ({
         url: "/auth/register/firm",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
 
-    authStaffRegister: builder.mutation({
+    registerStaff: builder.mutation({
       query: (data) => ({
         url: "/auth/register/staff",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
-    authLogOut: builder.mutation({
+
+    authLogout: builder.mutation({
       query: () => ({
         url: "/auth/logout",
         method: "POST",
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
-    authUserInfo: builder.query({
+
+    getFirmUserInfo: builder.query({
       query: () => ({
         url: "/auth/user/userInfo",
         method: "GET",
       }),
-      providesTags: ["userInfo"],
+      providesTags: ["firmInfo"],
     }),
-    updateUserData: builder.mutation({
+
+    updateFirmData: builder.mutation({
       query: (data) => ({
         url: "/user/update",
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
-    changePassword: builder.mutation({
+
+    changeFirmPassword: builder.mutation({
       query: (data) => ({
         url: "/auth/change-password",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
-    forgotPassowrd: builder.mutation({
+
+    forgotFirmPassword: builder.mutation({
       query: (data) => ({
         url: "/auth/forgot-password",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
-    resetPassowrd: builder.mutation({
+
+    resetFirmPassword: builder.mutation({
       query: (data) => ({
         url: "/auth/reset-password",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["userInfo"],
+      invalidatesTags: ["firmInfo"],
     }),
-    verifyEmail: builder.mutation({
+
+    verifyFirmEmail: builder.mutation({
       query: (data) => ({
         url: "/auth/verify-email",
         method: "POST",
         body: data,
       }),
     }),
-    resendVerificationEmail: builder.mutation({
+
+    resendFirmVerificationEmail: builder.mutation({
       query: (data) => ({
         url: "/auth/resend-verification-email",
         method: "POST",
         body: data,
       }),
     }),
-    changeUserAccountStats: builder.mutation({
+
+    changeFirmAccountStatus: builder.mutation({
       query: (payload) => ({
         url: `/auth/users/${payload.userId}/status`,
         method: "PATCH",
         body: payload.data,
       }),
-      invalidatesTags: ["all-users"],
+      invalidatesTags: ["all-firms"],
     }),
-    sendOtp: builder.mutation({
+
+    sendFirmOtp: builder.mutation({
       query: (data) => ({
         url: "/auth/send-otp",
         method: "POST",
@@ -104,14 +117,15 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    verifyOtp: builder.mutation({
+    verifyFirmOtp: builder.mutation({
       query: (data) => ({
         url: "/auth/verify-otp",
         method: "POST",
         body: data,
       }),
     }),
-    changeEmail: builder.mutation({
+
+    changeFirmEmail: builder.mutation({
       query: (data) => ({
         url: "/auth/change-email",
         method: "POST",
@@ -119,32 +133,26 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    updateUserDefalultPic: builder.mutation({
-      query: (data) => ({
-        url: `/user/update/default/${data.userId}`,
-        method: "PATCH",
-        body: data?.data,
-      }),
-      invalidatesTags: ["lead-list-admin"],
-    }),
+   
+    
   }),
 });
 
 export const {
-  useAuthLoginMutation,
-  useAuthFirmRegisterMutation,
-  useAuthStaffRegisterMutation,
-  useAuthUserInfoQuery,
-  useAuthLogOutMutation,
-  useUpdateUserDataMutation,
-  useChangePasswordMutation,
-  useResetPassowrdMutation,
-  useForgotPassowrdMutation,
-  useVerifyEmailMutation,
-  useResendVerificationEmailMutation,
-  useChangeUserAccountStatsMutation,
-  useChangeEmailMutation,
-  useVerifyOtpMutation,
-  useSendOtpMutation,
-  useUpdateUserDefalultPicMutation,
-} = authApi;
+  useLoginFirmMutation,
+  useRegisterFirmMutation,
+  useRegisterStaffMutation,
+  useAuthLogoutMutation,
+  useGetFirmUserInfoQuery,
+  useUpdateFirmDataMutation,
+  useChangeFirmPasswordMutation,
+  useForgotFirmPasswordMutation,
+  useResetFirmPasswordMutation,
+  useVerifyFirmEmailMutation,
+  useResendFirmVerificationEmailMutation,
+  useChangeFirmAccountStatusMutation,
+  useSendFirmOtpMutation,
+  useVerifyFirmOtpMutation,
+  useChangeFirmEmailMutation,
+
+} = firmAuthApi;
