@@ -5,7 +5,7 @@ import { logOut, setUser } from "../firmFeatures/firmAuth/firmAuthSlice";
 
 // Basic baseQuery with auth header
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`,
+  baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/firm`,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const state = getState();
@@ -16,8 +16,6 @@ const baseQuery = fetchBaseQuery({
     return headers;
   },
 });
-
-
 
 // Enhanced baseQuery with refresh token logic
 const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
@@ -58,7 +56,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         //     method: 'POST',
         //   }).catch(console.error);
 
-        await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+        await api.dispatch(firmBaseApi.endpoints.logoutFirm.initiate()).unwrap();
       }
     } catch (err) {
       api.dispatch(logOut());
@@ -67,7 +65,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
       //     method: 'POST',
       //   }).catch(console.error);
 
-      await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+      await api.dispatch(firmBaseApi.endpoints.logoutFirm.initiate()).unwrap();
     }
   }
 
@@ -75,60 +73,12 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
 };
 
 // Create the API instance
-export const baseApi = createApi({
-  reducerPath: "baseApi",
+export const firmBaseApi = createApi({
+  reducerPath: "firmBaseApi",
   baseQuery: baseQueryWithRefreshToken,
   tagTypes: [
-    "service",
-    "userInfo",
-    "Country",
-    "question",
-    "option",
-    "range",
-    "leadService",
-    "lead",
-    "user",
-    "response",
-    "notification",
-    "credit-payment",
-    "payment-method",
-    "user-credit-stats",
-    "next-offer",
-    "transaction-history",
-    "notificationPreferences",
-    "app-settings",
-    "category",
-    "transaction-history-list",
-    "response-my",
-    "response-list",
-    "lead-list-admin",
-    "lead-list",
-    "lead-wise-response",
-    "Country-list",
-    "zipcode",
-    "zipcode-list",
-    "range-list",
-    "public-user",
-    "public-user-list",
-    "public-category",
-    "category-list",
-    "question-wise-option",
-    "option-list",
-    "service-wise-question",
-    "question-list",
-    "service-list",
-    "country-wise-map",
-    "country-wise-map-list",
-    "all-users",
-    "request",
-    "requests",
-    "lawyer-suggestion",
-    "lead-my",
-    "recent-visitor",
-    "client-cases",
-    "all-client",
-    "all-lawyer",
-    "dashboard-stats",
+    "firmInfo",   // for individual firm info queries/mutations
+    "all-firms",  // for admin-level firm list updates
   ],
   endpoints: () => ({}),
 });

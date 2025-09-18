@@ -6,9 +6,9 @@ import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 
 import { useDispatch, useSelector } from "react-redux";
-import { previousStep, setFormData } from "@/store/features/auth/lawFirmRegistrationSlice";
+import { previousStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
-import { useAuthFirmRegisterMutation } from "@/store/features/auth/authApiService";
+import {  useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +16,7 @@ export default function LawFirmRegisterStepTwo() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData); // get previous step data
   const router = useRouter()
-  const [firmRegister, { isLoading }] = useAuthFirmRegisterMutation();
+  const [firmRegister, { isLoading }] = useRegisterFirmMutation();
 
   const defaultValues = {
     licenseType: formData.licenseDetails.licenseType,

@@ -17,9 +17,9 @@ import Link from "next/link";
 import { userDummyImage } from "@/data/data";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { useAuthLogOutMutation } from "@/store/features/auth/authApiService";
-import { logOut } from "@/store/features/auth/authSlice";
+import { logOut } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthLogoutMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ export default function LawFirmProfileDropDown({ data, isCurrentUserLoading }) {
    * - Dispatches the logOut action to update the Redux store and clear user state.
    * - Redirects the user to the login page using the Next.js router.
    */
-  const [authLogout] = useAuthLogOutMutation();
+  const [authLogout] =  useAuthLogoutMutation();
   const handleLogout = () => {
     authLogout();
     dispatch(logOut());

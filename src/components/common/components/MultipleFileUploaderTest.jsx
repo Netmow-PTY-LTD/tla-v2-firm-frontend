@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';
 import { CloudUpload, Trash } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useUpdateUserDataMutation } from '@/store/features/auth/authApiService';
+import { useUpdateUserDataMutation } from '@/store/firmFeatures/firmAuth/firmAuthApiService';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
 import { useDeleteProfileVideoUrlMutation } from '@/store/features/admin/userApiService';
 

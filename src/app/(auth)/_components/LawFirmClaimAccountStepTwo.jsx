@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { previousStep } from "@/store/features/auth/lawFirmRegistrationSlice";
+import { previousStep } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { CloudUpload, Download, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
