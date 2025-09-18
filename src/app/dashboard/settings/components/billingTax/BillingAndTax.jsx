@@ -33,9 +33,9 @@ export default function BillingAndTax() {
 <div className="max-w-[900px] mx-auto">
   {/* Heading and Description */}
   <div className="mb-6">
-    <h1 className="text-2xl font-semibold text-gray-800">
+    <h3 className="text-black font-semibold heading-lg">
       Billing & Tax Information
-    </h1>
+    </h3>
     <p className="text-gray-600 mt-1">
       Please provide your billing details including contact email, IBAN, BIC/SWIFT code, Tax ID, and invoicing currency. This information will be used for generating invoices.
     </p>
