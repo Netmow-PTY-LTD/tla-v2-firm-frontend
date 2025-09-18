@@ -108,12 +108,12 @@ export function StaffDataTable({
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 py-4">
         <div className="text-sm">
           Showing {pageIndex * pageSize + 1}–
           {Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows} staff
         </div>
-        <div className="space-x-2 flex items-center">
+        <div className="space-x-2 flex flex-wrap gap-3 items-center">
           <Button
             variant="outline"
             size="sm"
@@ -123,7 +123,7 @@ export function StaffDataTable({
             Previous
           </Button>
 
-          <div className="flex items-center gap-1 text-sm">
+          <div className="flex flex-wrap items-center gap-1 text-sm">
             <span>Page</span>
             <select
               value={pageIndex + 1}
