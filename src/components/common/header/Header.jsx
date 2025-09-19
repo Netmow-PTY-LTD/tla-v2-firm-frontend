@@ -6,13 +6,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { Building2, Gavel } from "lucide-react";
+import { selectCurrentToken } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
+import { checkTokenValidity } from "@/helpers/checkTokenValidity";
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
 
   // ✅ Get token from Redux store with typing
-  // const token = useSelector((state: RootState) => state.auth.token)
-  //const validToken = checkValidity(token)
+  const token = useSelector(selectCurrentToken);
+  const validToken = checkTokenValidity(token);
+
+  console.log("Header token:", token);
 
   // ✅ Call API conditionally
   //   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
@@ -29,16 +33,6 @@ export default function Header() {
       return () => window.removeEventListener("scroll", handleScroll);
     }
   }, []);
-
-  // ✅ Define dashboard URL paths based on user type
-  //   const dashboardPaths: Record<UserData['regUserType'], string> = {
-  //     admin: '/admin',
-  //     lawyer: '/lawyer/dashboard',
-  //     client: '/client/dashboard',
-  //   }
-
-  //   const userType = currentUser?.data?.regUserType
-  //   const dashboardUrl = userType ? dashboardPaths[userType] : ''
 
   return (
     <header
@@ -84,20 +78,29 @@ export default function Header() {
                 </Link>
               </div>
             )} */}
-            <div className="flex items-center gap-4 flex-shrink-0">
-              <Link href="/login" className={styles.nav_link}>
-                <span>Log In</span>
-              </Link>
-              <Link
-                href="/register"
-                className={`${styles.btn_register} ${styles.btn_register_mobile}`}
-              >
-                <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
-                  <Building2 className="w-4 h-4 text-black" />
-                </div>
-                <span>List Your Law Firm</span>
-              </Link>
-            </div>
+
+            {validToken ? (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <Link href={"/dashboard"} className={styles.btn_register}>
+                  <span>Dashboard</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <Link href="/login" className={styles.nav_link}>
+                  <span>Log In</span>
+                </Link>
+                <Link
+                  href="/register"
+                  className={`${styles.btn_register} ${styles.btn_register_mobile}`}
+                >
+                  <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
+                    <Building2 className="w-4 h-4 text-black" />
+                  </div>
+                  <span>List Your Law Firm</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

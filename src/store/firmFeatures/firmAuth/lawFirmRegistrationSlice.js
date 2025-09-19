@@ -13,7 +13,7 @@ const initialState = {
     yearEstablished: '',
     // Contact Info
     contactInfo: {
-      officeAddress: '',
+      zipCode: '',
       country: '',
       city: '',
       phone: '',
@@ -22,7 +22,7 @@ const initialState = {
     },
     // License Details
     licenseDetails: {
-      licenseType: '',
+      certificationId: '',
       licenseNumber: '',
       issuedBy: '',
       validUntil: '',

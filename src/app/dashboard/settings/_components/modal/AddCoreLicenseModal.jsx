@@ -3,9 +3,37 @@ import SelectInput from "@/components/form/SelectInput";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import { Button } from "@/components/ui/button";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
+import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import Cookies from "js-cookie";
 import React from "react";
+import { useSelector } from "react-redux";
 
 export default function AddCoreLicenseModal() {
+  const token = Cookies.get("token");
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useGetFirmUserInfoQuery(undefined, {
+      skip: !token,
+    });
+  console.log("currentUser in AddCoreLicenseModal", currentUser);
+
+  const countryId =
+    currentUser?.data?.firmProfile?.contactInfo?.country ||
+    currentUser?.data?.firmProfile?.contactInfo?.country?._id ||
+    ""; // Default to Australia if not available
+
+  const {
+    data: certificationsList,
+    isLoading: isCertificationsListLoading,
+    isError,
+  } = useGetLawCertificationsListQuery({
+    countryId: countryId,
+    type: "optional",
+    page: 1,
+    limit: 10,
+  });
+  console.log("Certifications List:", certificationsList);
   const handleAddCoreLicense = () => {
     // Logic to open the modal
     console.log("Add Core License");

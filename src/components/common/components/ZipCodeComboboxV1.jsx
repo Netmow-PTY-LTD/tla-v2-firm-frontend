@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/command';
 import { Button } from '@/components/ui/button';
 
-export default function ZipCodeCombobox({ data = [], onChange }) {
+export default function ZipCodeComboboxV1({ data = [], onChange }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
 

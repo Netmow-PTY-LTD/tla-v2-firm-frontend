@@ -164,6 +164,26 @@ const publicApiService = baseApi.injectEndpoints({
         "request",
       ],
     }),
+
+    getLawCertificationsList: builder.query({
+      query: ({ countryId, type, search, age, limit }) => ({
+        url: `/lawfirm-certification/list`,
+        method: "GET",
+        params: { countryId, type, search, age, limit },
+      }),
+      providesTags: ["lawfirm-certification", "certification"],
+    }),
+
+    //  city
+
+    getCityList: builder.query({
+      query: (params) => ({
+        url: `/country/city/list`,
+        method: "GET",
+        params,
+      }),
+      providesTags: ["city-list"],
+    }),
   }),
 });
 
@@ -188,4 +208,6 @@ export const {
   useGetAllRequestsFromClientQuery,
   useGetRequestFromClientByIdQuery,
   useCreateRatingMutation,
+  useGetLawCertificationsListQuery,
+  useGetCityListQuery,
 } = publicApiService;
