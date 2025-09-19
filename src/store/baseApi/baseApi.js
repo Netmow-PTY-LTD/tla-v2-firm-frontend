@@ -17,8 +17,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-
-
 // Enhanced baseQuery with refresh token logic
 const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
   let result = await baseQuery(arg, api, extraOptions);
@@ -129,6 +127,8 @@ export const baseApi = createApi({
     "all-client",
     "all-lawyer",
     "dashboard-stats",
+    "lawfirm-certification",
+    "certification",
   ],
   endpoints: () => ({}),
 });

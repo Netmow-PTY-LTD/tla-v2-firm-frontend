@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useState } from "react";
@@ -18,15 +16,12 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
 
-
-
-
   // filter options based on query
   const filteredOptions =
     query === ""
       ? options
       : options?.filter((item) =>
-          item.label.toLowerCase().includes(query.toLowerCase())
+          item?.label?.toLowerCase()?.includes(query.toLowerCase())
         );
 
   return (
@@ -45,7 +40,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
           >
             <div className="relative">
               <ComboboxInput
-                className="tla-form-control w-full"
+                className="border border-gray-200 rounded-md w-full h-[44px] px-4"
                 displayValue={(val) =>
                   options?.find((o) => o.value === val)?.label || ""
                 }
@@ -58,16 +53,14 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
 
               {filteredOptions?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredOptions.map((item) => (
+                  {filteredOptions.map((item, index) => (
                     <ComboboxOption
-                      key={item.value}
+                      key={index}
                       value={item.value}
                       className={({ active }) =>
                         cn(
                           "cursor-pointer select-none relative py-2 pl-10 pr-4",
-                          active
-                            ? "bg-blue-100 text-blue-900"
-                            : "text-gray-900"
+                          active ? "bg-blue-100 text-blue-900" : "text-gray-900"
                         )
                       }
                     >
@@ -107,22 +100,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
 
 export default InputCombobox;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //  ----------------------------------- watch moode feature -------------------------------
-
 
 // "use client";
 

@@ -29,6 +29,7 @@ export const store = configureStore({
     [firmBaseApi.reducerPath]: firmBaseApi.reducer,
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
+    firmAuth: persistedAuthReducer,
     lawFirmRegistration: lawFirmRegistrationReducer, // ,
   },
 
@@ -39,7 +40,7 @@ export const store = configureStore({
       },
     })
       .concat(firmBaseApi.middleware) //  add both middlewares,
-      .concat(baseApi.middleware)
+      .concat(baseApi.middleware),
 });
 
 export const persistor = persistStore(store);
