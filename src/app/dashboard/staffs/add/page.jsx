@@ -48,7 +48,18 @@ const defaultValues = {
 export default function CreateStaffPage() {
   function onSubmit(values) {
     console.log("New staff data:", values);
+
+    const { fullName, designation, email, password, permissions } = values;
     // TODO: send values to API (e.g. /api/staff)
+
+    const payload = {
+      fullName,
+      designation,
+      email,
+      password,
+      permissions,
+    };
+    console.log("Payload to send:", payload);
   }
 
   return (

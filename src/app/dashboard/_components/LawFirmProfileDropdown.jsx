@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { logOut } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthLogoutMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { slugify } from "@/helpers/generateSlug";
 
 export default function LawFirmProfileDropDown({
   currentUser,
@@ -46,7 +47,7 @@ export default function LawFirmProfileDropDown({
    * - Dispatches the logOut action to update the Redux store and clear user state.
    * - Redirects the user to the login page using the Next.js router.
    */
-  const [authLogout] =  useAuthLogoutMutation();
+  const [authLogout] = useAuthLogoutMutation();
   const handleLogout = () => {
     authLogout();
     dispatch(logOut());
@@ -99,7 +100,10 @@ export default function LawFirmProfileDropDown({
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href="/"
+                href={`/company-profile/${slugify(
+                  currentUser?.firmProfile?.firmName
+                )}`}
+                target="_blank"
                 className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >
                 <span>Company Profile</span>
