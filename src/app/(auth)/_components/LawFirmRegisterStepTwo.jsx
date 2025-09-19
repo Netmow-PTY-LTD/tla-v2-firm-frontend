@@ -6,7 +6,7 @@ import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 
 import { useDispatch, useSelector } from "react-redux";
-import { previousStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
+import { previousStep, resetRegistration, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
 import { useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
@@ -58,6 +58,7 @@ export default function LawFirmRegisterStepTwo() {
 
       if (res.success) {
         showSuccessToast(res?.message || "Firm registered successfully");
+        dispatch(resetRegistration())
         router.push("/dashboard"); // ✅ redirect after success
       }
 

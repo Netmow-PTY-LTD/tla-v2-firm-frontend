@@ -36,19 +36,14 @@ export const lawFirmRegStepOneSchema = z.object({
       "Invalid phone number format"
     ),
 
-  email: z
-    .string()
-    .email("Invalid email address"),
+  email: z.email("Invalid email address"),
 
   password: z
     .string()
     .min(6, "Password must be at least 6 characters long"),
 
-  website: z
-    .string()
-    .url("Invalid website URL")
-    .optional()
-    .or(z.literal("")), // allow empty string
+  website: z.url("Invalid website URL")
+    .optional(),
 
   registrationNumber: z
     .string()
