@@ -45,7 +45,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
           >
             <div className="relative">
               <ComboboxInput
-                className="tla-form-control w-full"
+                className=" w-full"
                 displayValue={(val) =>
                   options?.find((o) => o.value === val)?.label || ""
                 }
