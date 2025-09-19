@@ -17,7 +17,6 @@ export default function LawFirmRegisterStepOne() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
-
   const defaultValues = {
     firmName: formData.firmName,
     registrationNumber: formData.registrationNumber,
