@@ -129,6 +129,7 @@ export const baseApi = createApi({
     "dashboard-stats",
     "lawfirm-certification",
     "certification",
+    "city-list",
   ],
   endpoints: () => ({}),
 });

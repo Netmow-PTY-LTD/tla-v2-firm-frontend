@@ -25,7 +25,7 @@ export const lawFirmRegStepOneSchema = z.object({
     .string()
     .min(1, "City is required"),
 
-  AreaZipcode: z
+  zipCode: z
     .string()
     .min(1, "Address / Zipcode is required"),
 
@@ -36,26 +36,21 @@ export const lawFirmRegStepOneSchema = z.object({
       "Invalid phone number format"
     ),
 
-  email: z
-    .string()
-    .email("Invalid email address"),
+  email: z.email("Invalid email address"),
 
   password: z
     .string()
     .min(6, "Password must be at least 6 characters long"),
 
-  website: z
-    .string()
-    .url("Invalid website URL")
-    .optional()
-    .or(z.literal("")), // allow empty string
+  website: z.url("Invalid website URL")
+    .optional(),
 
   registrationNumber: z
     .string()
     .min(3, "Registration Number must be at least 3 characters")
     .max(50, "Registration Number must be less than 50 characters"),
 
-  yearOfEstablishment: z
+   yearEstablished: z
     .string()
     .regex(
       /^(19|20)\d{2}$/,

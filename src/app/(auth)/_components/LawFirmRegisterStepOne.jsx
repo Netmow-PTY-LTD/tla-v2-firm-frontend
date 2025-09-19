@@ -1,152 +1,21 @@
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
-import SelectInput from "@/components/form/SelectInput";
-import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
+import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
+import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
+import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
 
-export const demoLocations = [
-  {
-    countryId: "1",
-    slug: "germany",
-    name: "Germany",
-    cities: [
-      {
-        id: "c1",
-        name: "Berlin",
-        zipcodes: [
-          {
-            _id: "z1",
-            zipcode: "10115",
-            postalCode: "10115",
-            latitude: 52.532,
-            longitude: 13.384,
-            address: "Berlin Central",
-          },
-          {
-            _id: "z2",
-            zipcode: "10117",
-            postalCode: "10117",
-            latitude: 52.52,
-            longitude: 13.404,
-            address: "Berlin Mitte",
-          },
-        ],
-      },
-      {
-        id: "c2",
-        name: "Hamburg",
-        zipcodes: [
-          {
-            _id: "z3",
-            zipcode: "20095",
-            postalCode: "20095",
-            latitude: 53.55,
-            longitude: 10.0,
-            address: "Hamburg Altstadt",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    countryId: "2",
-    slug: "usa",
-    name: "United States",
-    cities: [
-      {
-        id: "c3",
-        name: "New York",
-        zipcodes: [
-          {
-            _id: "z4",
-            zipcode: "10001",
-            postalCode: "10001",
-            latitude: 40.75,
-            longitude: -73.997,
-            address: "Manhattan",
-          },
-        ],
-      },
-      {
-        id: "c4",
-        name: "San Francisco",
-        zipcodes: [
-          {
-            _id: "z5",
-            zipcode: "94103",
-            postalCode: "94103",
-            latitude: 37.774,
-            longitude: -122.419,
-            address: "SoMa District",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    countryId: "3",
-    slug: "canada",
-    name: "Canada",
-    cities: [
-      {
-        id: "c5",
-        name: "Toronto",
-        zipcodes: [
-          {
-            _id: "z6",
-            zipcode: "M5H 2N2",
-            postalCode: "M5H 2N2",
-            latitude: 43.653,
-            longitude: -79.383,
-            address: "Downtown Toronto",
-          },
-        ],
-      },
-      {
-        id: "c6",
-        name: "Vancouver",
-        zipcodes: [
-          {
-            _id: "z7",
-            zipcode: "V6B 1V2",
-            postalCode: "V6B 1V2",
-            latitude: 49.282,
-            longitude: -123.117,
-            address: "Gastown",
-          },
-        ],
-      },
-    ],
-  },
-];
+
 
 export default function LawFirmRegisterStepOne() {
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
-  const countries = demoLocations.map((c) => ({
-    value: c.slug,
-    label: c.name,
-  }));
-
-  const cities =
-    demoLocations
-      .find((c) => c.slug === selectedCountry)
-      ?.cities.map((city) => ({ value: city.id, label: city.name })) || [];
-
-  const zipcodes =
-    demoLocations
-      .find((c) => c.slug === selectedCountry)
-      ?.cities.find((city) => city.id === selectedCity)
-      ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
-
 
 
   const defaultValues = {
@@ -156,7 +25,7 @@ export default function LawFirmRegisterStepOne() {
     officeAddress: formData.contactInfo.officeAddress,
     country: formData.contactInfo.country,
     city: formData.contactInfo.city,
-    AreaZipcode: formData.contactInfo.AreaZipcode, // optional if needed
+    zipCode: formData.contactInfo.zipCode, // optional if needed
     phone: formData.contactInfo.phone,
     email: formData.contactInfo.email,
     password: formData.password,
@@ -165,7 +34,6 @@ export default function LawFirmRegisterStepOne() {
   };
 
   const onSubmit = (data) => {
-    console.log("Step One Submitted ==>", data);
 
     dispatch(
       setFormData({
@@ -175,7 +43,7 @@ export default function LawFirmRegisterStepOne() {
         email: data.email,
         password: data.password,
         contactInfo: {
-          officeAddress: data.officeAddress,
+          zipCode: data.zipCode, // optional if needed
           country: data.country,
           city: data.city,
           phone: data.phone,
@@ -204,7 +72,7 @@ export default function LawFirmRegisterStepOne() {
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepOneSchema}
-          // defaultValues={defaultValues}
+            defaultValues={defaultValues}
 
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -214,34 +82,27 @@ export default function LawFirmRegisterStepOne() {
                 placeholder="i.e. ABC LLC"
               />
 
-              {/* Country */}
-              <SelectInput
+              <CountrySelect
                 name="country"
                 label="Country"
-                options={countries}
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
-                onValueChange={(val) => {
-                  setSelectedCountry(val);
-                  setSelectedCity(null);
-                }}
+
               />
 
               {/* City */}
-              <InputCombobox
+              <CityCombobox
                 name="city"
                 label="City"
-                options={cities}
                 placeholder="Select a city"
-                onSelect={(val) => setSelectedCity(val)}
+
               />
 
-              {/* Address / Zipcode */}
-              <InputCombobox
-                name="AreaZipcode"
+              <ZipCodeCombobox
+                name="zipCode"
                 label="Address"
-                placeholder="Select a Zipcode"
-                options={zipcodes}
+                placeholder="Select a Zipcode or Address"
+
               />
 
               <TextInput
@@ -274,7 +135,7 @@ export default function LawFirmRegisterStepOne() {
               />
 
               <TextInput
-                name="yearOfEstablishment"
+                name="yearEstablished"
                 label="Year of Establishment"
                 placeholder="i.e. 2003"
               />
