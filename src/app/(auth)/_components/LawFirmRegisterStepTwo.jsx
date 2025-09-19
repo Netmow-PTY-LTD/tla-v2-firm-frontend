@@ -19,7 +19,7 @@ export default function LawFirmRegisterStepTwo() {
   const [firmRegister, { isLoading }] = useRegisterFirmMutation();
 
   const defaultValues = {
-    licenseType: formData.licenseDetails.licenseType,
+    certificationId: formData.licenseDetails.certificationId,
     licenseNumber: formData.licenseDetails.licenseNumber,
     issuedBy: formData.licenseDetails.issuedBy,
     validUntil: formData.licenseDetails.validUntil,
@@ -33,7 +33,7 @@ export default function LawFirmRegisterStepTwo() {
       dispatch(
         setFormData({
           licenseDetails: {
-            licenseType: data.licenseType,
+            certificationId: data.certificationId,
             licenseNumber: data.licenseNumber,
             issuedBy: data.issuedBy,
             validUntil: data.validUntil,
@@ -95,8 +95,8 @@ export default function LawFirmRegisterStepTwo() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
-                name="licenseType"
-                label="License Type"
+                name="certificationId"
+                label="License"
                 placeholder="i.e. Law Firm License"
               />
 

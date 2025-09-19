@@ -70,50 +70,6 @@ const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
                 <ChevronDown className="h-4 w-4" />
               </ComboboxButton>
 
-              {/* {isLoading ? (
-                <div className="absolute z-10 mt-1 w-full bg-white p-2 text-sm text-gray-500 shadow-md">
-                  Loading...
-                </div>
-              ) : options.length > 0 ? (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {options.map((item) => (
-                    <ComboboxOption
-                      key={item.value}
-                      value={item.value}
-                      className={({ active }) =>
-                        cn(
-                          "cursor-pointer select-none relative py-2 pl-10 pr-4",
-                          active
-                            ? "bg-blue-100 text-blue-900"
-                            : "text-gray-900"
-                        )
-                      }
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span
-                            className={cn("block truncate", {
-                              "font-medium": selected,
-                              "font-normal": !selected,
-                            })}
-                          >
-                            {item.label}
-                          </span>
-                          {selected && (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                              <Check className="h-4 w-4" />
-                            </span>
-                          )}
-                        </>
-                      )}
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              ) : selectedCountry ? (
-                <div className="absolute z-10 mt-1 w-full bg-white p-2 text-sm text-gray-500 shadow-md">
-                  No zip codes found
-                </div>
-              ) : null} */}
 
               <ComboboxOptions
                 className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md 

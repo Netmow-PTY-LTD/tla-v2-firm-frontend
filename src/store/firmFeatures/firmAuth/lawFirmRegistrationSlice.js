@@ -22,7 +22,7 @@ const initialState = {
     },
     // License Details
     licenseDetails: {
-      licenseType: '',
+      certificationId: '',
       licenseNumber: '',
       issuedBy: '',
       validUntil: '',
