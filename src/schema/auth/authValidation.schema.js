@@ -25,7 +25,7 @@ export const lawFirmRegStepOneSchema = z.object({
     .string()
     .min(1, "City is required"),
 
-  AreaZipcode: z
+  zipCode: z
     .string()
     .min(1, "Address / Zipcode is required"),
 

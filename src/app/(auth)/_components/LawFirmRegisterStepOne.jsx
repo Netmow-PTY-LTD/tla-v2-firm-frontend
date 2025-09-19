@@ -141,7 +141,7 @@ export default function LawFirmRegisterStepOne() {
     officeAddress: formData.contactInfo.officeAddress,
     country: formData.contactInfo.country,
     city: formData.contactInfo.city,
-    AreaZipcode: formData.contactInfo.AreaZipcode, // optional if needed
+    zipCode: formData.contactInfo.zipCode, // optional if needed
     phone: formData.contactInfo.phone,
     email: formData.contactInfo.email,
     password: formData.password,
@@ -159,7 +159,7 @@ export default function LawFirmRegisterStepOne() {
         email: data.email,
         password: data.password,
         contactInfo: {
-          AreaZipcode: data.AreaZipcode, // optional if needed
+          zipCode: data.zipCode, // optional if needed
           country: data.country,
           city: data.city,
           phone: data.phone,
@@ -215,7 +215,7 @@ export default function LawFirmRegisterStepOne() {
               />
 
               <ZipCodeCombobox
-                name="AreaZipcode"
+                name="zipCode"
                 label="Address"
                 placeholder="Select a Zipcode or Address"
 
