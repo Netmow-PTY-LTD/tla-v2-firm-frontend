@@ -150,7 +150,6 @@ export default function LawFirmRegisterStepOne() {
   };
 
   const onSubmit = (data) => {
-    console.log("Step One Submitted ==>", data);
 
     dispatch(
       setFormData({
@@ -160,7 +159,7 @@ export default function LawFirmRegisterStepOne() {
         email: data.email,
         password: data.password,
         contactInfo: {
-          officeAddress: data.officeAddress,
+          AreaZipcode: data.AreaZipcode, // optional if needed
           country: data.country,
           city: data.city,
           phone: data.phone,
@@ -189,7 +188,7 @@ export default function LawFirmRegisterStepOne() {
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepOneSchema}
-          // defaultValues={defaultValues}
+            defaultValues={defaultValues}
 
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -218,7 +217,7 @@ export default function LawFirmRegisterStepOne() {
               <ZipCodeCombobox
                 name="AreaZipcode"
                 label="Address"
-                placeholder="Select a Zipcode"
+                placeholder="Select a Zipcode or Address"
 
               />
 
@@ -252,7 +251,7 @@ export default function LawFirmRegisterStepOne() {
               />
 
               <TextInput
-                name="yearOfEstablishment"
+                name="yearEstablished"
                 label="Year of Establishment"
                 placeholder="i.e. 2003"
               />

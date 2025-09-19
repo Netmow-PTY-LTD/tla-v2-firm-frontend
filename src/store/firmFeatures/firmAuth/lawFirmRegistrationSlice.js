@@ -13,7 +13,7 @@ const initialState = {
     yearEstablished: '',
     // Contact Info
     contactInfo: {
-      officeAddress: '',
+      AreaZipcode: '',
       country: '',
       city: '',
       phone: '',

@@ -55,7 +55,7 @@ export const lawFirmRegStepOneSchema = z.object({
     .min(3, "Registration Number must be at least 3 characters")
     .max(50, "Registration Number must be less than 50 characters"),
 
-  yearOfEstablishment: z
+   yearEstablished: z
     .string()
     .regex(
       /^(19|20)\d{2}$/,
