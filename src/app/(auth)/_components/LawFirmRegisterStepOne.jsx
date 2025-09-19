@@ -9,8 +9,9 @@ import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
-import { useGetCountryListQuery, useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import { useGetCountryListQuery, } from "@/store/tlaFeatures/public/publicApiService";
 import ZipCodeCombobox from "@/components/common/components/ZipCodeCombobox";
+import CityCombobox from "@/components/common/components/CityCombobox";
 
 
 
@@ -132,17 +133,16 @@ export const demoLocations = [
 
 export default function LawFirmRegisterStepOne() {
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
-  const { data: countriesData } = useGetCountryListQuery();
-  // const { data: zipCodeData } = useGetZipCodeListQuery({
-  //   page:1,
-  //   limit:10,
-  //   search:'',
-  //   countryId: selectedCountry,
-  // });
+
+  const { data: countriesData } = useGetCountryListQuery({
+    page: 1,
+    limit: 10,
+    search: '',
+    countryId: selectedCountry,
+  });
 
 
   const countries = countriesData?.data?.map((c) => ({
@@ -152,21 +152,6 @@ export default function LawFirmRegisterStepOne() {
 
 
 
-  const cities =
-    demoLocations
-      .find((c) => c.slug === selectedCountry)
-      ?.cities.map((city) => ({ value: city.id, label: city.name })) || [];
-
-  // const zipcodes =
-  //   zipCodeData?.data?.find((c) => c.countryId === selectedCountry)
-  //     ?.zipcodes.map((z) => ({ value: z._id, label: z.zipCode })) || [];
-
-  //     console.log('selectedCountry',selectedCountry)
-  //     console.log('zipcodes',zipcodes)
-  // const zipcodes =
-  //   zipCodeData?.data?.find((c) => c.slug === selectedCountry)
-  //     ?.cities.find((city) => city.id === selectedCity)
-  //     ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
 
 
 
@@ -242,19 +227,18 @@ export default function LawFirmRegisterStepOne() {
                 options={countries}
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
-                // onValueChange={(val) => {
-                //   setSelectedCountry(val);
-                //   setSelectedCity(null);
-                // }}
+                onValueChange={(val) => {
+                  setSelectedCountry(val);
+                 
+                }}
               />
 
               {/* City */}
-              <InputCombobox
+              <CityCombobox
                 name="city"
                 label="City"
-                options={cities}
                 placeholder="Select a city"
-                onSelect={(val) => setSelectedCity(val)}
+
               />
 
               {/* Address / Zipcode */}
@@ -268,7 +252,7 @@ export default function LawFirmRegisterStepOne() {
                 name="AreaZipcode"
                 label="Address"
                 placeholder="Select a Zipcode"
-               
+
               />
 
 

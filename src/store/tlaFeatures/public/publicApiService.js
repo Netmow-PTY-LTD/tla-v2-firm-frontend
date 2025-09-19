@@ -164,6 +164,24 @@ const publicApiService = baseApi.injectEndpoints({
         "request",
       ],
     }),
+
+
+
+    //  city
+
+     getCityList: builder.query({
+      query: (params) => ({
+        url: `/country/city/list`,
+        method: "GET",
+        params,
+      }),
+      providesTags: ["city-list"],
+    }),
+
+
+
+
+
   }),
 });
 
@@ -188,4 +206,5 @@ export const {
   useGetAllRequestsFromClientQuery,
   useGetRequestFromClientByIdQuery,
   useCreateRatingMutation,
+  useGetCityListQuery
 } = publicApiService;
