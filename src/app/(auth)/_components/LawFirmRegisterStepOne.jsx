@@ -1,17 +1,15 @@
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
-import SelectInput from "@/components/form/SelectInput";
-import InputCombobox from "@/components/form/ComboboxInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
-import { useGetCountryListQuery, } from "@/store/tlaFeatures/public/publicApiService";
-import ZipCodeCombobox from "@/components/common/components/ZipCodeCombobox";
-import CityCombobox from "@/components/common/components/CityCombobox";
+import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
+import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
+import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
 
 
 
@@ -132,27 +130,8 @@ export const demoLocations = [
 ];
 
 export default function LawFirmRegisterStepOne() {
-  const [selectedCountry, setSelectedCountry] = useState(null);
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
-
-
-  const { data: countriesData } = useGetCountryListQuery({
-    page: 1,
-    limit: 10,
-    search: '',
-    countryId: selectedCountry,
-  });
-
-
-  const countries = countriesData?.data?.map((c) => ({
-    value: c._id,
-    label: c.name,
-  }));
-
-
-
-
 
 
   const defaultValues = {
@@ -220,17 +199,12 @@ export default function LawFirmRegisterStepOne() {
                 placeholder="i.e. ABC LLC"
               />
 
-              {/* Country */}
-              <SelectInput
+              <CountrySelect
                 name="country"
                 label="Country"
-                options={countries}
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
-                onValueChange={(val) => {
-                  setSelectedCountry(val);
-                 
-                }}
+
               />
 
               {/* City */}
@@ -241,21 +215,12 @@ export default function LawFirmRegisterStepOne() {
 
               />
 
-              {/* Address / Zipcode */}
-              {/* <InputCombobox
-                name="AreaZipcode"
-                label="Address"
-                placeholder="Select a Zipcode"
-                options={zipcodes}
-              /> */}
               <ZipCodeCombobox
                 name="AreaZipcode"
                 label="Address"
                 placeholder="Select a Zipcode"
 
               />
-
-
 
               <TextInput
                 name="email"
