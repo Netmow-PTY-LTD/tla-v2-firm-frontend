@@ -8,7 +8,7 @@ import SelectInput from "@/components/form/SelectInput";
 import { useDispatch, useSelector } from "react-redux";
 import { previousStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
-import {  useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +29,7 @@ export default function LawFirmRegisterStepTwo() {
     try {
 
 
-      // 1️⃣ Save Step 2 data inside licenseDetails
+      // 1️ Save Step 2 data inside licenseDetails
       dispatch(
         setFormData({
           licenseDetails: {
@@ -41,7 +41,7 @@ export default function LawFirmRegisterStepTwo() {
         })
       );
 
-      // 2️⃣ Combine all steps data from Redux
+      // 2️ Combine all steps data from Redux
       const finalData = {
         ...formData,
         licenseDetails: {
@@ -50,9 +50,9 @@ export default function LawFirmRegisterStepTwo() {
         },
       };
 
-      console.log("Final Submit Data ==>", finalData);
 
-      // 3️⃣ API call to finish registration
+
+      // 3️ API call to finish registration
       const res = await firmRegister(finalData).unwrap();
       console.log("API Response ==>", res);
 
@@ -90,7 +90,7 @@ export default function LawFirmRegisterStepTwo() {
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepTwoSchema}
-          // defaultValues={defaultValues}
+            defaultValues={defaultValues}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
@@ -109,6 +109,7 @@ export default function LawFirmRegisterStepTwo() {
                 name="issuedBy"
                 label="Issued By"
                 placeholder="Select a body"
+                multiple={true}
                 options={[
                   { value: "bar-council", label: "Bar Council of Australia" },
                   { value: "legal-services-commission", label: "Legal Services Commission" },
@@ -130,14 +131,14 @@ export default function LawFirmRegisterStepTwo() {
                 type="button"
                 className="btn-default btn-outline-black"
                 onClick={() => dispatch(previousStep())}
-                disabled={isLoading} // ✅ prevent step change while submitting
+                disabled={isLoading} //  prevent step change while submitting
               >
                 Back
               </button>
               <button
                 type="submit"
                 className="btn-default bg-[var(--color-special)]"
-                disabled={isLoading} // ✅ disable while submitting
+                disabled={isLoading} //  disable while submitting
               >
                 {isLoading ? "Submitting..." : "Finish"}
               </button>
