@@ -64,7 +64,7 @@ export const lawFirmRegStepOneSchema = z.object({
 
 // -------------------- Step Two --------------------
 export const lawFirmRegStepTwoSchema = z.object({
-  licenseType: z
+  certificationId: z
     .string()
     .min(2, "License Type is required")
     .max(100, "License Type is too long"),
