@@ -1,9 +1,8 @@
 
-
 "use client";
 
-import React, { useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import React, { useState, useMemo } from "react";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
   Combobox,
   ComboboxInput,
@@ -14,20 +13,35 @@ import {
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
+// API hook import
+import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+
+const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
 
+  // ✅ watch selected country from form
+  const selectedCountry = useWatch({ control, name: "country" });
 
+  // ✅ fetch zip codes dynamically when country changes
+  const { data, isLoading } = useGetZipCodeListQuery(
+    {
+      page: 1,
+      limit: 10,
+      search: query,
+      countryId: selectedCountry,
+    },
+    { skip: !selectedCountry } // don't fetch until country is selected
+  );
 
-
-  // filter options based on query
-  const filteredOptions =
-    query === ""
-      ? options
-      : options?.filter((item) =>
-          item.label.toLowerCase().includes(query.toLowerCase())
-        );
+  // ✅ transform API data → options
+  const options = useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((z) => ({
+      value: z._id,
+      label: `${z.zipcode}`, // adjust based on API response
+    }));
+  }, [data]);
 
   return (
     <Controller
@@ -45,20 +59,24 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
           >
             <div className="relative">
               <ComboboxInput
-                className=" w-full"
+                className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4  text-sm font-medium leading-[27px] placeholder:text-[12px] placeholder:font-normal"
                 displayValue={(val) =>
-                  options?.find((o) => o.value === val)?.label || ""
+                  options.find((o) => o.value === val)?.label || ""
                 }
                 placeholder={placeholder}
-                onChange={(e) => setQuery(e.target.value)} // ✅ enable search
+                onChange={(e) => setQuery(e.target.value)} // live search
               />
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                <ChevronDown className="h-4 w-4 " />
+                <ChevronDown className="h-4 w-4" />
               </ComboboxButton>
 
-              {filteredOptions?.length > 0 && (
+              {isLoading ? (
+                <div className="absolute z-10 mt-1 w-full bg-white p-2 text-sm text-gray-500 shadow-md">
+                  Loading...
+                </div>
+              ) : options.length > 0 ? (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredOptions.map((item) => (
+                  {options.map((item) => (
                     <ComboboxOption
                       key={item.value}
                       value={item.value}
@@ -91,13 +109,15 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
                     </ComboboxOption>
                   ))}
                 </ComboboxOptions>
-              )}
+              ) : selectedCountry ? (
+                <div className="absolute z-10 mt-1 w-full bg-white p-2 text-sm text-gray-500 shadow-md">
+                  No zip codes found
+                </div>
+              ) : null}
             </div>
           </Combobox>
           {fieldState.error && (
-            <p className="text-red-600 text-sm mt-1">
-              {fieldState.error.message}
-            </p>
+            <p className="text-red-600 text-sm mt-1">{fieldState.error.message}</p>
           )}
         </div>
       )}
@@ -105,16 +125,4 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
   );
 };
 
-export default InputCombobox;
-
-
-
-
-
-
-
-
-
-
-
-
+export default ZipCodeCombobox;
