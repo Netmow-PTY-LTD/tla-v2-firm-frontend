@@ -1,91 +1,128 @@
-'use client';
 
-import React from 'react';
-import { ChevronsUpDown, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+"use client";
+
+import React, { useState, useMemo } from "react";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandGroup,
-  CommandList,
-  CommandEmpty,
-} from '@/components/ui/command';
-import { Button } from '@/components/ui/button';
+  Combobox,
+  ComboboxInput,
+  ComboboxButton,
+  ComboboxOptions,
+  ComboboxOption,
+} from "@headlessui/react";
+import { ChevronDown, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function ZipCodeCombobox({ data = [], onChange }) {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+// API hook import
+import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
 
-  const handleSelect = (zipcode) => {
-    setValue(zipcode);
-    setOpen(false);
-    onChange?.(zipcode);
-  };
+const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
+  const { control } = useFormContext();
+  const [query, setQuery] = useState("");
+
+  // ✅ watch selected country from form
+  const selectedCountry = useWatch({ control, name: "country" });
+
+  // ✅ fetch zip codes dynamically when country changes
+  const { data, isLoading } = useGetZipCodeListQuery(
+    {
+      page: 1,
+      limit: 10,
+      search: query,
+      countryId: selectedCountry,
+    },
+    { skip: !selectedCountry } // don't fetch until country is selected
+  );
+
+  // ✅ transform API data → options
+  const options = useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((z) => ({
+      value: z._id,
+      label: `${z.zipcode}`, // adjust based on API response
+    }));
+  }, [data]);
 
   return (
-    <div className="flex flex-col gap-2 mt-8">
-      <span className="text-sm font-medium">Enter Your ZIP Code</span>
-
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between h-[44px]"
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">{label}</label>
+          <Combobox
+            value={field.value}
+            onChange={(val) => {
+              field.onChange(val);
+              if (onSelect) onSelect(val);
+            }}
           >
-            {value ? value : 'Search ZIP Code...'}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
+            <div className="relative">
+              <ComboboxInput
+                className="tla-form-control w-full"
+                displayValue={(val) =>
+                  options.find((o) => o.value === val)?.label || ""
+                }
+                placeholder={placeholder}
+                onChange={(e) => setQuery(e.target.value)} // live search
+              />
+              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                <ChevronDown className="h-4 w-4" />
+              </ComboboxButton>
 
-        <PopoverContent
-          className="w-full p-0 z-[9999]" // ensure it's above modal
-          forceMount // ✅ make sure it stays mounted
-          onInteractOutside={(e) => {
-            if (e.target.closest('[cmdk-root]')) {
-              e.preventDefault(); // ✅ prevent closing when clicking in options
-            }
-          }}
-        >
-          <Command>
-            <CommandInput
-              placeholder="Search ZIP Code..."
-              className="h-[44px]"
-            />
-            <CommandList>
-              <CommandEmpty>No ZIP codes found.</CommandEmpty>
-              <CommandGroup>
-                {data?.map((zip) => (
-                  <CommandItem
-                    key={zip._id}
-                    value={zip.zipcode}
-                    onSelect={(zipcode) => {
-                      setValue(zipcode);
-                      setOpen(false);
-                      onChange?.(zipcode);
-                    }}
-                  >
-                    {zip.zipcode}
-                    <Check
-                      className={cn(
-                        'ml-auto h-4 w-4',
-                        value === zip.zipcode ? 'opacity-100' : 'opacity-0'
+              {isLoading ? (
+                <div className="absolute z-10 mt-1 w-full bg-white p-2 text-sm text-gray-500 shadow-md">
+                  Loading...
+                </div>
+              ) : options.length > 0 ? (
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  {options.map((item) => (
+                    <ComboboxOption
+                      key={item.value}
+                      value={item.value}
+                      className={({ active }) =>
+                        cn(
+                          "cursor-pointer select-none relative py-2 pl-10 pr-4",
+                          active
+                            ? "bg-blue-100 text-blue-900"
+                            : "text-gray-900"
+                        )
+                      }
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={cn("block truncate", {
+                              "font-medium": selected,
+                              "font-normal": !selected,
+                            })}
+                          >
+                            {item.label}
+                          </span>
+                          {selected && (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                              <Check className="h-4 w-4" />
+                            </span>
+                          )}
+                        </>
                       )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              ) : selectedCountry ? (
+                <div className="absolute z-10 mt-1 w-full bg-white p-2 text-sm text-gray-500 shadow-md">
+                  No zip codes found
+                </div>
+              ) : null}
+            </div>
+          </Combobox>
+          {fieldState.error && (
+            <p className="text-red-600 text-sm mt-1">{fieldState.error.message}</p>
+          )}
+        </div>
+      )}
+    />
   );
-}
+};
+
+export default ZipCodeCombobox;

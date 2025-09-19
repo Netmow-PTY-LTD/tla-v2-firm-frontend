@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
 import { useGetCountryListQuery, useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import ZipCodeCombobox from "@/components/common/components/ZipCodeCombobox";
+
+
 
 export const demoLocations = [
   {
@@ -134,11 +137,16 @@ export default function LawFirmRegisterStepOne() {
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
   const { data: countriesData } = useGetCountryListQuery();
-  const { data: zipCodeData } = useGetZipCodeListQuery();
+  // const { data: zipCodeData } = useGetZipCodeListQuery({
+  //   page:1,
+  //   limit:10,
+  //   search:'',
+  //   countryId: selectedCountry,
+  // });
 
 
   const countries = countriesData?.data?.map((c) => ({
-    value: c.slug,
+    value: c._id,
     label: c.name,
   }));
 
@@ -149,12 +157,12 @@ export default function LawFirmRegisterStepOne() {
       .find((c) => c.slug === selectedCountry)
       ?.cities.map((city) => ({ value: city.id, label: city.name })) || [];
 
-  const zipcodes =
-    demoLocations
-      .find((c) => c.slug === selectedCountry)
-      ?.cities.find((city) => city.id === selectedCity)
-      ?.zipcodes.map((z) => ({ value: z._id, label: z.zipcode })) || [];
+  // const zipcodes =
+  //   zipCodeData?.data?.find((c) => c.countryId === selectedCountry)
+  //     ?.zipcodes.map((z) => ({ value: z._id, label: z.zipCode })) || [];
 
+  //     console.log('selectedCountry',selectedCountry)
+  //     console.log('zipcodes',zipcodes)
   // const zipcodes =
   //   zipCodeData?.data?.find((c) => c.slug === selectedCountry)
   //     ?.cities.find((city) => city.id === selectedCity)
@@ -234,10 +242,10 @@ export default function LawFirmRegisterStepOne() {
                 options={countries}
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
-                onValueChange={(val) => {
-                  setSelectedCountry(val);
-                  setSelectedCity(null);
-                }}
+                // onValueChange={(val) => {
+                //   setSelectedCountry(val);
+                //   setSelectedCity(null);
+                // }}
               />
 
               {/* City */}
@@ -250,12 +258,20 @@ export default function LawFirmRegisterStepOne() {
               />
 
               {/* Address / Zipcode */}
-              <InputCombobox
+              {/* <InputCombobox
                 name="AreaZipcode"
                 label="Address"
                 placeholder="Select a Zipcode"
                 options={zipcodes}
+              /> */}
+              <ZipCodeCombobox
+                name="AreaZipcode"
+                label="Address"
+                placeholder="Select a Zipcode"
+               
               />
+
+
 
               <TextInput
                 name="email"
