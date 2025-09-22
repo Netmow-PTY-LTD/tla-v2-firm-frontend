@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,50 +13,71 @@ import { StaffDataTable } from "../../_components/StaffDataTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import {
+  useDeleteStaffMutation,
+  useGetFirmWiseStaffListQuery,
+} from "@/store/firmFeatures/staff/staffApiService";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 
-// ✅ Example staff data
-const staffData = [
-  {
-    id: 1,
-    name: "John Doe",
-    role: "Lawyer",
-    email: "john@example.com",
-    status: "Active",
-    lastLogin: "2025-09-10",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    role: "Admin",
-    email: "jane@example.com",
-    status: "Inactive",
-    lastLogin: "2025-09-01",
-  },
-  {
-    id: 3,
-    name: "Mark Lee",
-    role: "Assistant",
-    email: "mark@example.com",
-    status: "Active",
-    lastLogin: "2025-09-12",
-  },
-];
+// // ✅ Example staff data
+// const staffData = [
+//   {
+//     id: 1,
+//     name: "John Doe",
+//     role: "Lawyer",
+//     email: "john@example.com",
+//     status: "Active",
+//     lastLogin: "2025-09-10",
+//   },
+//   {
+//     id: 2,
+//     name: "Jane Smith",
+//     role: "Admin",
+//     email: "jane@example.com",
+//     status: "Inactive",
+//     lastLogin: "2025-09-01",
+//   },
+//   {
+//     id: 3,
+//     name: "Mark Lee",
+//     role: "Assistant",
+//     email: "mark@example.com",
+//     status: "Active",
+//     lastLogin: "2025-09-12",
+//   },
+// ];
 
 const pageSizeOptions = [5, 10, 20];
 
 export default function StaffsList() {
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
 
-  const handleDelete = (id) => {
-    alert("Staff with ID " + id + " has been deleted!");
-  };
+  const { data: currentUser } = useGetFirmUserInfoQuery();
+  //console.log("Current User Data in Staff List Page:", currentUser);
 
+  const {
+    data: staffList,
+    isLoading,
+    isError,
+  } = useGetFirmWiseStaffListQuery(currentUser?.data?._id, {
+    skip: !currentUser?.data?._id,
+  });
+
+  //console.log("Staff List Data:", staffList);
   const columns = [
     // ✅ Name
     {
-      accessorKey: "name",
+      accessorKey: "fullName",
       header: "Name",
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => <div>{row.getValue("fullName")}</div>,
+    },
+
+    // ✅ Role
+    {
+      accessorKey: "designation",
+      header: "Designation",
+      cell: ({ row }) => <div>{row.getValue("designation")}</div>,
     },
 
     // ✅ Role
@@ -81,8 +102,8 @@ export default function StaffsList() {
         const status = row.getValue("status");
         return (
           <span
-            className={`px-2 py-1 rounded text-xs ${
-              status === "Active"
+            className={`px-2 py-1 rounded text-xs capitalize ${
+              status?.toLowerCase() === "active"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
@@ -120,7 +141,7 @@ export default function StaffsList() {
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
                 <Link
-                  href={`/dashboard/staffs/edit/${staff.id}`}
+                  href={`/dashboard/staffs/edit/${staff?._id}`}
                   className="flex gap-2"
                 >
                   <Pencil className="w-4 h-4" />
@@ -130,7 +151,7 @@ export default function StaffsList() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="flex gap-2 cursor-pointer py-1 px-2 text-red-600"
-                onClick={() => handleDelete(staff.id)}
+                onClick={() => handleDelete(staff?._id)}
               >
                 <Trash2 className="w-4 h-4" />
                 Delete
@@ -142,11 +163,31 @@ export default function StaffsList() {
     },
   ];
 
+  const [deleteStaff] = useDeleteStaffMutation();
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteStaff({
+        firmId: currentUser?.data?._id,
+        staffId: id,
+      }).unwrap();
+      console.log("Delete response:", res);
+      if (res?.success) {
+        showSuccessToast(res?.message || "Staff deleted successfully!");
+      }
+    } catch (error) {
+      console.error("Error deleting staff:", error);
+      // Optionally show an error toast here
+      showErrorToast(
+        "Error deleting staff: " + error?.data?.message || error.error
+      );
+    }
+  };
+
   return (
     <div className="max-w-[1200px] mx-auto bg-white p-6 rounded-lg shadow-sm">
       <h2 className="text-2xl font-bold mb-6">List of Staffs</h2>
       <StaffDataTable
-        data={staffData || []}
+        data={staffList?.data || []}
         columns={columns}
         pageSize={pageSize}
         setPageSize={setPageSize}
