@@ -5,10 +5,11 @@ import FormWrapper from "@/components/form/FormWrapper";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import FirmFormAction from "./form/FirmFormAction";
-import CompanyProfile from "./components/CompanyProfile";
-import CompanyLocation from "./components/CompanyLocation";
-import CompanyAbout from "./components/CompanyAbout";
+import CompanyProfile from "./_components/CompanyProfile";
+import CompanyLocation from "./_components/CompanyLocation";
+import CompanyAbout from "./_components/CompanyAbout";
 import { useState } from "react";
+import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 
 export default function Firm() {
   const [zipCode, setZipCode] = useState(null);
@@ -16,22 +17,29 @@ export default function Firm() {
   const [longitude, setLongitude] = useState(null);
   const [postalCode, setPostalCode] = useState("");
 
-  const initialValues = {
-    firmName: "",
-    logo: "",
-    registrationNumber: "",
-    vatTaxId: "",
-    yearEstablished: "",
-    legalFocusAreas: "",
+  const { data: companyInfo, isLoading: isCompanyInfoLoading } =
+    useGetFirmInfoQuery();
+  console.log("company ===>", companyInfo?.data);
+
+  const defaultValues = {
+    firmName: companyInfo?.data?.firmName || "",
+    email: companyInfo?.data?.contactInfo?.email || "",
+    phone: companyInfo?.data?.contactInfo?.phone || "",
+    website: companyInfo?.data?.contactInfo?.officialWebsite || "",
+    logo: companyInfo?.data?.logo || "",
+    registrationNumber: companyInfo?.data?.registrationNumber || "",
+    vatTaxId: companyInfo?.data?.vatTaxId || "",
+    yearEstablished: companyInfo?.data?.yearEstablished || "",
+    legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
     contactInfo: {
-      officeAddress: "",
-      country: "",
-      city: "",
-      phone: "",
-      email: "",
-      officialWebsite: "",
+      officeAddress: companyInfo?.data?.contactInfo?.officeAddress || "",
+      country: companyInfo?.data?.contactInfo?.country || "",
+      city: companyInfo?.data?.contactInfo?.city || "",
+      phone: companyInfo?.data?.contactInfo?.phone || "",
+      email: companyInfo?.data?.contactInfo?.email || "",
+      officialWebsite: companyInfo?.data?.contactInfo?.officialWebsite || "",
     },
-    overview: "",
+    overview: companyInfo?.data?.overview || "",
   };
 
   const onSubmit = (data) => {
@@ -96,7 +104,7 @@ export default function Firm() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={onSubmit}>
+      <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
         <CompanyProfile />
         <div className="border-t border-white" />
         <CompanyLocation
@@ -104,13 +112,14 @@ export default function Firm() {
           setLatitude={setLatitude}
           setLongitude={setLongitude}
           setPostalCode={setPostalCode}
+          companyInfo={companyInfo?.data}
         />
         <div className="border-t border-white" />
-        <CompanyAbout />
+        <CompanyAbout companyInfo={companyInfo?.data} />
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <FirmFormAction isLoading={false} initialValues={initialValues} />
+        <FirmFormAction isLoading={false} defaultValues={defaultValues} />
       </FormWrapper>
     </div>
   );

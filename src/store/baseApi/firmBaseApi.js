@@ -85,6 +85,9 @@ export const firmBaseApi = createApi({
     "staff-list", // for firm-wide staff list updates
     "partner", // for individual partner member updates
     "lawfirm-certification",
+    "license",
+    "certificate",
+    "firm",
     "certification",
     "city-list",
   ],

@@ -2,24 +2,27 @@ import { Modal } from "@/components/common/components/Modal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import InputCombobox from "@/components/form/ComboboxInput";
 import FormWrapper from "@/components/form/FormWrapper";
-import SelectInput from "@/components/form/SelectInput";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import { Button } from "@/components/ui/button";
-import { useAddFirmWiseLicenseAndCertificationMutation } from "@/store/firmFeatures/certificateLicensesApiService";
+import {
+  useAddFirmWiseLicenseAndCertificationMutation,
+  useGetSingleLicenseAndCertificationByIdQuery,
+  useUpdateLicenseAndCertificationMutation,
+} from "@/store/firmFeatures/certificateLicensesApiService";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
 
-export default function AddCoreLicenseModal({
+export default function EditOptionalLicenseModal({
+  isOpen,
   defaultValues,
   schema,
   refetchLicenses,
+  onClose,
+  selectedLicense,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const onCancel = () => setIsOpen(!isOpen);
-
   const token = Cookies.get("token");
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
@@ -44,9 +47,14 @@ export default function AddCoreLicenseModal({
   });
   //console.log("Certifications List:", certificationsList);
 
-  const [addLicenseAndCertification] =
-    useAddFirmWiseLicenseAndCertificationMutation();
-  const handleMandatoryLicenseSubmit = async (data) => {
+  const { data: singleLicense, isLoading: isSingleLicenseLoading } =
+    useGetSingleLicenseAndCertificationByIdQuery(selectedLicense?._id, {
+      skip: !selectedLicense?._id,
+    });
+  // console.log("singleLicense in EditCoreLicenseModal", singleLicense);
+  const [updateLicenseAndCertification] =
+    useUpdateLicenseAndCertificationMutation();
+  const handleOptionalLicenseSubmit = async (data) => {
     // console.log("Mandatory License form submitted:", data);
     const { certificationId, licenseNumber, validUntil, additionalNote } = data;
 
@@ -55,13 +63,16 @@ export default function AddCoreLicenseModal({
       licenseNumber,
       validUntil,
       additionalNote,
-      type: "mandatory",
+      type: "optional",
     };
 
     console.log("Payload to be sent:", payload);
 
     try {
-      const res = await addLicenseAndCertification(payload).unwrap();
+      const res = await updateLicenseAndCertification({
+        licenseId: selectedLicense?._id,
+        body: payload,
+      }).unwrap();
       console.log("Response after adding license and certification:", res);
       if (res?.success) {
         // Show success message or toast
@@ -69,7 +80,7 @@ export default function AddCoreLicenseModal({
           res?.message || "License and certification added successfully"
         );
         refetchLicenses();
-        onCancel();
+        onClose();
       }
     } catch (error) {
       console.error("Error adding license and certification:", error);
@@ -79,37 +90,26 @@ export default function AddCoreLicenseModal({
       );
     }
   };
+
+  console.log("defaultValues in EditOptionalLicenseModal", defaultValues);
   return (
     <Modal
       title="Add Core License"
       description="Add a new license to your firm"
       buttonName="+ Add License"
       width="max-w-[600px]"
-      onOpenChange={setIsOpen}
+      onOpenChange={onClose}
       open={isOpen}
     >
       <div className="modal-header">
-        <h4 className="text-lg font-semibold ">Add Core License</h4>
+        <h4 className="text-lg font-semibold ">Edit Optional License</h4>
       </div>
       <FormWrapper
-        onSubmit={handleMandatoryLicenseSubmit}
+        onSubmit={handleOptionalLicenseSubmit}
         defaultValues={defaultValues}
         schema={schema}
       >
         <div className="grid grid-cols-1 gap-5 mt-6">
-          {/* <SelectInput
-          label="License Type"
-          name="licenseType"
-          placeholder="Licensing Type"
-          options={
-            certificationsList?.data?.map((cert) => ({
-              value: cert._id,
-              label: cert.certificatiionName,
-            })) || []
-          }
-          triggerClassName="w-full " // set custom width here
-        /> */}
-
           <InputCombobox
             label="License Type"
             name="certificationId"
@@ -148,12 +148,12 @@ export default function AddCoreLicenseModal({
             type="button"
             variant={"outline"}
             className="cursor-pointer"
-            onClick={onCancel}
+            onClick={onClose}
           >
             Cancel
           </Button>
           <Button type="submit" variant={"default"} className="cursor-pointer">
-            Add License
+            Update License
           </Button>
         </div>
       </FormWrapper>

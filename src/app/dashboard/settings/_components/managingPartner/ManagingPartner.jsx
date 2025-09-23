@@ -62,7 +62,7 @@ export default function ManagingPartner() {
     skip: isCurrentUserLoading,
   });
 
-  console.log("Partners data in managing partner page", partners);
+  //console.log("Partners data in managing partner page", partners);
 
   const handleEditClick = (service) => {
     setSelectedPartner(service);
