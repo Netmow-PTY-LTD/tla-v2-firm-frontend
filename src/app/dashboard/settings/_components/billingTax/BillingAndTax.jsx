@@ -1,27 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import TextareaInput from "@/components/form/TextArea";
 
 import BillingTaxFormAction from "./BillingTaxFormAction";
+import {
+  useGetFirmInfoQuery,
+  useUpdateFirmInfoMutation,
+} from "@/store/firmFeatures/firmApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 
 export default function BillingAndTax() {
-  const [logo, setLogo] = useState(null);
+  const {
+    data: companyInfo,
+    isLoading: isCompanyInfoLoading,
+    refetch: refetchCompanyInfo,
+  } = useGetFirmInfoQuery();
 
-  const initialValues = {
-    billingEmail: "Contactfinance@lexeuropa.de",
-    iban: "DE89 3704 0044 0532 0130 00",
-    bicSwift: "COBADEFFXXX",
-    taxId: "27/123/45678",
-    currency: "EUR (€)",
-    notes: "",
-    companyLogo: null,
-  };
+  console.log("company ===>", companyInfo?.data);
+  const initialValues = useMemo(() => {
+    return {
+      billingEmail: companyInfo?.data?.billingInfo?.billingEmail || "",
+      iban: companyInfo?.data?.billingInfo?.iban || "",
+      bicSwift: companyInfo?.data?.billingInfo?.bicSwift || "",
+      taxId: companyInfo?.data?.billingInfo?.taxId || "",
+      currency: companyInfo?.data?.billingInfo?.currency || "",
+      notes: companyInfo?.data?.billingInfo?.notes || "",
+    };
+  }, [companyInfo]);
 
-  const onSubmit = (data) => {
+  const [updateFirmInfo, { isLoading: isUpdatingFirmInfoLoading }] =
+    useUpdateFirmInfoMutation();
+
+  const onSubmit = async (data) => {
     console.log("Billing form submitted:", data);
+    const { billingEmail, iban, bicSwift, taxId, currency, notes } = data;
+    const payload = {
+      billingInfo: {
+        billingEmail,
+        iban,
+        bicSwift,
+        taxId,
+        currency,
+        notes,
+      },
+    };
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(payload));
+
+    try {
+      const res = await updateFirmInfo(formData).unwrap();
+      console.log("Billing info updated:", res);
+      if (res?.success) {
+        showSuccessToast(res?.message || "Billing info updated successfully");
+        refetchCompanyInfo();
+      }
+    } catch (error) {
+      console.error("Error updating firm info:", error);
+      showErrorToast(error?.data?.message || "Failed to update firm info");
+    }
   };
 
   return (

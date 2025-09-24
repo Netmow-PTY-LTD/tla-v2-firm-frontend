@@ -10,6 +10,8 @@ import { useCreateStaffMutation } from "@/store/firmFeatures/staff/staffApiServi
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useRouter } from "next/navigation";
 import SelectInput from "@/components/form/SelectInput";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -212,7 +214,14 @@ export default function CreateStaffPage() {
             />
           ))}
 
-          <div className="flex justify-center">
+          <div className="flex justify-between items-center mt-10">
+            <Link
+              href="/dashboard/staffs/list"
+              className="text-sm flex items-center hover:underline bg-black text-white px-4 py-2 rounded-md"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span>Back to Staffs List</span>
+            </Link>
             <Button type="submit" className="cursor-pointer">
               Create Staff
             </Button>
