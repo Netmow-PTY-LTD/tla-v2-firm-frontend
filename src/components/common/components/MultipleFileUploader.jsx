@@ -1,165 +1,106 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useFormContext, useFormState } from 'react-hook-form';
-import { CloudUpload, Trash } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useEffect, useState } from "react";
+import { useFormContext, useFormState } from "react-hook-form";
+import { CloudUpload, Trash, X } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { showErrorToast, showSuccessToast } from "../toasts";
+import { useUpdateFirmDataMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import {
+  useDeleteFirmMediaMutation,
+  useUpdateFirmInfoMutation,
+  useUpdateFirmMediaMutation,
+} from "@/store/firmFeatures/firmApiService";
 
-export default function MultipleFileUploader({
-  name = 'avatar',
-  label = 'Upload File(s)',
-  accept = 'image/*',
+export default function MultipleFileUploaderTest({
+  name = "avatar",
+  label = "Upload File(s)",
+  accept = "image/*",
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
+  refetch,
+  firmMediaInfo,
 }) {
-  const { register, setValue, watch, getValues, control } = useFormContext();
-  const { isDirty,errors } = useFormState({ control }); // ensures RHF state is ready
-  const files = watch(name);
+  const [updatePhotosData, { isLoading: photosIsLoading }] =
+    useUpdateFirmMediaMutation();
+  const { register, getValues } = useFormContext();
+
   const [previews, setPreviews] = useState([]);
 
-  console.log('errors ==>',errors)
-  // Ensure field is registered
+  //console.log("firmMediaInfo", firmMediaInfo?.data?.photos);
+
   useEffect(() => {
-    register(name);
-  }, [register, name]);
+    if (firmMediaInfo?.data?.photos) {
+      setPreviews(firmMediaInfo.data.photos);
+    }
+  }, [firmMediaInfo]);
 
-  // Convert a URL string to a File object
-  // const urlToFile = async (url, index) => {
-  //   try {
-  //     const res = await fetch(url);
-  //     const blob = await res.blob();
-  //     const ext = blob.type.split('/')[1] || 'jpg';
-  //     return new File([blob], `default-${index}.${ext}`, { type: blob.type });
-  //   } catch (err) {
-  //     console.error('Error converting URL to file:', url, err);
-  //     return null;
-  //   }
-  // };
+  // console.log("previews", previews);
 
-  const urlToFile = async (url, index) => {
+  const handleChange = async (e) => {
     try {
-      const res = await fetch(url);
-      const blob = await res.blob();
+      const files = e.target.files;
 
-      // Normalize known variants
-      let mimeType = blob.type;
+      if (!files || files.length === 0) return;
 
-      if (!mimeType || mimeType === 'application/octet-stream') {
-        // Try to guess mimeType from file extension in URL
-        const extensionMatch = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
-        if (extensionMatch) {
-          const extFromUrl = extensionMatch[1].toLowerCase();
-          // map common extensions to mime types
-          const mimeMap = {
-            jpg: 'image/jpeg',
-            jpeg: 'image/jpeg',
-            png: 'image/png',
-            gif: 'image/gif',
-            webp: 'image/webp',
-            bmp: 'image/bmp',
-            svg: 'image/svg+xml',
-          };
-          mimeType = mimeMap[extFromUrl] || 'image/jpeg';
-        } else {
-          mimeType = 'image/jpeg'; // default fallback
-        }
+      const formData = new FormData();
+
+      // Optional payload - you can adjust this if needed
+      const payload = {
+        videos: "",
+      };
+
+      // Add JSON payload to formData
+      formData.append("data", JSON.stringify(payload));
+
+      // Append all selected files
+      for (let i = 0; i < files.length; i++) {
+        formData.append("photos", files[i]); // field name should match backend
       }
 
-      // Normalize progressive jpeg
-      if (mimeType === 'image/pjpeg') mimeType = 'image/jpeg';
+      console.log("check photos data==>", formData.get("photos"));
 
-      const ext = mimeType.split('/')[1].split('+')[0]; // handle cases like svg+xml
+      // ✅ Log files correctly
 
-      return new File([blob], `default-${index}.${ext}`, { type: mimeType });
-    } catch (err) {
-      console.error('Error converting URL to file:', url, err);
-      return null;
+      const res = await updatePhotosData(formData).unwrap();
+      console.log("res", res);
+
+      if (res?.success === true) {
+        showSuccessToast(res?.message || "Update successful");
+        setPreviews(res?.data?.photos || []);
+        refetch();
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || "An error occurred";
+      showErrorToast(errorMessage);
+      console.error("Error submitting form:", error);
     }
   };
 
-  // Initialize default file values (URLs → File objects)
-  useEffect(() => {
-    const initDefaultFiles = async () => {
-      const defaultValue = getValues(name);
+  const [deleteFirmMedia, { isLoading: isDeleting }] =
+    useDeleteFirmMediaMutation();
 
-      if (
-        !defaultValue ||
-        (Array.isArray(defaultValue) && defaultValue[0] instanceof File)
-      ) {
-        return;
+  const handleDeleteFirmMedia = async (index) => {
+    console.log("index", index);
+    const payload = { type: "photos", index };
+    console.log("payload", payload);
+    try {
+      const res = await deleteFirmMedia(payload).unwrap();
+      console.log("res", res);
+      if (res?.success === true) {
+        showSuccessToast(res?.message || "Deleted successfully");
+        setPreviews(res?.data?.photos);
+        refetch();
       }
-
-      const urls = Array.isArray(defaultValue) ? defaultValue : [defaultValue];
-
-      const fileObjs = await Promise.all(
-        urls.map((url, i) => urlToFile(url, i))
-      );
-      const validFiles = fileObjs.filter(Boolean);
-
-      setValue(name, multiple ? validFiles : validFiles[0] || null, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-
-      const blobUrls = validFiles.map((file) => URL.createObjectURL(file));
-      setPreviews(blobUrls);
-    };
-
-    initDefaultFiles();
-  }, [isDirty]);
-
-  // Update preview images when files change
-  useEffect(() => {
-    if (!files) return;
-
-    const fileList = Array.isArray(files) ? files : [files];
-    const urls = fileList.map((file) =>
-      file instanceof File ? URL.createObjectURL(file) : file
-    );
-
-    setPreviews(urls);
-
-    return () => {
-      urls.forEach((url) => {
-        if (url.startsWith('blob:')) URL.revokeObjectURL(url);
-      });
-    };
-  }, [files]);
-
-  const handleChange = (e) => {
-    const selectedFiles = Array.from(e.target.files || []);
-
-    if (!selectedFiles.length) return;
-
-    if (multiple) {
-      const existingFiles = Array.isArray(files) ? [...files] : [];
-      const mergedFiles = [...existingFiles, ...selectedFiles];
-      setValue(name, mergedFiles, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-    } else {
-      // If not multiple, just replace
-      setValue(name, selectedFiles[0], {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
+    } catch (error) {
+      const errorMessage = error?.data?.message || "An error occurred";
+      showErrorToast(errorMessage);
+      console.error("Error submitting form:", error);
     }
-  };
-
-  const handleRemove = (index) => {
-    const updatedPreviews = previews.filter((_, i) => i !== index);
-    const updatedFiles = Array.isArray(files)
-      ? [...files].filter((_, i) => i !== index)
-      : [];
-
-    setPreviews(updatedPreviews);
-    setValue(name, multiple ? updatedFiles : null, { shouldValidate: true });
   };
 
   return (
-    <div>
-      <div className="flex gap-4">
+    <div className="flex gap-4">
       {/* Previews */}
       <div className="flex flex-wrap gap-4">
         {previews.map((src, index) => (
@@ -170,10 +111,10 @@ export default function MultipleFileUploader({
             </Avatar>
             <button
               type="button"
-              onClick={() => handleRemove(index)}
-              className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100"
+              className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100 cursor-pointer transition-all duration-300"
+              onClick={() => handleDeleteFirmMedia(index)}
             >
-              <Trash className="h-4 w-4" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         ))}
@@ -197,8 +138,6 @@ export default function MultipleFileUploader({
         </label>
         <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
       </div>
-    </div>
-   
     </div>
   );
 }
