@@ -11,8 +11,8 @@ const partnerApiService = firmBaseApi.injectEndpoints({
       invalidatesTags: ["partner"],
     }),
     getPartnersList: builder.query({
-      query: (firmId) => ({
-        url: `/partner/${firmId}/list`,
+      query: () => ({
+        url: `/partner/list`,
         method: "GET",
       }),
       providesTags: ["partner"],
@@ -25,8 +25,8 @@ const partnerApiService = firmBaseApi.injectEndpoints({
       providesTags: ["partner"],
     }),
     updatePartner: builder.mutation({
-      query: ({ firmId, partnerId, formData }) => ({
-        url: `/partner/${firmId}/${partnerId}/update`, // ✅ correct URL format
+      query: ({ partnerId, formData }) => ({
+        url: `/partner/${partnerId}/update`, // ✅ correct URL format
         method: "PUT",
         body: formData,
       }),
@@ -34,8 +34,8 @@ const partnerApiService = firmBaseApi.injectEndpoints({
     }),
 
     deletePartner: builder.mutation({
-      query: ({ firmId, partnerId }) => ({
-        url: `/partner/${firmId}/${partnerId}/delete`,
+      query: ({ partnerId }) => ({
+        url: `/partner/${partnerId}/delete`,
         method: "DELETE",
       }),
       invalidatesTags: ["partner"],
