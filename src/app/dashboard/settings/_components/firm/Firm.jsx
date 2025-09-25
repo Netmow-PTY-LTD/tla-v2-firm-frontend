@@ -16,6 +16,7 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
+
 export default function Firm() {
   const [zipCode, setZipCode] = useState(null);
   const [latitude, setLatitude] = useState(null);
@@ -73,6 +74,8 @@ export default function Firm() {
     useUpdateFirmInfoMutation();
 
   const onSubmit = async (data) => {
+
+    console.log('form data after submit==>',data)
 
     const {
       companyLogo,
@@ -163,12 +166,9 @@ export default function Firm() {
         <CompanyProfile />
         <div className="border-t border-white" />
         <CompanyLocation
-          setZipCode={setZipCode}
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
-          setPostalCode={setPostalCode}
           companyInfo={companyInfo?.data}
         />
+
         <div className="border-t border-white" />
         <CompanyAbout companyInfo={companyInfo?.data} />
 
