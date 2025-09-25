@@ -1,21 +1,22 @@
-
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
-import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
+import {
+  nextStep,
+  setFormData,
+} from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
 import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
 import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
 import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
 
-
-
 export default function LawFirmRegisterStepOne() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
+  const [country, setCountry] = useState(formData.contactInfo.country || "");
 
   const defaultValues = {
     firmName: formData.firmName,
@@ -33,7 +34,6 @@ export default function LawFirmRegisterStepOne() {
   };
 
   const onSubmit = (data) => {
-
     dispatch(
       setFormData({
         firmName: data.firmName,
@@ -55,6 +55,8 @@ export default function LawFirmRegisterStepOne() {
     dispatch(nextStep());
   };
 
+  console.log("defaultValues", defaultValues?.country);
+  console.log("defaultValues", defaultValues?.city);
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -63,30 +65,41 @@ export default function LawFirmRegisterStepOne() {
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
-          <h3 className="tla-auth-title mb-3 text-center">List Your Law Firm</h3>
+          <h3 className="tla-auth-title mb-3 text-center">
+            List Your Law Firm
+          </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
-            Create your firm’s account to add lawyers and oversee their activities
+            Create your firm’s account to add lawyers and oversee their
+            activities
           </p>
 
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepOneSchema}
             defaultValues={defaultValues}
-
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <TextInput
-                name="firmName"
-                label="Law Firm Name"
-                placeholder="i.e. ABC LLC"
-              />
-
               <CountrySelect
                 name="country"
                 label="Country"
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
+                onValueChange={(val) => {
+                  dispatch(
+                    setFormData({
+                      contactInfo: {
+                        country: val,
+                      },
+                    })
+                  );
+                }} // 👈 track
+              />
 
+              <TextInput
+                name="firmName"
+                label="Law Firm Name"
+                placeholder="i.e. ABC LLC"
+                disabled={!formData.contactInfo.country}
               />
 
               {/* City */}
@@ -94,14 +107,32 @@ export default function LawFirmRegisterStepOne() {
                 name="city"
                 label="City"
                 placeholder="Select a city"
-
+                disabled={!formData.contactInfo.country}
+                onSelect={(val) => {
+                  dispatch(
+                    setFormData({
+                      contactInfo: {
+                        city: val,
+                      },
+                    })
+                  );
+                }}
               />
 
               <ZipCodeCombobox
                 name="zipCode"
                 label="Address"
                 placeholder="Select a Zipcode or Address"
-
+                disabled={!formData.contactInfo.country}
+                onSelect={(val) => {
+                  dispatch(
+                    setFormData({
+                      contactInfo: {
+                        zipCode: val,
+                      },
+                    })
+                  );
+                }}
               />
 
               <TextInput
@@ -167,12 +198,3 @@ export default function LawFirmRegisterStepOne() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-

@@ -17,10 +17,10 @@ const firmApiService = firmBaseApi.injectEndpoints({
       providesTags: ["firmInfo", "firm"],
     }),
     updateFirmInfo: builder.mutation({
-      query: () => ({
+      query: (formData) => ({
         url: `/firms/firmInfo/update`, // ✅ correct URL format
         method: "PUT",
-        body,
+        body: formData,
       }),
       invalidatesTags: ["firmInfo", "firm"],
     }),
