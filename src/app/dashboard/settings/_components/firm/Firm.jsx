@@ -73,7 +73,7 @@ export default function Firm() {
     useUpdateFirmInfoMutation();
 
   const onSubmit = async (data) => {
-    console.log("data ===>", data);
+
     const {
       companyLogo,
       firmName,
@@ -89,37 +89,35 @@ export default function Firm() {
     } = data;
 
     const payload = {
-      companyProfileInfo: {
-        firmName,
-        registrationNumber,
-        vatTaxId,
-        contactInfo: {
-          country:
-            currentUser?.data?.firmProfile?.contactInfo?.country ||
-            currentUser?.data?.firmProfile?.contactInfo?.country?._id, // Use country from current user profile
-          city:
-            currentUser?.data?.firmProfile?.contactInfo?.city ||
-            currentUser?.data?.firmProfile?.contactInfo?.city?._id,
-          zipCode:
-            currentUser?.data?.firmProfile?.contactInfo?.zipCode ||
-            currentUser?.data?.firmProfile?.contactInfo?.zipCode?._id,
-          phone,
-          email,
-          officialWebsite: website,
-        },
-        location: {
-          address: rest.location.address,
-          hideFromProfile: rest.location.hideFromProfile,
-          locationReason: rest.location.locationReason,
-          coordinates: {
-            lat: rest.location?.coordinates?.lat,
-            lng: rest.location?.coordinates?.lng,
-          },
-        },
-        companySize,
-        yearsInBusiness,
-        description,
+      firmName,
+      registrationNumber,
+      vatTaxId,
+      contactInfo: {
+        country:
+          currentUser?.data?.firmProfile?.contactInfo?.country ||
+          currentUser?.data?.firmProfile?.contactInfo?.country?._id, // Use country from current user profile
+        city:
+          currentUser?.data?.firmProfile?.contactInfo?.city ||
+          currentUser?.data?.firmProfile?.contactInfo?.city?._id,
+        zipCode:
+          currentUser?.data?.firmProfile?.contactInfo?.zipCode ||
+          currentUser?.data?.firmProfile?.contactInfo?.zipCode?._id,
+        phone,
+        email,
+        officialWebsite: website,
       },
+      location: {
+        address: rest.location.address,
+        hideFromProfile: rest.location.hideFromProfile,
+        locationReason: rest.location.locationReason,
+        coordinates: {
+          lat: rest.location?.coordinates?.lat,
+          lng: rest.location?.coordinates?.lng,
+        },
+      },
+      companySize,
+      yearsInBusiness,
+      description,
     };
 
     console.log("Payload to send:", payload);
