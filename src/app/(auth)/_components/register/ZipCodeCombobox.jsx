@@ -28,7 +28,6 @@ const ZipCodeCombobox = ({
 
   // ✅ watch selected country from form
   const selectedCountry = useWatch({ control, name: "country" });
-  const selectedZipCodeId = useWatch({ control, name }); // 🔧 watch current selected value
 
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery();
@@ -53,36 +52,13 @@ const ZipCodeCombobox = ({
   );
 
   // ✅ transform API data → options
-  // const options = useMemo(() => {
-  //   if (!data?.data) return [];
-  //   return data.data.map((z) => ({
-  //     value: z._id,
-  //     label: `${z.zipcode}`, // adjust based on API response
-  //   }));
-  // }, [data]);
-
-  const zipCodeList = data?.data || [];
-
-  // 🔧 try to find selected item in fetched data
-  const selectedZipCodeLabel = location?.address?.zipcode || ""; // fallback label
-
   const options = useMemo(() => {
-    const base = zipCodeList.map((z) => ({
+    if (!data?.data) return [];
+    return data.data.map((z) => ({
       value: z._id,
-      label: z.zipcode,
+      label: `${z.zipcode}`, // adjust based on API response
     }));
-
-    const alreadyIncluded = base.find((z) => z.value === selectedZipCodeId);
-
-    if (!alreadyIncluded && selectedZipCodeId) {
-      base.unshift({
-        value: selectedZipCodeId,
-        label: selectedZipCodeLabel,
-      });
-    }
-
-    return base;
-  }, [zipCodeList, selectedZipCodeId, selectedZipCodeLabel]);
+  }, [data]);
 
   return (
     <Controller
