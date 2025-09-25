@@ -49,7 +49,7 @@ export default function Firm() {
       //   email: companyInfo?.data?.contactInfo?.email || "",
       //   officialWebsite: companyInfo?.data?.contactInfo?.officialWebsite || "",
       // },
-      zipCode: companyInfo?.data?.contactInfo?.zipCode || "",
+      zipCode: companyInfo?.data?.contactInfo?.zipCode?._id || "",
       companySize: companyInfo?.data?.companySize || "",
       yearsInBusiness: companyInfo?.data?.yearsInBusiness || "",
       description: companyInfo?.data?.description || "",
