@@ -1,0 +1,51 @@
+import { firmBaseApi } from "@/store/baseApi/firmBaseApi";
+
+const staffApiService = firmBaseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    createStaff: builder.mutation({
+      query: (body) => ({
+        url: "/staffs/add",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["staff"],
+    }),
+    getFirmWiseStaffList: builder.query({
+      query: (firmId) => ({
+        url: `/staffs/${firmId}/list`,
+        method: "GET",
+      }),
+      providesTags: ["staff-list", "staff"],
+    }),
+    getSingleStaffById: builder.query({
+      query: ({ firmId, staffId }) => ({
+        url: `/staffs/${firmId}/${staffId}`,
+        method: "GET",
+      }),
+      providesTags: ["staff"],
+    }),
+    updateStaff: builder.mutation({
+      query: (body) => ({
+        url: `/staffs/${body?.firmId}/${body?.staffId}/update`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["staff"],
+    }),
+    deleteStaff: builder.mutation({
+      query: (body) => ({
+        url: `/staffs/${body?.firmId}/${body?.staffId}/delete`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["staff"],
+    }),
+  }),
+});
+
+export const {
+  useCreateStaffMutation,
+  useGetFirmWiseStaffListQuery,
+  useGetSingleStaffByIdQuery,
+  useUpdateStaffMutation,
+  useDeleteStaffMutation,
+} = staffApiService;

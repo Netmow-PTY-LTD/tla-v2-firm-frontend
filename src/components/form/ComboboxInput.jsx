@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useState } from "react";
@@ -18,15 +16,12 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
 
-
-
-
   // filter options based on query
   const filteredOptions =
     query === ""
       ? options
       : options?.filter((item) =>
-          item.label.toLowerCase().includes(query.toLowerCase())
+          item?.label?.toLowerCase()?.includes(query.toLowerCase())
         );
 
   return (
@@ -34,7 +29,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
       control={control}
       name={name}
       render={({ field, fieldState }) => (
-        <div className="mb-4">
+        <div className="w-full">
           <label className="block text-sm font-medium mb-1">{label}</label>
           <Combobox
             value={field.value}
@@ -45,7 +40,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
           >
             <div className="relative">
               <ComboboxInput
-                className=" w-full"
+                className=" w-full border border-gray-300 rounded-md pl-3 pr-10 py-2 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-200 focus:border-gray-200 h-[44px]"
                 displayValue={(val) =>
                   options?.find((o) => o.value === val)?.label || ""
                 }
@@ -57,17 +52,15 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
               </ComboboxButton>
 
               {filteredOptions?.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredOptions.map((item) => (
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-gray-200 ring-opacity-5 focus:outline-none">
+                  {filteredOptions.map((item, index) => (
                     <ComboboxOption
-                      key={item.value}
+                      key={index}
                       value={item.value}
                       className={({ active }) =>
                         cn(
                           "cursor-pointer select-none relative py-2 pl-10 pr-4",
-                          active
-                            ? "bg-blue-100 text-blue-900"
-                            : "text-gray-900"
+                          active ? "bg-blue-100 text-blue-900" : "text-gray-900"
                         )
                       }
                     >
@@ -106,15 +99,3 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
 };
 
 export default InputCombobox;
-
-
-
-
-
-
-
-
-
-
-
-

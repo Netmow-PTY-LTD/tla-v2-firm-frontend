@@ -42,7 +42,7 @@ export default function SelectInput({
             {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
             <FormControl>
               <Select
-                disabled={disabled}
+                // disabled={disabled}
                 // onValueChange={field.onChange}
                 onValueChange={(val) => {
                   field.onChange(val); // maintain react-hook-form behavior
@@ -76,4 +76,3 @@ export default function SelectInput({
     />
   );
 }
-

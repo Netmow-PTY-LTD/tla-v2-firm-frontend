@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import CheckboxInput from '@/components/form/CheckboxInput';
-import SelectInput from '@/components/form/SelectInput';
-import TextInput from '@/components/form/TextInput';
-import { safeJsonParse } from '@/helpers/safeJsonParse';
-import Cookies from 'js-cookie';
-import { AlertCircle } from 'lucide-react';
-import React, { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
-
+import CheckboxInput from "@/components/form/CheckboxInput";
+import SelectInput from "@/components/form/SelectInput";
+import TextInput from "@/components/form/TextInput";
+import { safeJsonParse } from "@/helpers/safeJsonParse";
+import Cookies from "js-cookie";
+import { AlertCircle } from "lucide-react";
+import React, { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 
 export default function CompanyLocation({
   setZipCode,
   setLatitude,
   setLongitude,
   setPostalCode,
+  companyInfo,
 }) {
   const { watch, setValue } = useFormContext();
 
-  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+  const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
 
-  const address = watch('location.address');
-  console.log('address', address);
-  const hideFromProfile = watch('location.hideFromProfile');
-  const coordinates = watch('location.coordinates');
+  const address = watch("location.address");
+  console.log("address", address);
+  const hideFromProfile = watch("location.hideFromProfile");
+  const coordinates = watch("location.coordinates");
 
   const mapQuery = address?.trim()
     ? encodeURIComponent(address)
@@ -35,11 +35,11 @@ export default function CompanyLocation({
     let autocomplete;
 
     const initAutocomplete = () => {
-      const input = document.getElementById('address-input');
+      const input = document.getElementById("address-input");
       if (!input) return;
 
       autocomplete = new google.maps.places.Autocomplete(input, {
-        fields: ['geometry', 'formatted_address', 'address_components'],
+        fields: ["geometry", "formatted_address", "address_components"],
       });
 
       // ✅ Restrict search to Australia
@@ -47,15 +47,15 @@ export default function CompanyLocation({
         country: [cookieCountry?.code?.toLowerCase()],
       });
 
-      autocomplete.addListener('place_changed', () => {
+      autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
         if (!place.geometry) return;
 
         // Extract ZIP code
         const postalCodeObj = place.address_components.find((c) =>
-          c.types.includes('postal_code')
+          c.types.includes("postal_code")
         );
-        const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+        const zipCode = postalCodeObj ? postalCodeObj.long_name : "";
         setPostalCode(zipCode);
 
         if (!zipCode) {
@@ -65,16 +65,16 @@ export default function CompanyLocation({
 
         setZipCode(place.formatted_address);
 
-        setValue('location.address', place.formatted_address);
-        setValue('location.coordinates.lat', place.geometry.location.lat());
-        setValue('location.coordinates.lng', place.geometry.location.lng());
+        setValue("location.address", place.formatted_address);
+        setValue("location.coordinates.lat", place.geometry.location.lat());
+        setValue("location.coordinates.lng", place.geometry.location.lng());
         //setValue('location.zipCode', zipCode);
-        console.log('Zip code:', zipCode);
+        console.log("Zip code:", zipCode);
       });
     };
 
     // ✅ Wait until Google script is loaded
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       if (window.google && window.google.maps && window.google.maps.places) {
         initAutocomplete();
       } else {
@@ -96,31 +96,31 @@ export default function CompanyLocation({
         );
         const data = await res.json();
 
-        console.log('data from geocode', data);
+        console.log("data from geocode", data);
 
-        if (data.status === 'OK') {
+        if (data.status === "OK") {
           const coords = data.results[0].geometry.location;
-          setValue('location.coordinates.lat', coords.lat);
-          setValue('location.coordinates.lng', coords.lng);
+          setValue("location.coordinates.lat", coords.lat);
+          setValue("location.coordinates.lng", coords.lng);
 
           setLatitude(coords.lat);
           setLongitude(coords.lng);
 
           // Extract ZIP code
           const postalCodeObj = data.results[0].address_components.find(
-            (component) => component.types.includes('postal_code')
+            (component) => component.types.includes("postal_code")
           );
-          const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+          const zipCode = postalCodeObj ? postalCodeObj.long_name : "";
 
           setPostalCode(zipCode);
 
           // ✅ Prevent null in autocomplete
-          setValue('location.zipCode', zipCode);
+          setValue("location.zipCode", zipCode);
           setZipCode(data.results[0].formatted_address);
-          console.log('Zip code:', zipCode);
+          console.log("Zip code:", zipCode);
         }
       } catch (err) {
-        console.error('Failed to fetch coordinates', err);
+        console.error("Failed to fetch coordinates", err);
       }
     };
 
@@ -131,16 +131,16 @@ export default function CompanyLocation({
 
   const options = [
     {
-      label: 'No Location',
-      value: 'no_location',
+      label: "No Location",
+      value: "no_location",
     },
     {
-      label: 'Online only',
-      value: 'online_only',
+      label: "Online only",
+      value: "online_only",
     },
     {
-      label: 'Multiple Location',
-      value: 'multiple_location',
+      label: "Multiple Location",
+      value: "multiple_location",
     },
   ];
 
@@ -176,7 +176,7 @@ export default function CompanyLocation({
           <div>
             <SelectInput
               label={"Can't give us a particular location?"}
-              name={'location.locationReason'}
+              name={"location.locationReason"}
               options={options}
               placeholder="Select a reason"
               textColor="text-[#4b4949]"

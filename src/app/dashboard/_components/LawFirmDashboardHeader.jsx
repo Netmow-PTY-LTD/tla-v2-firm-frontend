@@ -23,7 +23,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
   return (
     <header className="db-header">
       <div className="db-header-container flex gap-4">
-        <Link href="/admin" className="db-logo">
+        <Link href={`${token ? "/dashboard" : "/"}`} className="db-logo">
           <Image
             src={"/assets/img/company-logo.png"}
             alt="TLA Logo"

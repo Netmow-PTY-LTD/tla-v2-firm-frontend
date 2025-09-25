@@ -6,23 +6,40 @@ import FormWrapper from "@/components/form/FormWrapper";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
 import TextInput from "@/components/form/TextInput";
 import CheckboxInput from "@/components/form/CheckboxInput";
+import { useCreateStaffMutation } from "@/store/firmFeatures/staff/staffApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useRouter } from "next/navigation";
+import SelectInput from "@/components/form/SelectInput";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
-  designation: z.string().min(2, "Designation is required"),
+  fullName: z.string().min(1, "Full name is required"),
+  designation: z.string().min(1, "Designation is required"),
+  role: z.enum(["admin", "staff"], {
+    errorMap: () => ({ message: "Role is required" }),
+  }),
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 chars"),
-  permissions: z
-    .object({
-      view_clients: z.boolean(),
-      manage_cases: z.boolean(),
-      access_billing: z.boolean(),
-      admin_rights: z.boolean(),
-    })
-    .refine((val) => Object.values(val).some(Boolean), {
-      message: "At least one permission must be selected",
-    }),
+  password: z.string().min(4, "Password must be at least 4 chars"),
+  phone: z.string().min(1, "Phone number is required"),
+  status: z.enum(["active", "inactive"], {
+    errorMap: () => ({ message: "Status is required" }),
+  }),
+  // permissions: z
+  //   .object({
+  //     view_clients: z.boolean(),
+  //     manage_cases: z.boolean(),
+  //     access_billing: z.boolean(),
+  //     admin_rights: z.boolean(),
+  //   })
+  //   .superRefine((val, ctx) => {
+  //     if (val && !Object.values(val).some(Boolean)) {
+  //       ctx.addIssue({
+  //         code: z.ZodIssueCode.custom,
+  //         message: "At least one permission must be selected",
+  //       });
+  //     }
+  //   })
+  //   .optional(),
 });
 
 const permissions = [
@@ -32,23 +49,67 @@ const permissions = [
   { label: "Admin Rights", value: "admin_rights" },
 ];
 
-const defaultValues = {
-  fullName: "",
-  designation: "",
-  email: "",
-  password: "",
-  permissions: {
-    view_clients: false,
-    manage_cases: false,
-    access_billing: false,
-    admin_rights: false,
-  },
-};
-
 export default function CreateStaffPage() {
-  function onSubmit(values) {
-    console.log("New staff data:", values);
+  const router = useRouter();
+
+  const defaultValues = {
+    fullName: "",
+    designation: "",
+    role: "",
+    phone: "",
+    status: "active",
+    email: "",
+    password: "",
+    permissions: {
+      view_clients: false,
+      manage_cases: false,
+      access_billing: false,
+      admin_rights: false,
+    },
+  };
+
+  const [createStaff] = useCreateStaffMutation();
+
+  async function onSubmit(values) {
+    //console.log("New staff data:", values);
+
+    const {
+      fullName,
+      designation,
+      role,
+      email,
+      password,
+      phone,
+      status,
+      permissions,
+    } = values;
     // TODO: send values to API (e.g. /api/staff)
+
+    const payload = {
+      fullName,
+      designation,
+      role,
+      email,
+      password,
+      phone,
+      status,
+      permissions,
+    };
+    console.log("Payload to send:", payload);
+
+    try {
+      const res = await createStaff(payload).unwrap();
+      console.log("Staff created successfully:", res);
+      if (res?.success) {
+        showSuccessToast(res?.message || "Staff created successfully!");
+        router.push("/dashboard/staffs/list");
+      }
+    } catch (error) {
+      console.error("Failed to create staff:", error);
+      showErrorToast(
+        "Error creating staff: " + error?.data?.message || error.error
+      );
+    }
   }
 
   return (
@@ -86,6 +147,16 @@ export default function CreateStaffPage() {
                 placeholder="i.e. Manager, Lawyer etc"
                 textColor="text-[#4b4949]"
               />
+              <SelectInput
+                name="role"
+                label="Role"
+                placeholder="Select role"
+                textColor="text-[#4b4949]"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "Staff", value: "staff" },
+                ]}
+              />
             </div>
           </div>
 
@@ -102,6 +173,24 @@ export default function CreateStaffPage() {
               label="Password"
               placeholder="********"
               textColor="text-[#4b4949]"
+            />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+            <TextInput
+              name="phone"
+              label="Phone"
+              placeholder="+1XXXXXXXXX"
+              textColor="text-[#4b4949]"
+            />
+            <SelectInput
+              name="status"
+              label="Status"
+              placeholder="Select Status"
+              textColor="text-[#4b4949]"
+              options={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
             />
           </div>
           <div className="border-t border-[#f2f2f2] h-1 mt-10" />

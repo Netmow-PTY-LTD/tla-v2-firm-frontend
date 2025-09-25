@@ -3,7 +3,7 @@ import { toast } from "sonner";
 // Success Toast
 export const showSuccessToast = (message) => {
   toast.success(message, {
-    duration: 2000,
+    duration: 3000,
     position: "top-right",
     style: { backgroundColor: "#22bb33", color: "white" },
   });
@@ -12,7 +12,7 @@ export const showSuccessToast = (message) => {
 // Error Toast
 export const showErrorToast = (message) => {
   toast.error(message, {
-    duration: 5000,
+    duration: 3000,
     position: "top-right",
     style: { backgroundColor: "#bb2124", color: "white" },
   });
@@ -33,7 +33,7 @@ export const showInfoToast = (message) => {
 // Warning Toast
 export const showWarningToast = (message) => {
   toast(message, {
-    duration: 5000,
+    duration: 3000,
     position: "top-right",
     style: {
       backgroundColor: "#f0ad4e",

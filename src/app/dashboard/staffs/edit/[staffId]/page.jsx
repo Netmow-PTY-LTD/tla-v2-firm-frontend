@@ -8,69 +8,44 @@ import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
 import CheckboxInput from "@/components/form/CheckboxInput";
-
-// ✅ Example staff data
-const staffData = [
-  {
-    id: 1,
-    name: "John Doe",
-    role: "Lawyer",
-    email: "john@example.com",
-    status: "Active",
-    lastLogin: "2025-09-10",
-    permissions: {
-      view_clients: true,
-      manage_cases: false,
-      access_billing: true,
-      admin_rights: false,
-    },
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    role: "Admin",
-    email: "jane@example.com",
-    status: "Inactive",
-    lastLogin: "2025-09-01",
-    permissions: {
-      view_clients: true,
-      manage_cases: true,
-      access_billing: true,
-      admin_rights: true,
-    },
-  },
-  {
-    id: 3,
-    name: "Mark Lee",
-    role: "Assistant",
-    email: "mark@example.com",
-    status: "Active",
-    lastLogin: "2025-09-12",
-    permissions: {
-      view_clients: true,
-      manage_cases: false,
-      access_billing: false,
-      admin_rights: false,
-    },
-  },
-];
+import {
+  useGetFirmWiseStaffListQuery,
+  useGetSingleStaffByIdQuery,
+  useUpdateStaffMutation,
+} from "@/store/firmFeatures/staff/staffApiService";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import SelectInput from "@/components/form/SelectInput";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
-  designation: z.string().min(2, "Designation is required"),
+  fullName: z.string().min(1, "Full name is required"),
+  designation: z.string().min(1, "Designation is required"),
+  role: z.enum(["admin", "staff"], {
+    errorMap: () => ({ message: "Role is required" }),
+  }),
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 chars"),
-  permissions: z
-    .object({
-      view_clients: z.boolean(),
-      manage_cases: z.boolean(),
-      access_billing: z.boolean(),
-      admin_rights: z.boolean(),
-    })
-    .refine((val) => Object.values(val).some(Boolean), {
-      message: "At least one permission must be selected",
-    }),
+  password: z.string().min(4, "Password must be at least 4 chars"),
+  phone: z.string().min(1, "Phone number is required"),
+  status: z.enum(["active", "inactive"], {
+    errorMap: () => ({ message: "Status is required" }),
+  }),
+  // permissions: z
+  //   .object({
+  //     view_clients: z.boolean(),
+  //     manage_cases: z.boolean(),
+  //     access_billing: z.boolean(),
+  //     admin_rights: z.boolean(),
+  //   })
+  //   .superRefine((val, ctx) => {
+  //     if (val && !Object.values(val).some(Boolean)) {
+  //       ctx.addIssue({
+  //         code: z.ZodIssueCode.custom,
+  //         message: "At least one permission must be selected",
+  //       });
+  //     }
+  //   })
+  //   .optional(),
 });
 
 const permissions = [
@@ -82,25 +57,79 @@ const permissions = [
 
 export default function EditStaffPage() {
   const params = useParams();
-  const staffId = params.staffId;
+  const staffId = params?.staffId;
 
-  const staff = staffData.find((s) => s.id.toString() === staffId);
+  const { data: currentUser } = useGetFirmUserInfoQuery();
+
+  const { data: staffData, isLoading: isStaffDataLoading } =
+    useGetSingleStaffByIdQuery(
+      { firmId: currentUser?.data?._id, staffId },
+      {
+        skip: !currentUser?.data?._id || !staffId,
+      }
+    );
+
+  const staff = staffData?.data;
   console.log("staff:", staff);
 
   const defaultValues = useMemo(
     () => ({
-      fullName: staff?.name || "",
-      designation: staff?.role || "",
+      fullName: staff?.fullName || "",
+      designation: staff?.designation || "",
+      role: staff?.role || "",
       email: staff?.email || "",
-      password: "",
+      password: staff?.password || "",
+      phone: staff?.phone || "",
+      status: staff?.status || "",
       permissions: staff?.permissions || [],
     }),
     [staff]
   );
 
-  function onSubmit(values) {
+  const [updateStaff] = useUpdateStaffMutation();
+
+  async function onSubmit(values) {
     console.log("New staff data:", values);
+
+    const {
+      fullName,
+      designation,
+      role,
+      email,
+      password,
+      phone,
+      status,
+      permissions,
+    } = values;
     // TODO: send values to API (e.g. /api/staff)
+
+    const payload = {
+      fullName,
+      designation,
+      role,
+      email,
+      password,
+      phone,
+      status,
+      permissions,
+    };
+    console.log("Payload to send:", payload);
+    try {
+      const res = await updateStaff({
+        ...payload,
+        firmId: currentUser?.data?._id,
+        staffId: staffId,
+      });
+      console.log("Staff updated successfully:", res);
+      if (res?.data?.success) {
+        showSuccessToast(res?.data?.message || "Staff updated successfully!");
+      }
+    } catch (error) {
+      console.error("Failed to update staff:", error);
+      showErrorToast(
+        "Error updating staff: " + error?.data?.message || error.error
+      );
+    }
   }
 
   return (
@@ -136,6 +165,16 @@ export default function EditStaffPage() {
                 placeholder="i.e. Manager, Lawyer etc"
                 textColor="text-[#4b4949]"
               />
+              <SelectInput
+                name="role"
+                label="Role"
+                placeholder="Select role"
+                textColor="text-[#4b4949]"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "Staff", value: "staff" },
+                ]}
+              />
             </div>
           </div>
 
@@ -152,6 +191,24 @@ export default function EditStaffPage() {
               label="Password"
               placeholder="********"
               textColor="text-[#4b4949]"
+            />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+            <TextInput
+              name="phone"
+              label="Phone"
+              placeholder="+1XXXXXXXXX"
+              textColor="text-[#4b4949]"
+            />
+            <SelectInput
+              name="status"
+              label="Status"
+              placeholder="Select Status"
+              textColor="text-[#4b4949]"
+              options={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
             />
           </div>
           <div className="border-t border-[#f2f2f2] h-1 mt-10" />

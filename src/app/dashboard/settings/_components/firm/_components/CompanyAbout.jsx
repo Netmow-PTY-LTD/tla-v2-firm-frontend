@@ -5,7 +5,7 @@ import TextInput from "@/components/form/TextInput";
 
 import React from "react";
 
-export default function CompanyAbout() {
+export default function CompanyAbout({ companyInfo }) {
   const options = [
     {
       label: "Self-employed / sole trader",
