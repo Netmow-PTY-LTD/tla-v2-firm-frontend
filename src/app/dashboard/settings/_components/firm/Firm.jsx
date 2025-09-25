@@ -8,8 +8,13 @@ import FirmFormAction from "./form/FirmFormAction";
 import CompanyProfile from "./_components/CompanyProfile";
 import CompanyLocation from "./_components/CompanyLocation";
 import CompanyAbout from "./_components/CompanyAbout";
-import { useState } from "react";
-import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
+import { use, useMemo, useState } from "react";
+import {
+  useGetFirmInfoQuery,
+  useUpdateFirmInfoMutation,
+} from "@/store/firmFeatures/firmApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function Firm() {
   const [zipCode, setZipCode] = useState(null);
@@ -17,67 +22,102 @@ export default function Firm() {
   const [longitude, setLongitude] = useState(null);
   const [postalCode, setPostalCode] = useState("");
 
-  const { data: companyInfo, isLoading: isCompanyInfoLoading } =
-    useGetFirmInfoQuery();
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useGetFirmUserInfoQuery();
+
+  console.log("currentUser ===>", currentUser?.data);
+
+  const {
+    data: companyInfo,
+    isLoading: isCompanyInfoLoading,
+    refetch: refetchCompanyInfo,
+  } = useGetFirmInfoQuery();
   console.log("company ===>", companyInfo?.data);
 
-  const defaultValues = {
-    firmName: companyInfo?.data?.firmName || "",
-    email: companyInfo?.data?.contactInfo?.email || "",
-    phone: companyInfo?.data?.contactInfo?.phone || "",
-    website: companyInfo?.data?.contactInfo?.officialWebsite || "",
-    logo: companyInfo?.data?.logo || "",
-    registrationNumber: companyInfo?.data?.registrationNumber || "",
-    vatTaxId: companyInfo?.data?.vatTaxId || "",
-    yearEstablished: companyInfo?.data?.yearEstablished || "",
-    legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
-    contactInfo: {
-      officeAddress: companyInfo?.data?.contactInfo?.officeAddress || "",
-      country: companyInfo?.data?.contactInfo?.country || "",
-      city: companyInfo?.data?.contactInfo?.city || "",
-      phone: companyInfo?.data?.contactInfo?.phone || "",
+  const defaultValues = useMemo(
+    () => ({
+      firmName: companyInfo?.data?.firmName || "",
+      companyLogo: companyInfo?.data?.logo || "",
       email: companyInfo?.data?.contactInfo?.email || "",
-      officialWebsite: companyInfo?.data?.contactInfo?.officialWebsite || "",
-    },
-    overview: companyInfo?.data?.overview || "",
-  };
+      phone: companyInfo?.data?.contactInfo?.phone || "",
+      website: companyInfo?.data?.contactInfo?.officialWebsite || "",
+      registrationNumber: companyInfo?.data?.registrationNumber || "",
+      vatTaxId: companyInfo?.data?.vatTaxId || "",
+      yearEstablished: companyInfo?.data?.yearEstablished || "",
+      legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
+      contactInfo: {
+        country: companyInfo?.data?.contactInfo?.country || "",
+        city: companyInfo?.data?.contactInfo?.city || "",
+        zipCode: companyInfo?.data?.contactInfo?.zipCode || "",
+        phone: companyInfo?.data?.contactInfo?.phone || "",
+        email: companyInfo?.data?.contactInfo?.email || "",
+        officialWebsite: companyInfo?.data?.contactInfo?.officialWebsite || "",
+      },
+      location: {
+        address: companyInfo?.data?.location?.address ?? "",
+        hideFromProfile: companyInfo?.data?.location?.hideFromProfile ?? false,
+        locationReason: companyInfo?.data?.location?.locationReason ?? "",
+        coordinates: {
+          lat: companyInfo?.data?.location?.coordinates?.lat ?? 0,
+          lng: companyInfo?.data?.location?.coordinates?.lng ?? 0,
+        },
+      },
+      companySize: companyInfo?.data?.companySize || "",
+      yearsInBusiness: companyInfo?.data?.yearsInBusiness || "",
+      description: companyInfo?.data?.description || "",
+    }),
+    [companyInfo]
+  );
 
-  const onSubmit = (data) => {
+  const [updateFirmInfo, { isLoading: isUpdatingFirmInfoLoading }] =
+    useUpdateFirmInfoMutation();
+
+  const onSubmit = async (data) => {
     console.log("data ===>", data);
     const {
       companyLogo,
-      companyName,
-      contactEmail,
-      phoneNumber,
+      firmName,
+      email,
+      phone,
       website,
       registrationNumber,
       vatTaxId,
       companySize,
-      yearInBusiness,
+      yearsInBusiness,
       description,
       ...rest
     } = data;
+
     const payload = {
-      companyProfile: {
-        companyName,
-        contactEmail,
-        phoneNumber,
-        website,
+      companyProfileInfo: {
+        firmName,
         registrationNumber,
         vatTaxId,
-      },
-      companyLocation: {
-        address: rest.location.address,
-        hideFromProfile: rest.location.hideFromProfile,
-        locationReason: rest.location.locationReason,
-        coordinates: {
-          lat: rest.location?.coordinates?.lat,
-          lng: rest.location?.coordinates?.lng,
+        contactInfo: {
+          country:
+            currentUser?.data?.firmProfile?.contactInfo?.country ||
+            currentUser?.data?.firmProfile?.contactInfo?.country?._id, // Use country from current user profile
+          city:
+            currentUser?.data?.firmProfile?.contactInfo?.city ||
+            currentUser?.data?.firmProfile?.contactInfo?.city?._id,
+          zipCode:
+            currentUser?.data?.firmProfile?.contactInfo?.zipCode ||
+            currentUser?.data?.firmProfile?.contactInfo?.zipCode?._id,
+          phone,
+          email,
+          officialWebsite: website,
         },
-      },
-      companyAbout: {
+        location: {
+          address: rest.location.address,
+          hideFromProfile: rest.location.hideFromProfile,
+          locationReason: rest.location.locationReason,
+          coordinates: {
+            lat: rest.location?.coordinates?.lat,
+            lng: rest.location?.coordinates?.lng,
+          },
+        },
         companySize,
-        yearInBusiness,
+        yearsInBusiness,
         description,
       },
     };
@@ -100,6 +140,23 @@ export default function Firm() {
     }
 
     // TODO: send values to API (e.g. /api/staff)
+    try {
+      const res = await updateFirmInfo(formData).unwrap();
+      console.log("Firm info updated successfully:", res);
+      if (res?.success) {
+        // show success message
+        showSuccessToast(
+          res?.message || "Firm information updated successfully"
+        );
+        refetchCompanyInfo();
+      }
+    } catch (error) {
+      console.error("Failed to update firm info:", error);
+      // Handle error (e.g., show error message)
+      showErrorToast(
+        error?.data?.message || "Failed to update firm information"
+      );
+    }
   };
 
   return (

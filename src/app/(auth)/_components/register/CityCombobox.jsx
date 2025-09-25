@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -17,7 +15,13 @@ import { cn } from "@/lib/utils";
 // API hook import
 import { useGetCityListQuery } from "@/store/tlaFeatures/public/publicApiService";
 
-const CityCombobox = ({ name, label, placeholder, onSelect }) => {
+const CityCombobox = ({
+  name,
+  label,
+  placeholder,
+  disabled = false,
+  onSelect,
+}) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
 
@@ -57,6 +61,7 @@ const CityCombobox = ({ name, label, placeholder, onSelect }) => {
               field.onChange(val);
               if (onSelect) onSelect(val);
             }}
+            disabled={disabled}
           >
             <div className="relative">
               <ComboboxInput
@@ -70,7 +75,6 @@ const CityCombobox = ({ name, label, placeholder, onSelect }) => {
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4" />
               </ComboboxButton>
-
 
               <ComboboxOptions
                 className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md 
@@ -114,17 +118,17 @@ const CityCombobox = ({ name, label, placeholder, onSelect }) => {
                     </ComboboxOption>
                   ))
                 ) : (
-                  <div className="p-2 text-gray-500 text-center">No cities found</div>
+                  <div className="p-2 text-gray-500 text-center">
+                    No cities found
+                  </div>
                 )}
               </ComboboxOptions>
-
-
-
-
             </div>
           </Combobox>
           {fieldState.error && (
-            <p className="text-red-600 text-sm mt-1">{fieldState.error.message}</p>
+            <p className="text-red-600 text-sm mt-1">
+              {fieldState.error.message}
+            </p>
           )}
         </div>
       )}
