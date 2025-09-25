@@ -85,7 +85,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
     clearErrors("videos");
     setOpen(false);
   };
-  const [updatePhotosData, { isLoading: photosIsLoading }] =
+  const [updateVideosData, { isLoading: photosIsLoading }] =
     useUpdateFirmMediaMutation();
   const handlePhotoUpload = async (data) => {
     //console.log('data', data);
@@ -93,9 +93,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
       const { video_url } = data;
 
       const payload = {
-        photos: {
-          videos: video_url,
-        },
+        videos: video_url,
       };
 
       console.log("payload", payload);
@@ -103,7 +101,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
       const formData = new FormData();
       formData.append("data", JSON.stringify(payload));
 
-      const res = await updatePhotosData(formData).unwrap();
+      const res = await updateVideosData(formData).unwrap();
       console.log("res", res);
       if (res?.success === true) {
         showSuccessToast(res?.message || "Update successful");
@@ -166,7 +164,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
               />
               <button
                 type="button"
-                className="absolute top-2 right-2 bg-white p-1 rounded-full shadow group-hover:opacity-100 opacity-0 transition"
+                className="absolute top-2 right-2 bg-white p-1 rounded-full shadow group-hover:opacity-100 opacity-0 transition cursor-pointer"
                 onClick={() => handleDeleteFirmMedia(index)}
               >
                 <Trash2 className="w-4 h-4 text-red-500" />
@@ -209,7 +207,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
             <button
               // onClick={onSave}
               type="submit"
-              className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
+              className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae] cursor-pointer"
             >
               Add Link
             </button>
