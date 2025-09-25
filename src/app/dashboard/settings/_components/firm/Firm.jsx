@@ -16,23 +16,19 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
+
 export default function Firm() {
-  const [zipCode, setZipCode] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [postalCode, setPostalCode] = useState("");
 
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery();
 
-  console.log("currentUser ===>", currentUser?.data);
 
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
     refetch: refetchCompanyInfo,
   } = useGetFirmInfoQuery();
-  console.log("company ===>", companyInfo?.data);
+
 
   const defaultValues = useMemo(
     () => ({
@@ -45,26 +41,11 @@ export default function Firm() {
       vatTaxId: companyInfo?.data?.vatTaxId || "",
       yearEstablished: companyInfo?.data?.yearEstablished || "",
       legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
-      contactInfo: {
-        country: companyInfo?.data?.contactInfo?.country || "",
-        city: companyInfo?.data?.contactInfo?.city || "",
-        zipCode: companyInfo?.data?.contactInfo?.zipCode || "",
-        phone: companyInfo?.data?.contactInfo?.phone || "",
-        email: companyInfo?.data?.contactInfo?.email || "",
-        officialWebsite: companyInfo?.data?.contactInfo?.officialWebsite || "",
-      },
-      location: {
-        address: companyInfo?.data?.location?.address ?? "",
-        hideFromProfile: companyInfo?.data?.location?.hideFromProfile ?? false,
-        locationReason: companyInfo?.data?.location?.locationReason ?? "",
-        coordinates: {
-          lat: companyInfo?.data?.location?.coordinates?.lat ?? 0,
-          lng: companyInfo?.data?.location?.coordinates?.lng ?? 0,
-        },
-      },
+      zipCode: companyInfo?.data?.contactInfo?.zipCode?._id || "",
       companySize: companyInfo?.data?.companySize || "",
       yearsInBusiness: companyInfo?.data?.yearsInBusiness || "",
       description: companyInfo?.data?.description || "",
+
     }),
     [companyInfo]
   );
@@ -73,7 +54,9 @@ export default function Firm() {
     useUpdateFirmInfoMutation();
 
   const onSubmit = async (data) => {
-    console.log("data ===>", data);
+
+    console.log('form data after submit==>', data)
+
     const {
       companyLogo,
       firmName,
@@ -85,41 +68,29 @@ export default function Firm() {
       companySize,
       yearsInBusiness,
       description,
+      zipCode,
       ...rest
     } = data;
 
     const payload = {
-      companyProfileInfo: {
-        firmName,
-        registrationNumber,
-        vatTaxId,
-        contactInfo: {
-          country:
-            currentUser?.data?.firmProfile?.contactInfo?.country ||
-            currentUser?.data?.firmProfile?.contactInfo?.country?._id, // Use country from current user profile
-          city:
-            currentUser?.data?.firmProfile?.contactInfo?.city ||
-            currentUser?.data?.firmProfile?.contactInfo?.city?._id,
-          zipCode:
-            currentUser?.data?.firmProfile?.contactInfo?.zipCode ||
-            currentUser?.data?.firmProfile?.contactInfo?.zipCode?._id,
-          phone,
-          email,
-          officialWebsite: website,
-        },
-        location: {
-          address: rest.location.address,
-          hideFromProfile: rest.location.hideFromProfile,
-          locationReason: rest.location.locationReason,
-          coordinates: {
-            lat: rest.location?.coordinates?.lat,
-            lng: rest.location?.coordinates?.lng,
-          },
-        },
-        companySize,
-        yearsInBusiness,
-        description,
+      firmName,
+      registrationNumber,
+      vatTaxId,
+      contactInfo: {
+        country:
+          currentUser?.data?.firmProfile?.contactInfo?.country ||
+          currentUser?.data?.firmProfile?.contactInfo?.country?._id, // Use country from current user profile
+        city:
+          currentUser?.data?.firmProfile?.contactInfo?.city ||
+          currentUser?.data?.firmProfile?.contactInfo?.city?._id,
+        zipCode: zipCode,
+        phone,
+        email,
+        officialWebsite: website,
       },
+      companySize,
+      yearsInBusiness,
+      description,
     };
 
     console.log("Payload to send:", payload);
@@ -165,12 +136,9 @@ export default function Firm() {
         <CompanyProfile />
         <div className="border-t border-white" />
         <CompanyLocation
-          setZipCode={setZipCode}
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
-          setPostalCode={setPostalCode}
           companyInfo={companyInfo?.data}
         />
+
         <div className="border-t border-white" />
         <CompanyAbout companyInfo={companyInfo?.data} />
 
