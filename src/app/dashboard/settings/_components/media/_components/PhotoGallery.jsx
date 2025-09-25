@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-
-import MultipleFileUploader from '@/components/common/components/MultipleFileUploader';
-import React from 'react';
+import MultipleFileUploader from "@/components/common/components/MultipleFileUploader";
+import React from "react";
 
 export default function PhotoGallery() {
+  console.log("PhotoGallery rendered 1");
   return (
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Photos</h3>

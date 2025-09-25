@@ -74,6 +74,8 @@ export default function VideoGallery() {
     setOpen(false);
   };
 
+  console.log("fields", fields);
+
   return (
     <div className="mt-10">
       <h3 className="text-black font-semibold heading-lg">Videos</h3>

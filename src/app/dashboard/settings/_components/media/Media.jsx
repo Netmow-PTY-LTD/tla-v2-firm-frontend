@@ -11,24 +11,30 @@ import PhotoGallery from "./_components/PhotoGallery";
 import VideoGallery from "./_components/VideoGallery";
 import MediaFormAction from "./_components/MediaFormAction";
 import FormWrapper from "@/components/form/FormWrapper";
+import {
+  useGetFirmInfoQuery,
+  useGetFirmMediaQuery,
+} from "@/store/firmFeatures/firmApiService";
 
 export default function Media() {
-  const {
-    data: userInfo,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetFirmUserInfoQuery(undefined, {
-    refetchOnMountOrArgChange: false,
-    refetchOnReconnect: false,
-    refetchOnFocus: false,
-    keepUnusedDataFor: 600, // keep data for 10 minutes
-  });
+  console.log("Media rendered 1");
+  const { data: firmMediaInfo, isLoading: isFirmMediaIsLoading } =
+    useGetFirmMediaQuery(undefined, {
+      refetchOnMountOrArgChange: false,
+      refetchOnReconnect: false,
+      refetchOnFocus: false,
+      keepUnusedDataFor: 600, // keep data for 10 minutes
+    });
+
+  console.log("Media rendered 2");
+
+  // console.log("firmMediaInfo", firmMediaInfo);
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateFirmDataMutation();
 
-  const profile = userInfo?.data?.profile;
+  console.log("Media rendered 3");
+
+  //const profile = userInfo?.data?.profile;
   // if (isLoading)
   //   return (
   //     <div>
@@ -56,11 +62,13 @@ export default function Media() {
   // }
 
   const defaultValues = {
-    videos: profile?.photos?.videos.map((item) => ({ url: item })) ?? [],
-    photos: profile?.photos?.photos ?? "",
+    videos: firmMediaInfo?.data?.videos.map((item) => ({ url: item })) ?? [],
+    photos: firmMediaInfo?.data?.photos ?? "",
   };
 
+  //console.log("defaultValues", defaultValues);
   const handlePhotoUpload = async (data) => {
+    console.log("data", data);
     try {
       const formData = new FormData();
       const { photos, videos } = data;
@@ -68,15 +76,13 @@ export default function Media() {
       console.log("Form data:", data);
 
       const payload = {
-        photos: {
-          videos: videos?.map((item) => item.url) || [],
-        },
+        videos: videos?.map((item) => item.url) || [],
       };
 
-      // Add JSON payload to formData
+      console.log("Payload:", payload);
+
       formData.append("data", JSON.stringify(payload));
 
-      // Append multiple photos
       if (Array.isArray(photos)) {
         photos.forEach((file) => {
           if (file instanceof File) {
@@ -87,10 +93,12 @@ export default function Media() {
         formData.append("photos", photos);
       }
 
-      // ✅ Log files correctly
+      console.log("check photos data==>", formData.get("data"));
+      console.log("check photos data==>", formData.get("photos"));
 
       const res = await updatePhotosData(formData).unwrap();
       console.log("response ==>", res);
+
       if (res?.success === true) {
         showSuccessToast(res?.message || "Update successful");
       }
@@ -104,7 +112,6 @@ export default function Media() {
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
-        onSubmit={handlePhotoUpload}
         defaultValues={defaultValues}
         // schema={lawyerSettingsMediaFormSchema}
       >
@@ -113,10 +120,10 @@ export default function Media() {
           <VideoGallery />
         </div>
         {/* Footer Buttons */}
-        <MediaFormAction
+        {/* <MediaFormAction
           isLoading={photosIsLoading}
           initialValues={defaultValues}
-        />
+        /> */}
       </FormWrapper>
     </div>
   );

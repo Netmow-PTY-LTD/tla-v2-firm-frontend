@@ -55,9 +55,6 @@ export default function LawFirmRegisterStepOne() {
     dispatch(nextStep());
   };
 
-  console.log("defaultValues", defaultValues?.country);
-  console.log("defaultValues", defaultValues?.city);
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
