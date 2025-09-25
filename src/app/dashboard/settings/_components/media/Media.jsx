@@ -1,16 +1,16 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import {
   useGetFirmUserInfoQuery,
   useUpdateFirmDataMutation,
-} from '@/store/firmFeatures/firmAuth/firmAuthApiService';
+} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
-import PhotoGallery from './components/PhotoGallery';
-import VideoGallery from './components/VideoGallery';
-import MediaFormAction from './components/MediaFormAction';
-import FormWrapper from '@/components/form/FormWrapper';
+import PhotoGallery from "./_components/PhotoGallery";
+import VideoGallery from "./_components/VideoGallery";
+import MediaFormAction from "./_components/MediaFormAction";
+import FormWrapper from "@/components/form/FormWrapper";
 
 export default function Media() {
   const {
@@ -20,15 +20,13 @@ export default function Media() {
     error,
     refetch,
   } = useGetFirmUserInfoQuery(undefined, {
-  refetchOnMountOrArgChange: false,
-  refetchOnReconnect: false,
-  refetchOnFocus: false,
-  keepUnusedDataFor: 600, // keep data for 10 minutes
-});
+    refetchOnMountOrArgChange: false,
+    refetchOnReconnect: false,
+    refetchOnFocus: false,
+    keepUnusedDataFor: 600, // keep data for 10 minutes
+  });
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateFirmDataMutation();
-
-
 
   const profile = userInfo?.data?.profile;
   // if (isLoading)
@@ -59,7 +57,7 @@ export default function Media() {
 
   const defaultValues = {
     videos: profile?.photos?.videos.map((item) => ({ url: item })) ?? [],
-    photos: profile?.photos?.photos ?? '',
+    photos: profile?.photos?.photos ?? "",
   };
 
   const handlePhotoUpload = async (data) => {
@@ -67,7 +65,7 @@ export default function Media() {
       const formData = new FormData();
       const { photos, videos } = data;
 
-      console.log('Form data:', data);
+      console.log("Form data:", data);
 
       const payload = {
         photos: {
@@ -76,30 +74,30 @@ export default function Media() {
       };
 
       // Add JSON payload to formData
-      formData.append('data', JSON.stringify(payload));
+      formData.append("data", JSON.stringify(payload));
 
       // Append multiple photos
       if (Array.isArray(photos)) {
         photos.forEach((file) => {
           if (file instanceof File) {
-            formData.append('photos', file);
+            formData.append("photos", file);
           }
         });
       } else if (photos instanceof File) {
-        formData.append('photos', photos);
+        formData.append("photos", photos);
       }
 
       // ✅ Log files correctly
 
       const res = await updatePhotosData(formData).unwrap();
-      console.log('response ==>',res)
+      console.log("response ==>", res);
       if (res?.success === true) {
-        showSuccessToast(res?.message || 'Update successful');
+        showSuccessToast(res?.message || "Update successful");
       }
     } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
+      const errorMessage = error?.data?.message || "An error occurred";
       showErrorToast(errorMessage);
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
