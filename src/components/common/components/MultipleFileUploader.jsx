@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useFormContext, useFormState } from "react-hook-form";
-import { CloudUpload, Trash } from "lucide-react";
+import { CloudUpload, Trash, X } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { showErrorToast, showSuccessToast } from "../toasts";
 import { useUpdateFirmDataMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
-import { useUpdateFirmInfoMutation } from "@/store/firmFeatures/firmApiService";
+import {
+  useDeleteFirmMediaMutation,
+  useUpdateFirmInfoMutation,
+  useUpdateFirmMediaMutation,
+} from "@/store/firmFeatures/firmApiService";
 
 export default function MultipleFileUploaderTest({
   name = "avatar",
@@ -15,17 +19,23 @@ export default function MultipleFileUploaderTest({
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
   refetch,
-  userInfo,
+  firmMediaInfo,
 }) {
   const [updatePhotosData, { isLoading: photosIsLoading }] =
-    useUpdateFirmInfoMutation();
+    useUpdateFirmMediaMutation();
   const { register, getValues } = useFormContext();
 
   const [previews, setPreviews] = useState([]);
 
+  //console.log("firmMediaInfo", firmMediaInfo?.data?.photos);
+
   useEffect(() => {
-    setPreviews(userInfo?.data?.profile?.photos?.photos || []);
-  }, []);
+    if (firmMediaInfo?.data?.photos) {
+      setPreviews(firmMediaInfo.data.photos);
+    }
+  }, [firmMediaInfo]);
+
+  // console.log("previews", previews);
 
   const handleChange = async (e) => {
     try {
@@ -37,9 +47,7 @@ export default function MultipleFileUploaderTest({
 
       // Optional payload - you can adjust this if needed
       const payload = {
-        photos: {
-          videos: [],
-        },
+        videos: "",
       };
 
       // Add JSON payload to formData
@@ -69,27 +77,27 @@ export default function MultipleFileUploaderTest({
     }
   };
 
-  // const [deleteProfilePhoto, { isLoading: isDeleting }] =
-  //   useDeleteProfileVideoUrlMutation();
+  const [deleteFirmMedia, { isLoading: isDeleting }] =
+    useDeleteFirmMediaMutation();
 
-  // const handleDeleteProfilePhoto = async (url) => {
-  //   console.log("url", url);
-  //   const payload = { type: "photos", url };
-  //   console.log("payload", payload);
-  //   try {
-  //     const res = await deleteProfilePhoto(payload).unwrap();
-  //     console.log("res", res);
-  //     if (res?.success === true) {
-  //       showSuccessToast(res?.message || "Deleted successfully");
-  //       setPreviews(res?.data?.photos);
-  //       refetch();
-  //     }
-  //   } catch (error) {
-  //     const errorMessage = error?.data?.message || "An error occurred";
-  //     showErrorToast(errorMessage);
-  //     console.error("Error submitting form:", error);
-  //   }
-  // };
+  const handleDeleteFirmMedia = async (index) => {
+    console.log("index", index);
+    const payload = { type: "photos", index };
+    console.log("payload", payload);
+    try {
+      const res = await deleteFirmMedia(payload).unwrap();
+      console.log("res", res);
+      if (res?.success === true) {
+        showSuccessToast(res?.message || "Deleted successfully");
+        setPreviews(res?.data?.photos);
+        refetch();
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || "An error occurred";
+      showErrorToast(errorMessage);
+      console.error("Error submitting form:", error);
+    }
+  };
 
   return (
     <div className="flex gap-4">
@@ -103,10 +111,10 @@ export default function MultipleFileUploaderTest({
             </Avatar>
             <button
               type="button"
-              className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100"
-              // onClick={() => handleDeleteProfilePhoto(src)}
+              className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100 cursor-pointer transition-all duration-300"
+              onClick={() => handleDeleteFirmMedia(index)}
             >
-              <Trash className="h-4 w-4" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         ))}

@@ -40,9 +40,10 @@ const firmApiService = firmBaseApi.injectEndpoints({
       invalidatesTags: ["media", "photo", "video"],
     }),
     deleteFirmMedia: builder.mutation({
-      query: () => ({
+      query: (body) => ({
         url: `/firm-media/remove`, // ✅ correct URL format
         method: "DELETE",
+        body,
       }),
       invalidatesTags: ["media", "photo", "video"],
     }),
