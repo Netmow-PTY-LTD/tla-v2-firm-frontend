@@ -117,6 +117,20 @@ export default function LawFirmProfileDropDown({
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
+                href={`/dashboard/my-profile`}
+                className="w-full flex items-center justify-between gap-2 cursor-pointer"
+              >
+                <span>My Profile</span>
+                <DropdownMenuShortcut>
+                  <SendToBack />
+                </DropdownMenuShortcut>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link
                 href="/dashboard/settings"
                 className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >

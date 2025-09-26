@@ -6,6 +6,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
+import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import {
@@ -22,7 +23,6 @@ import { useFormContext, useWatch } from "react-hook-form";
 export default function LocationCombobox({
   name,
   onSelect,
-  disabled,
   placeholder,
   label,
   itemClassName,
@@ -34,10 +34,14 @@ export default function LocationCombobox({
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery();
 
+  console.log("currentUser in LocationCombobox", currentUser);
+
   const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id || // Prefer _id if it's an object
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
+    currentUser?.data?.contactInfo?.country?._id || // Prefer _id if it's an object
+    currentUser?.data?.contactInfo?.country ||
     "";
+
+  console.log("countryId in LocationCombobox", countryId);
 
   const { data, isLoading } = useGetZipCodeListQuery({
     page: 1,
@@ -55,8 +59,6 @@ export default function LocationCombobox({
     }));
   }, [data]);
 
-  console.log("options", options);
-
   return (
     <FormField
       control={control}
@@ -71,7 +73,6 @@ export default function LocationCombobox({
                 field.onChange(val);
                 if (onSelect) onSelect(val);
               }}
-              disabled={disabled}
             >
               <div className="relative">
                 <ComboboxInput
