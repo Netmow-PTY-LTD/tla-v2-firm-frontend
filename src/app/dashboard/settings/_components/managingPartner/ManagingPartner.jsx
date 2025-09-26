@@ -84,7 +84,7 @@ export default function ManagingPartner() {
         <AddPartnerModal refetchPartners={refetchPartners} />
       </div>
       <PartnerList
-        partners={partners?.data || partnerData}
+        partners={partners?.data || []}
         handleEditClick={handleEditClick}
         refetchPartners={refetchPartners}
         firmId={currentUser?.data?._id}

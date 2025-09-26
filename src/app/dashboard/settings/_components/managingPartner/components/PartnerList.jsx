@@ -15,7 +15,7 @@ export default function PartnerList({
 }) {
   return (
     <div className="mt-6 space-y-4">
-      {partners?.length > 0 &&
+      {partners?.length > 0 ? (
         partners.map((partner, i) => (
           <PartnerCard
             partner={partner}
@@ -24,7 +24,12 @@ export default function PartnerList({
             refetchPartners={refetchPartners}
             firmId={firmId}
           />
-        ))}
+        ))
+      ) : (
+        <p className="text-center text-gray-500">
+          Currently there is no partner.
+        </p>
+      )}
     </div>
   );
 }
