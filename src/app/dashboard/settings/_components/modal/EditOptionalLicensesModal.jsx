@@ -41,7 +41,7 @@ export default function EditOptionalLicenseModal({
     isError,
   } = useGetLawCertificationsListQuery({
     countryId: countryId,
-    type: "mandatory",
+    type: "optional",
     page: 1,
     limit: 10,
   });

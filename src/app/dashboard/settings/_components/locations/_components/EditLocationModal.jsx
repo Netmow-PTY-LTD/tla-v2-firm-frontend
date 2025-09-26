@@ -1,4 +1,3 @@
-import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
 import { Modal } from "@/components/common/components/Modal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import FormWrapper from "@/components/form/FormWrapper";
@@ -8,8 +7,9 @@ import {
   useAddOfficeLocationMutation,
   useUpdateOfficeLocationMutation,
 } from "@/store/firmFeatures/firmApiService";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+import LocationCombobox from "./LocationCombobox";
 
 const locationSchema = z.object({
   name: z.string().min(1, { message: "*Required" }),
@@ -26,10 +26,36 @@ export default function EditLocationModal({
   const defaultValues = useMemo(
     () => ({
       name: location?.name ?? "",
-      zipCode: location?.address?._id ?? "",
+      zipCode: location?.address
+        ? { value: location.address._id, label: location.address.zipcode }
+        : null,
     }),
     [location]
   );
+
+  // const [defaultValues, setDefaultValues] = useState({
+  //   name: location?.name ?? "",
+  //   zipCode: location?.address
+  //     ? {
+  //         value: location?.address?._id,
+  //         label: location?.address?.zipCode,
+  //       }
+  //     : null,
+  // });
+
+  // useEffect(() => {
+  //   if (location) {
+  //     setDefaultValues({
+  //       name: location?.name ?? "",
+  //       zipCode: location?.address
+  //         ? {
+  //             value: location?.address?._id,
+  //             label: location?.address?.zipCode,
+  //           }
+  //         : null,
+  //     });
+  //   }
+  // }, [location]);
 
   const [updateLocation, { isLoading }] = useUpdateOfficeLocationMutation();
 
@@ -76,10 +102,10 @@ export default function EditLocationModal({
           name="name"
           placeholder="Location Name"
         />
-        <ZipCodeCombobox
+        <LocationCombobox
           label="Zip Code"
           name="zipCode"
-          placeholder={"Search a zip code..."}
+          placeholder="Type Zip Code..."
         />
         {/* <div className="h-40">
           <iframe

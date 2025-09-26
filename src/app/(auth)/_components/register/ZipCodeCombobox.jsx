@@ -29,26 +29,14 @@ const ZipCodeCombobox = ({
   // ✅ watch selected country from form
   const selectedCountry = useWatch({ control, name: "country" });
 
-  const { data: currentUser, isLoading: isCurrentUserLoading } =
-    useGetFirmUserInfoQuery();
-
-  const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id || // Prefer _id if it's an object
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
-    "";
-
-  const finalCountryId = selectedCountry || countryId;
-
-  const isCountryReady = !!finalCountryId;
-
   const { data, isLoading } = useGetZipCodeListQuery(
     {
       page: 1,
       limit: 10,
       search: query,
-      countryId: finalCountryId,
+      countryId: selectedCountry,
     },
-    { skip: !isCountryReady || isCurrentUserLoading }
+    { skip: !selectedCountry }
   );
 
   // ✅ transform API data → options
