@@ -6,9 +6,9 @@ import { DynamicAccordion } from "@/components/common/components/AcordionCompone
 import ManagingPartner from "./_components/managingPartner/ManagingPartner";
 import BillingAndTax from "./_components/billingTax/BillingAndTax";
 import Media from "./_components/media/Media";
-import Locations from "./_components/locations/Locations";
 import { CreditSummary } from "./_components/CreditSummary/CreditSummary";
 import { TransactionHistory } from "./_components/TransactionHistory/TransactionHistory";
+import Locations from "./_components/locations/Locations";
 
 export default function DashboardSettings() {
   const accordionItems = [

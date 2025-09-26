@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import {
@@ -11,24 +11,38 @@ import PhotoGallery from "./_components/PhotoGallery";
 import VideoGallery from "./_components/VideoGallery";
 import MediaFormAction from "./_components/MediaFormAction";
 import FormWrapper from "@/components/form/FormWrapper";
+import {
+  useGetFirmInfoQuery,
+  useGetFirmMediaQuery,
+} from "@/store/firmFeatures/firmApiService";
 
 export default function Media() {
+  const [videos, setVideos] = useState(null);
+
   const {
-    data: userInfo,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetFirmUserInfoQuery(undefined, {
+    data: firmMediaInfo,
+    isLoading: isFirmMediaIsLoading,
+    refetch: refetchFirmMediaInfo,
+  } = useGetFirmMediaQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnReconnect: false,
     refetchOnFocus: false,
     keepUnusedDataFor: 600, // keep data for 10 minutes
   });
-  const [updatePhotosData, { isLoading: photosIsLoading }] =
-    useUpdateFirmDataMutation();
 
-  const profile = userInfo?.data?.profile;
+  console.log("Media rendered 2");
+
+  // console.log("firmMediaInfo", firmMediaInfo);
+  // const [updatePhotosData, { isLoading: photosIsLoading }] =
+  //   useUpdateFirmDataMutation();
+
+  useEffect(() => {
+    if (firmMediaInfo?.data?.videos) {
+      setVideos(firmMediaInfo?.data?.videos);
+    }
+  }, [firmMediaInfo?.data?.videos]);
+
+  //const profile = userInfo?.data?.profile;
   // if (isLoading)
   //   return (
   //     <div>
@@ -56,68 +70,76 @@ export default function Media() {
   // }
 
   const defaultValues = {
-    videos: profile?.photos?.videos.map((item) => ({ url: item })) ?? [],
-    photos: profile?.photos?.photos ?? "",
+    videos: firmMediaInfo?.data?.videos.map((item) => ({ url: item })) ?? [],
+    photos: firmMediaInfo?.data?.photos ?? "",
   };
 
-  const handlePhotoUpload = async (data) => {
-    try {
-      const formData = new FormData();
-      const { photos, videos } = data;
+  //console.log("defaultValues", defaultValues);
+  // const handlePhotoUpload = async (data) => {
+  //   console.log("data", data);
+  //   try {
+  //     const formData = new FormData();
+  //     const { photos, videos } = data;
 
-      console.log("Form data:", data);
+  //     console.log("Form data:", data);
 
-      const payload = {
-        photos: {
-          videos: videos?.map((item) => item.url) || [],
-        },
-      };
+  //     const payload = {
+  //       videos: videos?.map((item) => item.url) || [],
+  //     };
 
-      // Add JSON payload to formData
-      formData.append("data", JSON.stringify(payload));
+  //     console.log("Payload:", payload);
 
-      // Append multiple photos
-      if (Array.isArray(photos)) {
-        photos.forEach((file) => {
-          if (file instanceof File) {
-            formData.append("photos", file);
-          }
-        });
-      } else if (photos instanceof File) {
-        formData.append("photos", photos);
-      }
+  //     formData.append("data", JSON.stringify(payload));
 
-      // ✅ Log files correctly
+  //     if (Array.isArray(photos)) {
+  //       photos.forEach((file) => {
+  //         if (file instanceof File) {
+  //           formData.append("photos", file);
+  //         }
+  //       });
+  //     } else if (photos instanceof File) {
+  //       formData.append("photos", photos);
+  //     }
 
-      const res = await updatePhotosData(formData).unwrap();
-      console.log("response ==>", res);
-      if (res?.success === true) {
-        showSuccessToast(res?.message || "Update successful");
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || "An error occurred";
-      showErrorToast(errorMessage);
-      console.error("Error submitting form:", error);
-    }
-  };
+  //     console.log("check photos data==>", formData.get("data"));
+  //     console.log("check photos data==>", formData.get("photos"));
+
+  //     const res = await updatePhotosData(formData).unwrap();
+  //     console.log("response ==>", res);
+
+  //     if (res?.success === true) {
+  //       showSuccessToast(res?.message || "Update successful");
+  //     }
+  //   } catch (error) {
+  //     const errorMessage = error?.data?.message || "An error occurred";
+  //     showErrorToast(errorMessage);
+  //     console.error("Error submitting form:", error);
+  //   }
+  // };
 
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
-        onSubmit={handlePhotoUpload}
         defaultValues={defaultValues}
         // schema={lawyerSettingsMediaFormSchema}
       >
         <div className="flex flex-col gap-3 ">
-          <PhotoGallery />
-          <VideoGallery />
+          <PhotoGallery
+            firmMediaInfo={firmMediaInfo}
+            refetch={refetchFirmMediaInfo}
+          />
         </div>
         {/* Footer Buttons */}
-        <MediaFormAction
+        {/* <MediaFormAction
           isLoading={photosIsLoading}
           initialValues={defaultValues}
-        />
+        /> */}
       </FormWrapper>
+      <VideoGallery
+        firmMediaInfo={firmMediaInfo}
+        videos={videos}
+        refetch={refetchFirmMediaInfo}
+      />
     </div>
   );
 }

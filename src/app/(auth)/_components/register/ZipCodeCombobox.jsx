@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 
 // API hook import
 import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 const ZipCodeCombobox = ({
   name,
@@ -28,15 +29,26 @@ const ZipCodeCombobox = ({
   // ✅ watch selected country from form
   const selectedCountry = useWatch({ control, name: "country" });
 
-  // ✅ fetch zip codes dynamically when country changes
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useGetFirmUserInfoQuery();
+
+  const countryId =
+    currentUser?.data?.firmProfile?.contactInfo?.country?._id || // Prefer _id if it's an object
+    currentUser?.data?.firmProfile?.contactInfo?.country ||
+    "";
+
+  const finalCountryId = selectedCountry || countryId;
+
+  const isCountryReady = !!finalCountryId;
+
   const { data, isLoading } = useGetZipCodeListQuery(
     {
       page: 1,
       limit: 10,
       search: query,
-      countryId: selectedCountry,
+      countryId: finalCountryId,
     },
-    { skip: !selectedCountry } // don't fetch until country is selected
+    { skip: !isCountryReady || isCurrentUserLoading }
   );
 
   // ✅ transform API data → options
@@ -56,7 +68,7 @@ const ZipCodeCombobox = ({
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">{label}</label>
           <Combobox
-            value={field.value}
+            value={field.value ?? ""}
             onChange={(val) => {
               field.onChange(val);
               if (onSelect) onSelect(val);

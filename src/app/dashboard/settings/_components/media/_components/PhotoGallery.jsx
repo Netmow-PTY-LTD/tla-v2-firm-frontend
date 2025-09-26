@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
+import MultipleFileUploader from "@/components/common/components/MultipleFileUploader";
+import React from "react";
 
-import MultipleFileUploader from '@/components/common/components/MultipleFileUploader';
-import React from 'react';
-
-export default function PhotoGallery() {
+export default function PhotoGallery({ firmMediaInfo, refetch }) {
+  console.log("PhotoGallery rendered 1");
   return (
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Photos</h3>
@@ -16,7 +16,13 @@ export default function PhotoGallery() {
       </p>
 
       <div className="mt-11">
-        <MultipleFileUploader name="photos" label="Upload Photos" multiple />
+        <MultipleFileUploader
+          name="photos"
+          refetch={refetch}
+          firmMediaInfo={firmMediaInfo}
+          label="Upload Photos"
+          multiple
+        />
       </div>
     </div>
   );
