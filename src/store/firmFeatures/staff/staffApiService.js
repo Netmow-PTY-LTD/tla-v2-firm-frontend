@@ -11,22 +11,22 @@ const staffApiService = firmBaseApi.injectEndpoints({
       invalidatesTags: ["staff"],
     }),
     getFirmWiseStaffList: builder.query({
-      query: (firmId) => ({
-        url: `/staffs/${firmId}/list`,
+      query: () => ({
+        url: `/staffs/list`,
         method: "GET",
       }),
       providesTags: ["staff-list", "staff"],
     }),
     getSingleStaffById: builder.query({
-      query: ({ firmId, staffId }) => ({
-        url: `/staffs/${firmId}/${staffId}`,
+      query: ({ staffId }) => ({
+        url: `/staffs/${staffId}`,
         method: "GET",
       }),
       providesTags: ["staff"],
     }),
     updateStaff: builder.mutation({
       query: (body) => ({
-        url: `/staffs/${body?.firmId}/${body?.staffId}/update`,
+        url: `/staffs/${body?.staffId}/update`,
         method: "PUT",
         body,
       }),
@@ -34,7 +34,7 @@ const staffApiService = firmBaseApi.injectEndpoints({
     }),
     deleteStaff: builder.mutation({
       query: (body) => ({
-        url: `/staffs/${body?.firmId}/${body?.staffId}/delete`,
+        url: `/staffs/${body?.staffId}/delete`,
         method: "DELETE",
       }),
       invalidatesTags: ["staff"],
