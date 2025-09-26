@@ -48,6 +48,10 @@ const ZipCodeCombobox = ({
     }));
   }, [data]);
 
+
+
+  const isDisabled = disabled || !selectedCountry;
+
   return (
     <Controller
       control={control}
@@ -61,7 +65,7 @@ const ZipCodeCombobox = ({
               field.onChange(val);
               if (onSelect) onSelect(val);
             }}
-            disabled={disabled}
+            disabled={isDisabled}
           >
             <div className="relative">
               <ComboboxInput
