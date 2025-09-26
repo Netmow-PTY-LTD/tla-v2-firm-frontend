@@ -90,7 +90,7 @@ export default function Locations() {
                   {loc?.address?.zipcode}
                 </p>
                 <iframe
-                  src={`https://maps.google.com/maps?q=${loc?.address?.latitude},${loc?.address?.longitude}&z=15&output=embed`}
+                  src={`https://maps.google.com/maps?q=${loc?.address?.zipcode}&output=embed`}
                   className="w-full h-48 rounded-lg border"
                 />
               </CardContent>

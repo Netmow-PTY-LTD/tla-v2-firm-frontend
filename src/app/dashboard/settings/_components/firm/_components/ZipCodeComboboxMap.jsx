@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import {
   Combobox,
@@ -10,118 +10,71 @@ import {
 } from "@headlessui/react";
 import { Check, Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useLazyGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import {
+  useGetZipCodeListQuery,
+  useLazyGetZipCodeListQuery,
+} from "@/store/tlaFeatures/public/publicApiService";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-const ZipCodeComboboxMap = ({
-  name,
-  label,
-  placeholder,
-  countryId,
-  disabled = false,
-}) => {
+const ZipCodeComboboxMap = ({ name, countryId, address }) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
-  const [mapSrc, setMapSrc] = useState("");
-  const [options, setOptions] = useState([]);
 
-  const [getZipCodes, { data, isFetching }] = useLazyGetZipCodeListQuery();
+  const { data, isLoading } = useGetZipCodeListQuery({
+    page: 1,
+    limit: 10,
+    search: query,
+    countryId: countryId,
+  });
+
+  // ✅ transform API data → options
+  const options = useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((z) => ({
+      value: z._id,
+      label: `${z.zipcode}`, // adjust based on API response
+    }));
+  }, [data]);
+
+  //console.log("options in zipcodecomboboxmap", options);
 
   return (
-    <Controller
+    <FormField
       control={control}
       name={name}
-      render={({ field, fieldState }) => {
-        const selectedZip = options.find((o) => o._id === field.value) || null;
-
-        // 🔹 Fetch zip codes: prioritize search > default value > fallback
-        useEffect(() => {
-          const searchTerm = query.length >= 2 ? query : "";
-
-          if (searchTerm) {
-            // ✅ Prioritize search when user types
-            getZipCodes({
-              page: 1,
-              limit: 10,
-              countryId,
-              search: searchTerm,
-            });
-          } else if (field.value) {
-            // ✅ Fallback: fetch by default selected zip code
-            getZipCodes({
-              page: 1,
-              limit: 1,
-              countryId,
-              zipCodeId: field.value,
-            });
-          } else if (countryId) {
-            // ✅ Initial load: fetch first 10 zip codes of country
-            getZipCodes({
-              page: 1,
-              limit: 10,
-              countryId,
-            });
-          }
-        }, [field.value, query, countryId, getZipCodes]);
-
-        // 🔹 Update options & map when API responds
-        useEffect(() => {
-          if (data?.data) {
-            const opts = data.data.map((z) => ({
-              _id: z._id,
-              label: z.zipcode,
-              latitude: z.latitude,
-              longitude: z.longitude,
-            }));
-            setOptions(opts);
-
-            // If default selected zip → set map
-            if (field.value) {
-              const defaultZip = opts.find((z) => z._id === field.value);
-              if (defaultZip?.latitude && defaultZip?.longitude) {
-                setMapSrc(
-                  `https://maps.google.com/maps?q=${defaultZip.latitude},${defaultZip.longitude}&z=15&output=embed`
-                );
-              }
-            }
-          }
-        }, [data, field.value]);
+      render={({ field }) => {
+        const mapQuery = field.value?.label || query; // 🔑 use label for map
+        const mapSrc = mapQuery
+          ? `https://maps.google.com/maps?q=${mapQuery}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+          : "";
 
         return (
-          <div className="mb-4 w-full">
-            {label && (
-              <label className="block text-sm font-medium mb-1">{label}</label>
-            )}
-
+          <FormItem>
+            <FormLabel>Address</FormLabel>
             <Combobox
-              value={selectedZip}
-              onChange={(zip) => {
-                field.onChange(zip._id);
-                if (zip.latitude && zip.longitude) {
-                  setMapSrc(
-                    `https://maps.google.com/maps?q=${zip.latitude},${zip.longitude}&z=15&output=embed`
-                  );
-                }
-              }}
-              disabled={disabled}
+              value={field.value ?? null}
+              onChange={(val) => field.onChange(val)}
             >
               <div className="relative">
                 <ComboboxInput
-                  className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4 text-sm font-medium placeholder:text-[12px]"
-                  displayValue={(val) => val?.label || ""}
-                  placeholder={placeholder}
+                  className="bg-white border border-gray-300 rounded-md w-full h-[44px] px-4"
                   onChange={(e) => setQuery(e.target.value)}
+                  displayValue={(val) => val?.label || ""}
+                  placeholder="Select an Address"
+                  autoComplete="off"
                 />
 
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {isFetching ? (
-                    <div className="flex items-center justify-center gap-2 p-2 text-gray-500">
-                      <Loader className="h-4 w-4 animate-spin" /> Loading...
-                    </div>
-                  ) : options.length > 0 ? (
-                    options.map((zip) => (
+                {options?.length > 0 && (
+                  <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    {options.map((item) => (
                       <ComboboxOption
-                        key={zip._id}
-                        value={zip}
+                        key={item.value}
+                        value={item} // 🔑 store object in form
                         className={({ active }) =>
                           cn(
                             "cursor-pointer select-none relative py-2 pl-10 pr-4",
@@ -139,7 +92,7 @@ const ZipCodeComboboxMap = ({
                                 "font-normal": !selected,
                               })}
                             >
-                              {zip.label}
+                              {item.label}
                             </span>
                             {selected && (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
@@ -149,21 +102,15 @@ const ZipCodeComboboxMap = ({
                           </>
                         )}
                       </ComboboxOption>
-                    ))
-                  ) : (
-                    <div className="p-2 text-gray-500 text-center">
-                      No zip codes found
-                    </div>
-                  )}
-                </ComboboxOptions>
+                    ))}
+                  </ComboboxOptions>
+                )}
               </div>
             </Combobox>
+            <FormMessage className="text-red-600" />
 
-            {/* Map iframe */}
-            <div
-              style={{ height: "300px" }}
-              className="w-full mt-5 overflow-hidden rounded-lg border"
-            >
+            {/* Map */}
+            <div className="w-full mt-5 h-[300px] overflow-hidden rounded-lg border">
               {mapSrc ? (
                 <iframe
                   width="100%"
@@ -180,13 +127,7 @@ const ZipCodeComboboxMap = ({
                 </div>
               )}
             </div>
-
-            {fieldState.error && (
-              <p className="text-red-600 text-sm mt-1">
-                {fieldState.error.message}
-              </p>
-            )}
-          </div>
+          </FormItem>
         );
       }}
     />
@@ -194,16 +135,3 @@ const ZipCodeComboboxMap = ({
 };
 
 export default ZipCodeComboboxMap;
-
-
-
-
-
-
-
-
-
-
-
-
-

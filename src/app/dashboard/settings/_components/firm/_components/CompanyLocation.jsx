@@ -1,15 +1,12 @@
 "use client";
 
-
 import React from "react";
 
 import ZipCodeComboboxMap from "./ZipCodeComboboxMap";
 
-export default function CompanyLocation({ companyInfo}) {
-
-  const country= companyInfo?.contactInfo?.country
-
-
+export default function CompanyLocation({ companyInfo }) {
+  console.log("companyInfo in company location", companyInfo);
+  const country = companyInfo?.contactInfo?.country;
 
   return (
     <div className="">
@@ -20,8 +17,11 @@ export default function CompanyLocation({ companyInfo}) {
         helps build trust and connects you with local clients more effectively.
       </p>
 
-      <ZipCodeComboboxMap  name={'zipCode'}  countryId={country?._id} />
-
+      <ZipCodeComboboxMap
+        name={"zipCode"}
+        countryId={country?._id}
+        address={companyInfo?.contactInfo?.zipCode?.zipcode}
+      />
     </div>
   );
 }
