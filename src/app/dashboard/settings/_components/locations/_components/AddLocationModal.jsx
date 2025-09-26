@@ -75,13 +75,6 @@ export default function AddLocationModal({ refetchLocations }) {
           name="zipCode"
           placeholder={"Type a Zip Code..."}
         />
-
-        {/* <div className="h-40">
-          <iframe
-            src={`https://maps.google.com/maps?q=${form.lat},${form.lng}&z=15&output=embed`}
-            className="w-full h-full rounded-lg border"
-          />
-        </div> */}
         <Button type="submit" className="w-full bg-[var(--primary-color)]">
           Save Location
         </Button>

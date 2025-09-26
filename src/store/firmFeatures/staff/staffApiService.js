@@ -11,8 +11,8 @@ const staffApiService = firmBaseApi.injectEndpoints({
       invalidatesTags: ["staff"],
     }),
     getFirmWiseStaffList: builder.query({
-      query: (firmId) => ({
-        url: `/staffs/${firmId}/list`,
+      query: () => ({
+        url: `/staffs/list`,
         method: "GET",
       }),
       providesTags: ["staff-list", "staff"],
