@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAddOfficeLocationMutation } from "@/store/firmFeatures/firmApiService";
 import React, { useState } from "react";
 import { z } from "zod";
+import LocationCombobox from "./LocationCombobox";
 
 const locationSchema = z.object({
   name: z.string().min(1, { message: "*Required" }),
@@ -63,11 +64,18 @@ export default function AddLocationModal({ refetchLocations }) {
           name="name"
           placeholder="Location Name"
         />
-        <ZipCodeCombobox
+        {/* <ZipCodeCombobox
           label="Zip Code"
           name="zipCode"
           placeholder={"select zip code"}
+        /> */}
+
+        <LocationCombobox
+          label="Zip Code"
+          name="zipCode"
+          placeholder={"Type a Zip Code..."}
         />
+
         {/* <div className="h-40">
           <iframe
             src={`https://maps.google.com/maps?q=${form.lat},${form.lng}&z=15&output=embed`}

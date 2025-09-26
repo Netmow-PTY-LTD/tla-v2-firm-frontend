@@ -32,7 +32,7 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
       invalidatesTags: ["firmInfo"],
     }),
 
-    authLogout: builder.mutation({
+    authLogOut: builder.mutation({
       query: () => ({
         url: "/auth/logout",
         method: "POST",
@@ -42,7 +42,7 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
 
     getFirmUserInfo: builder.query({
       query: () => ({
-        url: "/auth/user/userInfo",
+        url: "/firms/firmInfo",
         method: "GET",
       }),
       providesTags: ["firmInfo"],
@@ -50,7 +50,7 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
 
     updateFirmData: builder.mutation({
       query: (data) => ({
-        url: "/user/update",
+        url: "/firms/firmInfo/update",
         method: "PATCH",
         body: data,
       }),
@@ -132,9 +132,6 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
         body: data,
       }),
     }),
-
-   
-    
   }),
 });
 
@@ -142,7 +139,7 @@ export const {
   useLoginFirmMutation,
   useRegisterFirmMutation,
   useRegisterStaffMutation,
-  useAuthLogoutMutation,
+  useAuthLogOutMutation,
   useGetFirmUserInfoQuery,
   useUpdateFirmDataMutation,
   useChangeFirmPasswordMutation,
@@ -154,5 +151,4 @@ export const {
   useSendFirmOtpMutation,
   useVerifyFirmOtpMutation,
   useChangeFirmEmailMutation,
-
 } = firmAuthApi;
