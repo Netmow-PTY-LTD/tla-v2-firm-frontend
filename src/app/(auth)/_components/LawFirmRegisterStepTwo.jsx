@@ -11,12 +11,16 @@ import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
 import { useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useRouter } from "next/navigation";
+import LawCertificationCombobox from "./register/LawCertificationCombobox";
 
 export default function LawFirmRegisterStepTwo() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData); // get previous step data
   const router = useRouter()
   const [firmRegister, { isLoading }] = useRegisterFirmMutation();
+
+
+  const countryId = formData?.contactInfo?.country
 
   const defaultValues = {
     certificationId: formData.licenseDetails.certificationId,
@@ -37,6 +41,7 @@ export default function LawFirmRegisterStepTwo() {
             licenseNumber: data.licenseNumber,
             issuedBy: data.issuedBy,
             validUntil: data.validUntil,
+            type: "mandatory",
           },
         })
       );
@@ -47,6 +52,7 @@ export default function LawFirmRegisterStepTwo() {
         licenseDetails: {
           ...formData.licenseDetails,
           ...data,
+          type: "mandatory"
         },
       };
 
@@ -94,11 +100,13 @@ export default function LawFirmRegisterStepTwo() {
             defaultValues={defaultValues}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <TextInput
+              {/* <TextInput
                 name="certificationId"
                 label="License"
                 placeholder="i.e. Law Firm License"
-              />
+              /> */}
+
+              <LawCertificationCombobox name={'certificationId'} label={'License'} placeholder="i.e. Law Firm License" countryId={countryId} />
 
               <TextInput
                 name="licenseNumber"
