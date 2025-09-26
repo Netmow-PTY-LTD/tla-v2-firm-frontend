@@ -16,7 +16,6 @@ import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
 export default function LawFirmRegisterStepOne() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
-  const [country, setCountry] = useState(formData.contactInfo.country || "");
 
   const defaultValues = {
     firmName: formData.firmName,
@@ -81,22 +80,15 @@ export default function LawFirmRegisterStepOne() {
                 label="Country"
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
-                onValueChange={(val) => {
-                  dispatch(
-                    setFormData({
-                      contactInfo: {
-                        country: val,
-                      },
-                    })
-                  );
-                }} // 👈 track
               />
 
+
+              {/*   Name will be real time firm checker logic based on country */}
               <TextInput
                 name="firmName"
                 label="Law Firm Name"
                 placeholder="i.e. ABC LLC"
-                disabled={!formData.contactInfo.country}
+
               />
 
               {/* City */}
@@ -104,32 +96,14 @@ export default function LawFirmRegisterStepOne() {
                 name="city"
                 label="City"
                 placeholder="Select a city"
-                disabled={!formData.contactInfo.country}
-                onSelect={(val) => {
-                  dispatch(
-                    setFormData({
-                      contactInfo: {
-                        city: val,
-                      },
-                    })
-                  );
-                }}
+
               />
 
               <ZipCodeCombobox
                 name="zipCode"
                 label="Address"
                 placeholder="Select a Zipcode or Address"
-                disabled={!formData.contactInfo.country}
-                onSelect={(val) => {
-                  dispatch(
-                    setFormData({
-                      contactInfo: {
-                        zipCode: val,
-                      },
-                    })
-                  );
-                }}
+
               />
 
               <TextInput
