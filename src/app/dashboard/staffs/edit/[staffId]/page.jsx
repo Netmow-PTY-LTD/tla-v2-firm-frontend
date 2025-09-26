@@ -17,13 +17,23 @@ import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import PasswordInput from "@/components/form/PasswordInput";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(4, "Password must be at least 4 chars"),
+  email: z.email("Invalid email"),
+  password: z
+    .string()
+    .optional()
+    .refine((val) => !val || typeof val === "string", {
+      message: "Password must be a string",
+    })
+    .refine((val) => !val || val.length >= 4, {
+      message: "Password must be at least 4 characters",
+    })
+    .transform((val) => (val === "" ? undefined : val)), // ignore empty string
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
@@ -57,13 +67,12 @@ export default function EditStaffPage() {
   const params = useParams();
   const staffId = params?.staffId;
 
-  const { data: currentUser } = useGetFirmUserInfoQuery();
 
   const { data: staffData, isLoading: isStaffDataLoading } =
     useGetSingleStaffByIdQuery(
-      { firmId: currentUser?.data?._id, staffId },
+      { staffId },
       {
-        skip: !currentUser?.data?._id || !staffId,
+        skip: !staffId,
       }
     );
 
@@ -74,8 +83,8 @@ export default function EditStaffPage() {
     () => ({
       fullName: staff?.fullName || "",
       designation: staff?.designation || "",
-      email: staff?.email || "",
-      password: staff?.password || "",
+      email: staff?.userId?.email || "",
+      password: staff?.userId?.password || "",
       phone: staff?.phone || "",
       status: staff?.status || "",
       permissions: staff?.permissions || [],
@@ -97,7 +106,6 @@ export default function EditStaffPage() {
       status,
       permissions,
     } = values;
-    // TODO: send values to API (e.g. /api/staff)
 
     const payload = {
       fullName,
@@ -112,7 +120,6 @@ export default function EditStaffPage() {
     try {
       const res = await updateStaff({
         ...payload,
-        firmId: currentUser?.data?._id,
         staffId: staffId,
       });
       console.log("Staff updated successfully:", res);
@@ -171,7 +178,7 @@ export default function EditStaffPage() {
               placeholder="example@example.com"
               textColor="text-[#4b4949]"
             />
-            <TextInput
+            <PasswordInput
               type="password"
               name="password"
               label="Password"
@@ -230,7 +237,7 @@ export default function EditStaffPage() {
           </div>
         </FormWrapper>
       </div>
-     
+
     </div>
   );
 }
