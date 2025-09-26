@@ -16,19 +16,17 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
-
 export default function Firm() {
-
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery();
 
+  // console.log("currentUser in Firm", currentUser);
 
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
     refetch: refetchCompanyInfo,
   } = useGetFirmInfoQuery();
-
 
   const defaultValues = useMemo(
     () => ({
@@ -41,11 +39,15 @@ export default function Firm() {
       vatTaxId: companyInfo?.data?.vatTaxId || "",
       yearEstablished: companyInfo?.data?.yearEstablished || "",
       legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
-      zipCode: companyInfo?.data?.contactInfo?.zipCode?._id || "",
+      zipCode: companyInfo?.data?.contactInfo?.zipCode
+        ? {
+            value: companyInfo.data.contactInfo.zipCode._id,
+            label: companyInfo.data.contactInfo.zipCode.zipcode,
+          }
+        : null,
       companySize: companyInfo?.data?.companySize || "",
       yearsInBusiness: companyInfo?.data?.yearsInBusiness || "",
       description: companyInfo?.data?.description || "",
-
     }),
     [companyInfo]
   );
@@ -54,8 +56,7 @@ export default function Firm() {
     useUpdateFirmInfoMutation();
 
   const onSubmit = async (data) => {
-
-    console.log('form data after submit==>', data)
+    //console.log("form data after submit==>", data);
 
     const {
       companyLogo,
@@ -78,12 +79,12 @@ export default function Firm() {
       vatTaxId,
       contactInfo: {
         country:
-          currentUser?.data?.firmProfile?.contactInfo?.country ||
-          currentUser?.data?.firmProfile?.contactInfo?.country?._id, // Use country from current user profile
+          currentUser?.data?.contactInfo?.country ||
+          currentUser?.data?.contactInfo?.country?._id, // Use country from current user profile
         city:
-          currentUser?.data?.firmProfile?.contactInfo?.city ||
-          currentUser?.data?.firmProfile?.contactInfo?.city?._id,
-        zipCode: zipCode,
+          currentUser?.data?.contactInfo?.city ||
+          currentUser?.data?.contactInfo?.city?._id,
+        zipCode: zipCode?.value,
         phone,
         email,
         officialWebsite: website,
@@ -103,7 +104,7 @@ export default function Firm() {
       formData.append("companyLogo", companyLogo);
     }
 
-    console.log("FormData to send:", JSON.parse(formData.get("data")));
+    //console.log("FormData to send:", JSON.parse(formData.get("data")));
 
     // ✅ Console all formData key-value pairs
     for (let [key, value] of formData.entries()) {
@@ -135,9 +136,7 @@ export default function Firm() {
       <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
         <CompanyProfile />
         <div className="border-t border-white" />
-        <CompanyLocation
-          companyInfo={companyInfo?.data}
-        />
+        <CompanyLocation companyInfo={companyInfo?.data} />
 
         <div className="border-t border-white" />
         <CompanyAbout companyInfo={companyInfo?.data} />

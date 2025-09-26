@@ -57,7 +57,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         //   }).catch(console.error);
 
         await api
-          .dispatch(firmBaseApi.endpoints.logoutFirm.initiate())
+          .dispatch(firmBaseApi.endpoints.authLogOut.initiate())
           .unwrap();
       }
     } catch (err) {
@@ -67,7 +67,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
       //     method: 'POST',
       //   }).catch(console.error);
 
-      await api.dispatch(firmBaseApi.endpoints.logoutFirm.initiate()).unwrap();
+      await api.dispatch(firmBaseApi.endpoints.authLogOut.initiate()).unwrap();
     }
   }
 
