@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import PasswordInput from "@/components/form/PasswordInput";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -154,7 +155,7 @@ export default function CreateStaffPage() {
               placeholder="example@example.com"
               textColor="text-[#4b4949]"
             />
-            <TextInput
+            <PasswordInput
               type="password"
               name="password"
               label="Password"
@@ -213,85 +214,7 @@ export default function CreateStaffPage() {
           </div>
         </FormWrapper>
       </div>
-      {/* <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="flex flex-wrap space-y-4">
-            <div className="w-full md:w-1/2">
-              <Card className="h-full">
-                <CardTitle className="pb-4 border-b px-6">
-                  Permissions
-                </CardTitle>
-                <CardContent className="h-full">
-                  <div className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="permissions"
-                      render={() => (
-                        <FormItem>
-                          <div className="space-y-3">
-                            {[
-                              "View Clients",
-                              "Manage Cases",
-                              "Access Billing",
-                              "Admin Rights",
-                            ].map((perm) => (
-                              <FormField
-                                key={perm}
-                                control={form.control}
-                                name="permissions"
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem
-                                      key={perm}
-                                      className="flex flex-row items-start space-y-0"
-                                    >
-                                      <FormControl>
-                                        <input
-                                          type="checkbox"
-                                          className="h-4 w-4"
-                                          checked={field.value?.includes(perm)}
-                                          onChange={(e) => {
-                                            if (e.target.checked) {
-                                              field.onChange([
-                                                ...(field.value || []),
-                                                perm,
-                                              ]);
-                                            } else {
-                                              field.onChange(
-                                                field.value.filter(
-                                                  (val) => val !== perm
-                                                )
-                                              );
-                                            }
-                                          }}
-                                        />
-                                      </FormControl>
-                                      <FormLabel className="font-normal cursor-pointer">
-                                        {perm}
-                                      </FormLabel>
-                                    </FormItem>
-                                  );
-                                }}
-                              />
-                            ))}
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Button type="submit" className="cursor-pointer">
-              Create Staff
-            </Button>
-          </div>
-        </form>
-      </Form> */}
+     
     </div>
   );
 }

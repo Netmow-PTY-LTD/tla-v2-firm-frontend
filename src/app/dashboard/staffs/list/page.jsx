@@ -10,59 +10,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { StaffDataTable } from "../../_components/StaffDataTable";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
   useDeleteStaffMutation,
   useGetFirmWiseStaffListQuery,
 } from "@/store/firmFeatures/staff/staffApiService";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 
-// // ✅ Example staff data
-// const staffData = [
-//   {
-//     id: 1,
-//     name: "John Doe",
-//     role: "Lawyer",
-//     email: "john@example.com",
-//     status: "Active",
-//     lastLogin: "2025-09-10",
-//   },
-//   {
-//     id: 2,
-//     name: "Jane Smith",
-//     role: "Admin",
-//     email: "jane@example.com",
-//     status: "Inactive",
-//     lastLogin: "2025-09-01",
-//   },
-//   {
-//     id: 3,
-//     name: "Mark Lee",
-//     role: "Assistant",
-//     email: "mark@example.com",
-//     status: "Active",
-//     lastLogin: "2025-09-12",
-//   },
-// ];
 
 const pageSizeOptions = [5, 10, 20];
 
 export default function StaffsList() {
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
 
-  const { data: currentUser } = useGetFirmUserInfoQuery();
-  //console.log("Current User Data in Staff List Page:", currentUser);
 
   const {
     data: staffList,
     isLoading,
     isError,
-  } = useGetFirmWiseStaffListQuery(currentUser?.data?._id, {
-    skip: !currentUser?.data?._id,
-  });
+  } = useGetFirmWiseStaffListQuery();
 
   //console.log("Staff List Data:", staffList);
   const columns = [
@@ -84,14 +52,22 @@ export default function StaffsList() {
     {
       accessorKey: "role",
       header: "Role",
-      cell: ({ row }) => <div>{row.getValue("role")}</div>,
+      cell: ({ row }) => {
+        const original = row.original
+        return <div>{original?.userId?.role}</div>
+      },
     },
 
     // ✅ Email
     {
       accessorKey: "email",
       header: "Email",
-      cell: ({ row }) => <div>{row.getValue("email")}</div>,
+      cell: ({ row }) => {
+        const original = row.original
+
+
+        return <div>{original?.userId?.email}</div>
+      },
     },
 
     // ✅ Status
@@ -102,11 +78,10 @@ export default function StaffsList() {
         const status = row.getValue("status");
         return (
           <span
-            className={`px-2 py-1 rounded text-xs capitalize ${
-              status?.toLowerCase() === "active"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
+            className={`px-2 py-1 rounded text-xs capitalize ${status?.toLowerCase() === "active"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+              }`}
           >
             {status}
           </span>
@@ -118,7 +93,12 @@ export default function StaffsList() {
     {
       accessorKey: "lastLogin",
       header: "Last Login",
-      cell: ({ row }) => <div>{row.getValue("lastLogin")}</div>,
+      cell: ({ row }) => {
+        const original = row.original
+
+
+        return <div>{original?.userId?.lastSeen ?? "-"}</div>
+      },
     },
 
     // ✅ Actions Dropdown
@@ -141,7 +121,7 @@ export default function StaffsList() {
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
                 <Link
-                  href={`/dashboard/staffs/edit/${staff?._id}`}
+                  href={`/dashboard/staffs/edit/${staff?.userId?._id}`}
                   className="flex gap-2"
                 >
                   <Pencil className="w-4 h-4" />
@@ -151,7 +131,7 @@ export default function StaffsList() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="flex gap-2 cursor-pointer py-1 px-2 text-red-600"
-                onClick={() => handleDelete(staff?._id)}
+                onClick={() => handleDelete(staff?.userId?._id)}
               >
                 <Trash2 className="w-4 h-4" />
                 Delete
@@ -167,7 +147,6 @@ export default function StaffsList() {
   const handleDelete = async (id) => {
     try {
       const res = await deleteStaff({
-        firmId: currentUser?.data?._id,
         staffId: id,
       }).unwrap();
       console.log("Delete response:", res);
