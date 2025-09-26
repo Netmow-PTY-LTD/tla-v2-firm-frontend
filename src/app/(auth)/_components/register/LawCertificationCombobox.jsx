@@ -12,16 +12,16 @@ import {
 import { ChevronDown, Check, Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// API hook import
-import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+// ✅ API hook import
+import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
 
-const ZipCodeCombobox = ({
+const LawCertificationCombobox = ({
   name,
   label,
   placeholder,
   disabled = false,
   onSelect,
+  countryId
 }) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
@@ -29,40 +29,35 @@ const ZipCodeCombobox = ({
   // ✅ watch selected country from form
   const selectedCountry = useWatch({ control, name: "country" });
 
-  const { data: currentUser, isLoading: isCurrentUserLoading } =
-    useGetFirmUserInfoQuery();
 
-  const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id || // Prefer _id if it's an object
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
-    "";
+  console.log(' countryId', countryId)
 
-  const finalCountryId = selectedCountry || countryId;
-
-  const isCountryReady = !!finalCountryId;
-
-  const { data, isLoading } = useGetZipCodeListQuery(
+  // ✅ fetch certification list
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useGetLawCertificationsListQuery(
     {
+      countryId: countryId,
+      type: "mandatory",
+      search: query,
       page: 1,
       limit: 10,
-      search: query,
-      countryId: finalCountryId,
     },
-    { skip: !isCountryReady || isCurrentUserLoading }
+    { skip: !countryId }
   );
+
+
 
   // ✅ transform API data → options
   const options = useMemo(() => {
     if (!data?.data) return [];
-    return data.data.map((z) => ({
-      value: z._id,
-      label: `${z.zipcode}`, // adjust based on API response
+    return data.data.map((cert) => ({
+      value: cert._id,
+      label: cert.certificationName, // adjust based on API response (e.g., cert.title / cert.certificationName)
     }));
   }, [data]);
-
-
-
-  const isDisabled = disabled || !selectedCountry;
 
   return (
     <Controller
@@ -72,16 +67,16 @@ const ZipCodeCombobox = ({
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">{label}</label>
           <Combobox
-            value={field.value ?? ""}
+            value={field.value}
             onChange={(val) => {
               field.onChange(val);
               if (onSelect) onSelect(val);
             }}
-            disabled={isDisabled}
+            disabled={disabled}
           >
             <div className="relative">
               <ComboboxInput
-                className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4  text-sm font-medium leading-[27px] placeholder:text-[12px] placeholder:font-normal"
+                className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4 text-sm font-medium leading-[27px] placeholder:text-[12px] placeholder:font-normal"
                 displayValue={(val) =>
                   options.find((o) => o.value === val)?.label || ""
                 }
@@ -135,7 +130,7 @@ const ZipCodeCombobox = ({
                   ))
                 ) : (
                   <div className="p-2 text-gray-500 text-center">
-                    No zip codes found
+                    No License found
                   </div>
                 )}
               </ComboboxOptions>
@@ -152,4 +147,4 @@ const ZipCodeCombobox = ({
   );
 };
 
-export default ZipCodeCombobox;
+export default LawCertificationCombobox;

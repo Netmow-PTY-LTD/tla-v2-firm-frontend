@@ -17,9 +17,6 @@ import { ArrowLeft } from "lucide-react";
 const staffSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
-  role: z.enum(["admin", "staff"], {
-    errorMap: () => ({ message: "Role is required" }),
-  }),
   email: z.string().email("Invalid email"),
   password: z.string().min(4, "Password must be at least 4 chars"),
   phone: z.string().min(1, "Phone number is required"),
@@ -78,7 +75,6 @@ export default function CreateStaffPage() {
     const {
       fullName,
       designation,
-      role,
       email,
       password,
       phone,
@@ -90,7 +86,6 @@ export default function CreateStaffPage() {
     const payload = {
       fullName,
       designation,
-      role,
       email,
       password,
       phone,
@@ -148,16 +143,6 @@ export default function CreateStaffPage() {
                 label="Designation"
                 placeholder="i.e. Manager, Lawyer etc"
                 textColor="text-[#4b4949]"
-              />
-              <SelectInput
-                name="role"
-                label="Role"
-                placeholder="Select role"
-                textColor="text-[#4b4949]"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "Staff", value: "staff" },
-                ]}
               />
             </div>
           </div>

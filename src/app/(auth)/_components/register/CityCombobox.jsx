@@ -48,6 +48,12 @@ const CityCombobox = ({
     }));
   }, [data]);
 
+
+  // ✅ final disabled logic
+
+  const isDisabled = disabled || !selectedCountry;
+
+
   return (
     <Controller
       control={control}
@@ -61,7 +67,7 @@ const CityCombobox = ({
               field.onChange(val);
               if (onSelect) onSelect(val);
             }}
-            disabled={disabled}
+            disabled={isDisabled}
           >
             <div className="relative">
               <ComboboxInput
