@@ -26,6 +26,7 @@ const initialState = {
       licenseNumber: '',
       issuedBy: '',
       validUntil: '',
+      type: ''
     },
   },
   totalSteps: 2, // Step 1 = General info, Step 2 = License info
