@@ -7,6 +7,8 @@ import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { json, z } from "zod";
 import { Modal } from "@/components/common/components/Modal";
 import { useCreatePartnerMutation } from "@/store/firmFeatures/partner/partnerApiService";
+import { Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
 // import { useCreatePartnerMutation } from '@/redux/features/partner/partnerApi'; // example
 
 // Zod Schema
@@ -23,7 +25,7 @@ const AddPartnerModal = ({ refetchPartners }) => {
   const [open, setOpen] = useState(false);
   const onCancel = () => setOpen(!open);
 
-  const [createPartner] = useCreatePartnerMutation();
+  const [createPartner, { isLoading: addPartnerIsLoading }] = useCreatePartnerMutation();
 
   const handleSubmit = async (values) => {
     //console.log("values ==>", values);
@@ -98,20 +100,28 @@ const AddPartnerModal = ({ refetchPartners }) => {
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex justify-between items-center pt-4">
-            <button
-              onClick={onCancel}
+
+          <div className="flex justify-between gap-4 mt-4">
+            <Button
               type="button"
-              className="text-sm text-gray-600 hover:text-gray-800"
+              variant={"outline"}
+              className="cursor-pointer"
+              onClick={onCancel}
+              disabled={addPartnerIsLoading} // disable while loading
+
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae] cursor-pointer transition-all duration-300"
+            </Button>
+            <Button
+              type="submit" variant={"default"}
+              className="cursor-pointer bg-[#ff8602]"
+              disabled={addPartnerIsLoading} // disable while loading
             >
-              Save
-            </button>
+              {addPartnerIsLoading && (
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {addPartnerIsLoading ? "Adding..." : "Add Partner"}
+            </Button>
           </div>
         </FormWrapper>
       </Modal>

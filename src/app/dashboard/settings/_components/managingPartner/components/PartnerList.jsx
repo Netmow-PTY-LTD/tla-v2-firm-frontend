@@ -1,11 +1,11 @@
 "use client";
+import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { userDummyImage } from "@/data/data";
 import { useDeletePartnerMutation } from "@/store/firmFeatures/partner/partnerApiService";
-// import { useDeletePartnerMutation } from '@/store/features/admin/partnerApi'; // example
 import { Edit, Trash, Trash2 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 export default function PartnerList({
   partners,
@@ -13,6 +13,7 @@ export default function PartnerList({
   refetchPartners,
   firmId,
 }) {
+
   return (
     <div className="mt-6 space-y-4">
       {partners?.length > 0 ? (
@@ -36,7 +37,7 @@ export default function PartnerList({
 
 const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
   const { name, position, email, phone } = partner;
-
+  const [isOpen, setIsOpen] = useState(false)
   const [deletePartner] = useDeletePartnerMutation();
 
   const handleDeletePartner = async (partnerId) => {
@@ -77,12 +78,23 @@ const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
           >
             <Edit size={18} />
           </button>
-          <button
-            className="text-red-500 hover:text-red-700 cursor-pointer"
-            onClick={() => handleDeletePartner(partner?._id)}
-          >
-            <Trash2 size={18} />
-          </button>
+
+          <ConfirmationModal
+            onConfirm={() => handleDeletePartner(partner?._id)}
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            description="You Want to to delete your Partner "
+            trigger={
+
+              <button
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+
+              >
+                <Trash2 size={18} />
+              </button>
+            }
+          />
+
         </div>
       </div>
     </div>

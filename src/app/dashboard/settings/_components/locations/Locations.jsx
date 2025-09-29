@@ -26,12 +26,11 @@ export default function Locations() {
     refetch: refetchLocations,
   } = useGetOfficeLocationsQuery();
 
-  //console.log("locations ===>", locations?.data);
+
 
   const [deleteLocation] = useDeleteOfficeLocationMutation();
 
   const handleDelete = async (id) => {
-    //console.log("id ===>", id);
 
     try {
       const res = await deleteLocation(id).unwrap();
