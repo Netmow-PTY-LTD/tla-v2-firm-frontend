@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Edit, Trash2 } from "lucide-react";
+import { MapPin, Edit, Trash2, Loader } from "lucide-react";
 import AddLocationModal from "./_components/AddLocationModal";
 import {
   useDeleteOfficeLocationMutation,
@@ -14,7 +14,7 @@ import EditLocationModal from "./_components/EditLocationModal";
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 
 export default function Locations() {
-    const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
@@ -28,12 +28,9 @@ export default function Locations() {
     refetch: refetchLocations,
   } = useGetOfficeLocationsQuery();
 
-
-
   const [deleteLocation] = useDeleteOfficeLocationMutation();
 
   const handleDelete = async (id) => {
-
     try {
       const res = await deleteLocation(id).unwrap();
       console.log("Delete location response:", res);
@@ -63,6 +60,11 @@ export default function Locations() {
       </div>
 
       {/* Locations List */}
+      {isLocationsLoading && (
+        <div className="flex justify-center">
+          <Loader className="animate-spin" />
+        </div>
+      )}
       {locations?.data?.length > 0 && (
         <div className="grid md:grid-cols-2 gap-4">
           {locations?.data?.map((loc) => (
@@ -77,28 +79,17 @@ export default function Locations() {
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(loc?._id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  {/* <ConfirmationModal
+                  <ConfirmationModal
                     onConfirm={() => handleDelete(loc?._id)}
                     open={isOpen}
                     onOpenChange={setIsOpen}
                     description="You Want to  delete this Location "
                     trigger={
-
-                      <button
-                        className="text-red-500 hover:text-red-700 cursor-pointer"
-
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      <Button variant="destructive" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     }
-                  /> */}
+                  />
                 </div>
               </CardHeader>
               <CardContent>
