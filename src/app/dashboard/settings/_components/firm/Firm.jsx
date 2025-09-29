@@ -143,7 +143,7 @@ export default function Firm() {
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <FirmFormAction isLoading={false} defaultValues={defaultValues} />
+        <FirmFormAction isLoading={isUpdatingFirmInfoLoading} defaultValues={defaultValues} />
       </FormWrapper>
     </div>
   );
