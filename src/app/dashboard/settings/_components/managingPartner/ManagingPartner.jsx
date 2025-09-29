@@ -8,44 +8,7 @@ import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthA
 import { useGetPartnersListQuery } from "@/store/firmFeatures/partner/partnerApiService";
 import EditPartnerModal from "./components/EditPartnerModal";
 
-const partnerData = [
-  {
-    _id: "64f9c1a7b3f5c1a2e7d12345",
-    firmId: "64f9c1a7b3f5c1a2e7d00001",
-    name: "John Doe",
-    position: "Senior Partner",
-    email: "john.doe@example.com",
-    phone: "+8801712345678",
-    barAssociation: "Bangladesh Bar Council",
-    licenseNo: "LIC123456",
-    createdAt: new Date("2025-09-16T06:00:00.000Z"),
-    updatedAt: new Date("2025-09-16T06:00:00.000Z"),
-  },
-  {
-    _id: "64f9c1a7b3f5c1a2e7d12346",
-    firmId: "64f9c1a7b3f5c1a2e7d00001",
-    name: "Jane Smith",
-    position: "Associate Partner",
-    email: "jane.smith@example.com",
-    phone: "+8801912345678",
-    barAssociation: "Dhaka Bar Association",
-    licenseNo: "LIC654321",
-    createdAt: new Date("2025-09-16T06:10:00.000Z"),
-    updatedAt: new Date("2025-09-16T06:10:00.000Z"),
-  },
-  {
-    _id: "64f9c1a7b3f5c1a2e7d12347",
-    firmId: "64f9c1a7b3f5c1a2e7d00002",
-    name: "Michael Johnson",
-    position: "Junior Partner",
-    email: "michael.johnson@example.com",
-    phone: "+8801812345678",
-    barAssociation: "Chittagong Bar Council",
-    licenseNo: "LIC789012",
-    createdAt: new Date("2025-09-16T06:20:00.000Z"),
-    updatedAt: new Date("2025-09-16T06:20:00.000Z"),
-  },
-];
+
 
 export default function ManagingPartner() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

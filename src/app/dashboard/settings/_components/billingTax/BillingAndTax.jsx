@@ -21,7 +21,7 @@ export default function BillingAndTax() {
     refetch: refetchCompanyInfo,
   } = useGetFirmInfoQuery();
 
-  console.log("company ===>", companyInfo?.data);
+
   const initialValues = useMemo(() => {
     return {
       billingEmail: companyInfo?.data?.billingInfo?.billingEmail || "",
@@ -135,7 +135,7 @@ export default function BillingAndTax() {
         <div className="border-t border-white mt-6" />
 
         {/* Footer Buttons */}
-        <BillingTaxFormAction isLoading={false} initialValues={initialValues} />
+        <BillingTaxFormAction isLoading={isUpdatingFirmInfoLoading} initialValues={initialValues} />
       </FormWrapper>
     </div>
   );

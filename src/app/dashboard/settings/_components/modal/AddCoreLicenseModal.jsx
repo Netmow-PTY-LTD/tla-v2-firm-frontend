@@ -10,6 +10,7 @@ import { useAddFirmWiseLicenseAndCertificationMutation } from "@/store/firmFeatu
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import Cookies from "js-cookie";
+import { Loader } from "lucide-react";
 import React, { useState } from "react";
 
 export default function AddCoreLicenseModal({
@@ -44,7 +45,7 @@ export default function AddCoreLicenseModal({
   });
   //console.log("Certifications List:", certificationsList);
 
-  const [addLicenseAndCertification] =
+  const [addLicenseAndCertification, { isLoading: addCoreLicenseIsLoading }] =
     useAddFirmWiseLicenseAndCertificationMutation();
   const handleMandatoryLicenseSubmit = async (data) => {
     // console.log("Mandatory License form submitted:", data);
@@ -97,19 +98,6 @@ export default function AddCoreLicenseModal({
         schema={schema}
       >
         <div className="grid grid-cols-1 gap-5 mt-6">
-          {/* <SelectInput
-          label="License Type"
-          name="licenseType"
-          placeholder="Licensing Type"
-          options={
-            certificationsList?.data?.map((cert) => ({
-              value: cert._id,
-              label: cert.certificatiionName,
-            })) || []
-          }
-          triggerClassName="w-full " // set custom width here
-        /> */}
-
           <InputCombobox
             label="License Type"
             name="certificationId"
@@ -149,11 +137,20 @@ export default function AddCoreLicenseModal({
             variant={"outline"}
             className="cursor-pointer"
             onClick={onCancel}
+            disabled={addCoreLicenseIsLoading} // disable while loading
+
           >
             Cancel
           </Button>
-          <Button type="submit" variant={"default"} className="cursor-pointer">
-            Add License
+          <Button
+            type="submit" variant={"default"}
+            className="cursor-pointer bg-[#ff8602]"
+            disabled={addCoreLicenseIsLoading} // disable while loading
+          >
+            {addCoreLicenseIsLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {addCoreLicenseIsLoading ? "Adding..." : "Add License"}
           </Button>
         </div>
       </FormWrapper>

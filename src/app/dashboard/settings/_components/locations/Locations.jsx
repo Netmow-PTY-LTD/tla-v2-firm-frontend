@@ -11,8 +11,10 @@ import {
 } from "@/store/firmFeatures/firmApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import EditLocationModal from "./_components/EditLocationModal";
+import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 
 export default function Locations() {
+    const [isOpen, setIsOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
@@ -26,12 +28,11 @@ export default function Locations() {
     refetch: refetchLocations,
   } = useGetOfficeLocationsQuery();
 
-  //console.log("locations ===>", locations?.data);
+
 
   const [deleteLocation] = useDeleteOfficeLocationMutation();
 
   const handleDelete = async (id) => {
-    //console.log("id ===>", id);
 
     try {
       const res = await deleteLocation(id).unwrap();
@@ -83,6 +84,21 @@ export default function Locations() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
+                  {/* <ConfirmationModal
+                    onConfirm={() => handleDelete(loc?._id)}
+                    open={isOpen}
+                    onOpenChange={setIsOpen}
+                    description="You Want to  delete this Location "
+                    trigger={
+
+                      <button
+                        className="text-red-500 hover:text-red-700 cursor-pointer"
+
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    }
+                  /> */}
                 </div>
               </CardHeader>
               <CardContent>
