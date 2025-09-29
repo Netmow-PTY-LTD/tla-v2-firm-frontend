@@ -9,7 +9,7 @@ import { Modal } from "@/components/common/components/Modal";
 import { useCreatePartnerMutation } from "@/store/firmFeatures/partner/partnerApiService";
 import { Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { useCreatePartnerMutation } from '@/redux/features/partner/partnerApi'; // example
+
 
 // Zod Schema
 const partnerSchema = z.object({
