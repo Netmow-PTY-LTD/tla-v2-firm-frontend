@@ -84,7 +84,7 @@ export default function Locations() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                  {/* <ConfirmationModal
+                  <ConfirmationModal
                     onConfirm={() => handleDelete(loc?._id)}
                     open={isOpen}
                     onOpenChange={setIsOpen}
@@ -98,7 +98,7 @@ export default function Locations() {
                         <Trash2 size={18} />
                       </button>
                     }
-                  /> */}
+                  />
                 </div>
               </CardHeader>
               <CardContent>
