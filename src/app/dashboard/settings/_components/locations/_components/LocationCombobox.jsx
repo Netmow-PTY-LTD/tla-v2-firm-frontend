@@ -34,14 +34,14 @@ export default function LocationCombobox({
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery();
 
-  console.log("currentUser in LocationCombobox", currentUser);
+  //console.log("currentUser in LocationCombobox", currentUser);
 
   const countryId =
     currentUser?.data?.contactInfo?.country?._id || // Prefer _id if it's an object
     currentUser?.data?.contactInfo?.country ||
     "";
 
-  console.log("countryId in LocationCombobox", countryId);
+  //console.log("countryId in LocationCombobox", countryId);
 
   const { data, isLoading } = useGetZipCodeListQuery({
     page: 1,
@@ -79,12 +79,8 @@ export default function LocationCombobox({
                   className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4  text-sm font-medium leading-[27px] placeholder:text-[12px] placeholder:font-normal"
                   displayValue={(val) => {
                     if (!val) return "";
-                    // look in fetched options
-                    const match = options.find((o) => o.value === val);
-                    if (match) return match.label;
-                    // fallback if location was pre-filled
-                    if (typeof val === "object") return val.label;
-                    return "";
+                    const match = options.find((o) => o.value === val); // val is string id
+                    return match ? match.label : "";
                   }}
                   //   displayValue={(val) =>
                   //     options.find((o) => o.value === val)?.label || ""

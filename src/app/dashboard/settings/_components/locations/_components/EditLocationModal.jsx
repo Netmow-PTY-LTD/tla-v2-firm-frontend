@@ -27,9 +27,7 @@ export default function EditLocationModal({
   const defaultValues = useMemo(
     () => ({
       name: location?.name ?? "",
-      zipCode: location?.address
-        ? { value: location.address._id, label: location.address.zipcode }
-        : null,
+      zipCode: location?.address?._id ?? "",
     }),
     [location]
   );
@@ -60,7 +58,7 @@ export default function EditLocationModal({
 
   const [updateLocation, { isLoading }] = useUpdateOfficeLocationMutation();
 
-  const handleSubmit = async (values) => {
+  const handleUpdataLocation = async (values) => {
     //console.log("values ==>", values);
 
     const { name, zipCode } = values;
@@ -70,7 +68,7 @@ export default function EditLocationModal({
       address: zipCode,
     };
 
-    //  console.log("payload ==>", payload);
+    console.log("payload ==>", payload);
 
     try {
       const res = await updateLocation({
@@ -94,7 +92,7 @@ export default function EditLocationModal({
     <Modal buttonName="+ Add Location" open={open} onOpenChange={onClose}>
       <h3 className="text-xl font-semibold text-black mb-6">Edit Location</h3>
       <FormWrapper
-        onSubmit={handleSubmit}
+        onSubmit={handleUpdataLocation}
         defaultValues={defaultValues}
         schema={locationSchema}
       >
