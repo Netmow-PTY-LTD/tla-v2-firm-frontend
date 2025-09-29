@@ -18,6 +18,8 @@ import {
   useGetFirmWiseStaffListQuery,
 } from "@/store/firmFeatures/staff/staffApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 
 
 const pageSizeOptions = [5, 10, 20];
@@ -25,12 +27,15 @@ const pageSizeOptions = [5, 10, 20];
 export default function StaffsList() {
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
 
+  const currentuser = useSelector(selectCurrentUser)
+  // Only pass firmId if currentuser exists and role is "firm"
+  const queryParams = currentuser?.role === "firm" ? { firmId: currentuser._id } : undefined;
 
   const {
     data: staffList,
     isLoading,
     isError,
-  } = useGetFirmWiseStaffListQuery();
+  } = useGetFirmWiseStaffListQuery(queryParams);
 
   //console.log("Staff List Data:", staffList);
   const columns = [
