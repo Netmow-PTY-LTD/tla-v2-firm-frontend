@@ -14,6 +14,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PasswordInput from "@/components/form/PasswordInput";
 import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({

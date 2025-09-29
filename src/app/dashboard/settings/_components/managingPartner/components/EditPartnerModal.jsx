@@ -77,7 +77,6 @@ const EditPartnerModal = ({
     const formData = new FormData();
     formData.append("data", JSON.stringify(payload)); // ✅ only the data needed in req.body
 
-    console.log("partnerImage ==>", partnerImage);
 
     if (partnerImage instanceof File) {
       formData.append("partnerImage", partnerImage);
