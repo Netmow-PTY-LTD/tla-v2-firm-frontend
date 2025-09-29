@@ -58,7 +58,7 @@ export default function EditLocationModal({
   const [updateLocation, { isLoading }] = useUpdateOfficeLocationMutation();
 
   const handleUpdataLocation = async (values) => {
-    console.log("values ==>", values);
+    //console.log("values ==>", values);
 
     const { name, zipCode } = values;
 
