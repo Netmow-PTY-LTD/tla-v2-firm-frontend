@@ -56,7 +56,8 @@ export default function CreateStaffPage() {
 
   const currentuser = useSelector(selectCurrentUser)
   // Only pass firmId if currentuser exists and role is "firm"
-  const firmId = currentuser?.role === "firm" ? currentuser._id : undefined;
+  const firmProfileId = currentuser?.firmProfileId;
+
 
   const defaultValues = {
     fullName: "",
@@ -72,6 +73,7 @@ export default function CreateStaffPage() {
       access_billing: false,
       admin_rights: false,
     },
+    image:''
   };
 
   const [createStaff] = useCreateStaffMutation();
@@ -91,7 +93,7 @@ export default function CreateStaffPage() {
     // TODO: send values to API (e.g. /api/staff)
 
     const payload = {
-      firmId,
+      firmProfileId,
       fullName,
       designation,
       email,
@@ -99,10 +101,12 @@ export default function CreateStaffPage() {
       phone,
       status,
       permissions,
+      image
     };
     console.log("Payload to send:", payload);
 
     try {
+
       const res = await createStaff(payload).unwrap();
       console.log("Staff created successfully:", res);
       if (res?.success) {
@@ -136,7 +140,7 @@ export default function CreateStaffPage() {
         >
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">
-              <AvatarUploader name="companyLogo" />
+              <AvatarUploader name="image" />
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col gap-4">
