@@ -70,7 +70,7 @@ export default function Media() {
   // }
 
   const defaultValues = {
-    videos: firmMediaInfo?.data?.videos.map((item) => ({ url: item })) ?? [],
+    videos: firmMediaInfo?.data?.videos?.map((item) => ({ url: item })) ?? [],
     photos: firmMediaInfo?.data?.photos ?? "",
   };
 

@@ -27,15 +27,12 @@ const pageSizeOptions = [5, 10, 20];
 export default function StaffsList() {
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
 
-  const currentuser = useSelector(selectCurrentUser)
-  // Only pass firmId if currentuser exists and role is "firm"
-  const queryParams = currentuser?.role === "firm" ? { firmId: currentuser._id } : undefined;
 
   const {
     data: staffList,
     isLoading,
     isError,
-  } = useGetFirmWiseStaffListQuery(queryParams);
+  } = useGetFirmWiseStaffListQuery();
 
   //console.log("Staff List Data:", staffList);
   const columns = [
@@ -46,7 +43,29 @@ export default function StaffsList() {
       cell: ({ row }) => <div>{row.getValue("fullName")}</div>,
     },
 
+    {
+      accessorKey: "image",
+      header: "Image",
+      cell: ({ row }) => {
+        const imageUrl = row.getValue("image"); // Assuming this is the image URL or path
+
+        return imageUrl ? (
+          <img
+            src={imageUrl}
+            alt="Staff"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
+            N/A
+          </div>
+        );
+      },
+    },
+
     // ✅ Role
+
+
     {
       accessorKey: "designation",
       header: "Designation",
@@ -76,23 +95,27 @@ export default function StaffsList() {
     },
 
     // ✅ Status
+
     {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const status = row.getValue("status");
+        const status = row.getValue("status"); // From StaffProfile
+        const accountStatus = row.original?.userId?.accountStatus?.toLowerCase(); // From FirmUser
+
+        const isActive = accountStatus === "active";
+
         return (
           <span
-            className={`px-2 py-1 rounded text-xs capitalize ${status?.toLowerCase() === "active"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
+            className={`px-2 py-1 rounded text-xs capitalize ${isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
               }`}
           >
-            {status}
+            {status || (isActive ? "Active" : "Inactive")}
           </span>
         );
       },
     },
+
 
     // ✅ Last Login
     {
