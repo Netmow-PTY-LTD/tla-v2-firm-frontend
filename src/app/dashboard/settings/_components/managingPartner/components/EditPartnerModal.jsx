@@ -8,6 +8,8 @@ import { z } from "zod";
 import { Modal } from "@/components/common/components/Modal";
 import { useUpdatePartnerMutation } from "@/store/firmFeatures/partner/partnerApiService";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
 
 // Zod schema for partner validation
@@ -57,7 +59,7 @@ const EditPartnerModal = ({
     [selectedPartner]
   );
 
-  const [updatePartner] = useUpdatePartnerMutation();
+  const [updatePartner, { isLoading: updatePartnerIsLoading }] = useUpdatePartnerMutation();
 
   const handleSubmit = async (values) => {
     const { name, position, email, phone, partnerImage } = values;
@@ -75,7 +77,6 @@ const EditPartnerModal = ({
     const formData = new FormData();
     formData.append("data", JSON.stringify(payload)); // ✅ only the data needed in req.body
 
-    console.log("partnerImage ==>", partnerImage);
 
     if (partnerImage instanceof File) {
       formData.append("partnerImage", partnerImage);
@@ -140,20 +141,28 @@ const EditPartnerModal = ({
         </div>
 
         {/* Footer Buttons */}
-        <div className="flex justify-between items-center pt-4">
-          <button
+
+        <div className="flex justify-between gap-4 mt-4">
+          <Button
             type="button"
+            variant={"outline"}
+            className="cursor-pointer"
             onClick={onCancel}
-            className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+            disabled={updatePartnerIsLoading} // disable while loading
+
           >
             Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae] cursor-pointer transition-all duration-300"
+          </Button>
+          <Button
+            type="submit" variant={"default"}
+            className="cursor-pointer bg-[#ff8602]"
+            disabled={updatePartnerIsLoading} // disable while loading
           >
-            Update
-          </button>
+            {updatePartnerIsLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {updatePartnerIsLoading ? "Updating..." : "Update Partner"}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>

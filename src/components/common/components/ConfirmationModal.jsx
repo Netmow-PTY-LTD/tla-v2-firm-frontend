@@ -49,7 +49,7 @@ export function ConfirmationModal({
               onOpenChange?.(false);
               // setTimeout(() => handleResponseCreate(), 2000);
             }}
-            className="bg-teal-400 hover:bg-teal-500 text-white"
+            className="bg-[#ff8602]  text-white"
           >
             {confirmText}
           </Button>

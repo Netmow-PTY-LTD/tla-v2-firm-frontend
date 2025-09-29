@@ -1,14 +1,18 @@
+import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { Button } from "@/components/ui/button";
 import { useDeleteLicenseAndCertificationMutation } from "@/store/firmFeatures/certificateLicensesApiService";
 import { Edit, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 export default function LicenseCard({
   license,
   handleOpenEditCoreLicenseModal,
   refetchLicenses,
 }) {
+  const [isOpen, setIsOpen] = useState(false)
   const [deleteLicense] = useDeleteLicenseAndCertificationMutation();
+
   const handleDeleteLicense = async (licenseId) => {
     try {
       const res = await deleteLicense(licenseId).unwrap();
@@ -37,10 +41,10 @@ export default function LicenseCard({
               <b>Valid Until:</b>{" "}
               {license?.validUntil
                 ? new Date(license?.validUntil).toLocaleDateString("en-US", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
                 : "—"}
             </p>
             <p className="text-sm text-[#6e6e6e]">
@@ -55,12 +59,21 @@ export default function LicenseCard({
           >
             <Edit size={18} />
           </button>
-          <button
-            className="text-red-500 hover:text-red-700 cursor-pointer"
-            onClick={() => handleDeleteLicense(license?._id)}
-          >
-            <Trash2 size={18} />
-          </button>
+          <ConfirmationModal
+            onConfirm={() => handleDeleteLicense(license?._id)}
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            description="You Want to to delete your Legal Certifications "
+            trigger={
+
+              <button
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+
+              >
+                <Trash2 size={18} />
+              </button>
+            }
+          />
         </div>
       </div>
     </div>
