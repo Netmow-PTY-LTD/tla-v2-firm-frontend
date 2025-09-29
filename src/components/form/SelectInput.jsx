@@ -62,7 +62,7 @@ export default function SelectInput({
                 </SelectTrigger>
                 <SelectContent>
                   {options?.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
+                    <SelectItem key={opt.key || opt.value} value={opt.value}>
                       {opt.label}
                     </SelectItem>
                   ))}

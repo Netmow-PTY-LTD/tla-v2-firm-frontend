@@ -78,9 +78,7 @@ export default function AddLocationModal({ refetchLocations }) {
             className="w-full h-full rounded-lg border"
           />
         </div> */}
-        {/* <Button type="submit" className="w-full bg-[var(--primary-color)]">
-          Save Location
-        </Button> */}
+   
 
         <Button
           type="submit"

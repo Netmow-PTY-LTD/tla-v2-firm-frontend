@@ -11,6 +11,8 @@ import {
   useUpdateFirmInfoMutation,
 } from "@/store/firmFeatures/firmApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import SelectInput from "@/components/form/SelectInput";
+import countries from "@/data/countries.json";
 
 export default function BillingAndTax() {
   const {
@@ -64,6 +66,20 @@ export default function BillingAndTax() {
     }
   };
 
+  // Use a Set to track added currencies
+  const seen = new Set();
+  const options = countries
+    .filter((country) => {
+      const currency = country.currency.toLowerCase();
+      if (seen.has(currency)) return false;
+      seen.add(currency);
+      return true;
+    })
+    .map((country) => ({
+      value: country.currency.toLowerCase(), // e.g., "eur"
+      label: country.currency, // e.g., "EUR"
+    }));
+
   return (
     <div className="max-w-[900px] mx-auto">
       {/* Heading and Description */}
@@ -96,10 +112,16 @@ export default function BillingAndTax() {
 
           <TextInput label="Tax ID" name="taxId" placeholder="Enter Tax ID" />
 
-          <TextInput
+          {/* <TextInput
             label="Invoicing Currency"
             name="currency"
             placeholder="Enter currency"
+          /> */}
+          <SelectInput
+            label="Invoicing Currency"
+            name="currency"
+            options={options}
+            placeholder={"Select currency"}
           />
 
           <TextareaInput

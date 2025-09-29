@@ -21,7 +21,10 @@ export default function CompanyProfile() {
 
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
         <div className="w-full md:w-1/2">
-          <AvatarUploader name="companyLogo" />
+          <AvatarUploader
+            name="companyLogo"
+            defaultImage={"/assets/img/dummylogo.jpg" || userDummyImage}
+          />
         </div>
 
         <div className="w-full md:w-1/2 flex flex-col gap-4">
