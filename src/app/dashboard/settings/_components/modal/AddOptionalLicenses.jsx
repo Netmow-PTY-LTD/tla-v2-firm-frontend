@@ -138,7 +138,7 @@ export default function AddOptionalLicenseModal({
           </Button>
           <Button
             type="submit" variant={"default"}
-            className="cursor-pointer"
+            className="cursor-pointer bg-[#ff8602]"
             disabled={addOptionalLicenseIsLoading} // disable while loading
           >
             {addOptionalLicenseIsLoading && (

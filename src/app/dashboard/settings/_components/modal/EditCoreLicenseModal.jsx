@@ -13,6 +13,7 @@ import {
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import Cookies from "js-cookie";
+import { Loader } from "lucide-react";
 import React, { useState } from "react";
 
 export default function EditCoreLicenseModal({
@@ -53,7 +54,7 @@ export default function EditCoreLicenseModal({
       skip: !selectedLicense?._id,
     });
   // console.log("singleLicense in EditCoreLicenseModal", singleLicense);
-  const [updateLicenseAndCertification] =
+  const [updateLicenseAndCertification,{isLoading:updateLicenseIsLoading}] =
     useUpdateLicenseAndCertificationMutation();
   const handleMandatoryLicenseSubmit = async (data) => {
     // console.log("Mandatory License form submitted:", data);
@@ -148,14 +149,26 @@ export default function EditCoreLicenseModal({
             variant={"outline"}
             className="cursor-pointer"
             onClick={onClose}
+            disabled={updateLicenseIsLoading} // disable while loading
+
           >
             Cancel
           </Button>
-          <Button type="submit" variant={"default"} className="cursor-pointer">
-            Update License
+          <Button
+            type="submit" variant={"default"}
+            className="cursor-pointer bg-[#ff8602]"
+            disabled={updateLicenseIsLoading} // disable while loading
+          >
+            {updateLicenseIsLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {updateLicenseIsLoading ? "Updating..." : "  Update License"}
           </Button>
         </div>
       </FormWrapper>
     </Modal>
   );
 }
+
+
+
