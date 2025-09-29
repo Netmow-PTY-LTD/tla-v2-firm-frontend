@@ -35,7 +35,7 @@ export default function FirmFormAction({ initialValues, isLoading }) {
         disabled={!isDirty || isLoading}
         className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white text-sm transition-all duration-150 cursor-pointer ${
           isDirty && !isLoading
-            ? "bg-[#12C7C4] hover:bg-[#10b0ae]"
+            ? "bg-[#ff8602] hover:bg-black"
             : "bg-gray-300 cursor-not-allowed"
         }`}
       >

@@ -13,6 +13,8 @@ import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PasswordInput from "@/components/form/PasswordInput";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -52,6 +54,10 @@ const permissions = [
 export default function CreateStaffPage() {
   const router = useRouter();
 
+  const currentuser = useSelector(selectCurrentUser)
+  // Only pass firmId if currentuser exists and role is "firm"
+  const firmId = currentuser?.role === "firm" ? currentuser._id : undefined;
+
   const defaultValues = {
     fullName: "",
     designation: "",
@@ -85,6 +91,7 @@ export default function CreateStaffPage() {
     // TODO: send values to API (e.g. /api/staff)
 
     const payload = {
+      firmId,
       fullName,
       designation,
       email,
@@ -214,7 +221,7 @@ export default function CreateStaffPage() {
           </div>
         </FormWrapper>
       </div>
-     
+
     </div>
   );
 }

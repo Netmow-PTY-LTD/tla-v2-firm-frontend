@@ -2,7 +2,6 @@ import { Modal } from "@/components/common/components/Modal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import InputCombobox from "@/components/form/ComboboxInput";
 import FormWrapper from "@/components/form/FormWrapper";
-import SelectInput from "@/components/form/SelectInput";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { useAddFirmWiseLicenseAndCertificationMutation } from "@/store/firmFeatu
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import Cookies from "js-cookie";
+import { Loader } from "lucide-react";
 import React, { useState } from "react";
 
 export default function AddOptionalLicenseModal({
@@ -42,7 +42,7 @@ export default function AddOptionalLicenseModal({
   });
   //console.log("Certifications List:", certificationsList);
 
-  const [addLicenseAndCertification] =
+  const [addLicenseAndCertification, { isLoading: addOptionalLicenseIsLoading }] =
     useAddFirmWiseLicenseAndCertificationMutation();
   const handleOptionalLicenseSubmit = async (data) => {
     //console.log("Optional License form submitted:", data);
@@ -124,17 +124,27 @@ export default function AddOptionalLicenseModal({
             className="w-full"
           />
         </div>
+
         <div className="flex justify-between gap-4 mt-8">
           <Button
             type="button"
             variant={"outline"}
             className="cursor-pointer"
             onClick={onCancel}
+            disabled={addOptionalLicenseIsLoading} // disable while loading
+
           >
             Cancel
           </Button>
-          <Button type="submit" variant={"default"} className="cursor-pointer">
-            Add License
+          <Button
+            type="submit" variant={"default"}
+            className="cursor-pointer bg-[#ff8602]"
+            disabled={addOptionalLicenseIsLoading} // disable while loading
+          >
+            {addOptionalLicenseIsLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {addOptionalLicenseIsLoading ? "Adding..." : "Add License"}
           </Button>
         </div>
       </FormWrapper>
