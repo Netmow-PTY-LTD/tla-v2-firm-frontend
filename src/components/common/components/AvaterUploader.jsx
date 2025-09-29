@@ -51,7 +51,7 @@ export default function AvatarUploader({
       {preview ? (
         <div className="relative h-28 w-28 md:h-32 md:w-32 lg:h-36 lg:w-36">
           <Avatar className="h-full w-full rounded-lg">
-            <AvatarImage src={preview} />
+            <AvatarImage src={preview} className="object-cover" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
