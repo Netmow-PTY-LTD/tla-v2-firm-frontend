@@ -2,7 +2,6 @@ import { Modal } from "@/components/common/components/Modal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import InputCombobox from "@/components/form/ComboboxInput";
 import FormWrapper from "@/components/form/FormWrapper";
-import SelectInput from "@/components/form/SelectInput";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import { Button } from "@/components/ui/button";
