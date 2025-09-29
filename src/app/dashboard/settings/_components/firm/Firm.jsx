@@ -73,6 +73,8 @@ export default function Firm() {
       ...rest
     } = data;
 
+    console.log("companyLogo", companyLogo);
+
     const payload = {
       firmName,
       registrationNumber,
@@ -103,6 +105,8 @@ export default function Firm() {
     if (companyLogo instanceof File) {
       formData.append("companyLogo", companyLogo);
     }
+
+    console.log("companyLogo after append", formData.get("companyLogo"));
 
     //console.log("FormData to send:", JSON.parse(formData.get("data")));
 
