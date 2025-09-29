@@ -27,6 +27,7 @@ export default function LocationCombobox({
   label,
   itemClassName,
   labelClassName,
+  address,
 }) {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
@@ -80,7 +81,7 @@ export default function LocationCombobox({
                   displayValue={(val) => {
                     if (!val) return "";
                     const match = options.find((o) => o.value === val); // val is string id
-                    return match ? match.label : "";
+                    return match ? match.label : address;
                   }}
                   //   displayValue={(val) =>
                   //     options.find((o) => o.value === val)?.label || ""

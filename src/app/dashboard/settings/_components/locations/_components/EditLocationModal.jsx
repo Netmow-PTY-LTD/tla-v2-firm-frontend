@@ -104,6 +104,7 @@ export default function EditLocationModal({
           label="Zip Code"
           name="zipCode"
           placeholder="Type Zip Code..."
+          address={location?.address?.zipcode}
         />
         {/* <div className="h-40">
           <iframe
