@@ -17,24 +17,29 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 
 // ---------------- Schema ----------------
+
 const staffSchema = z.object({
+  firmProfileId: z.string().min(1, "Firm profile ID is required"),
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
   email: z.string().email("Invalid email"),
   password: z.string().min(4, "Password must be at least 4 chars"),
+  image: z
+    .union([z.string().url(), z.instanceof(File)])
+    .optional(), // Accept File object or URL string
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
   }),
   // permissions: z
   //   .object({
-  //     view_clients: z.boolean(),
-  //     manage_cases: z.boolean(),
-  //     access_billing: z.boolean(),
-  //     admin_rights: z.boolean(),
+  //     view_clients: z.boolean().optional(),
+  //     manage_cases: z.boolean().optional(),
+  //     access_billing: z.boolean().optional(),
+  //     admin_rights: z.boolean().optional(),
   //   })
   //   .superRefine((val, ctx) => {
-  //     if (val && !Object.values(val).some(Boolean)) {
+  //     if (!Object.values(val).some(Boolean)) {
   //       ctx.addIssue({
   //         code: z.ZodIssueCode.custom,
   //         message: "At least one permission must be selected",
@@ -43,6 +48,7 @@ const staffSchema = z.object({
   //   })
   //   .optional(),
 });
+
 
 const permissions = [
   { label: "View Clients", value: "view_clients" },
@@ -73,7 +79,7 @@ export default function CreateStaffPage() {
       access_billing: false,
       admin_rights: false,
     },
-    image:''
+    image: ''
   };
 
   const [createStaff] = useCreateStaffMutation();
@@ -89,6 +95,7 @@ export default function CreateStaffPage() {
       phone,
       status,
       permissions,
+      image
     } = values;
     // TODO: send values to API (e.g. /api/staff)
 
@@ -101,13 +108,24 @@ export default function CreateStaffPage() {
       phone,
       status,
       permissions,
-      image
+
     };
     console.log("Payload to send:", payload);
 
+
     try {
 
-      const res = await createStaff(payload).unwrap();
+      const formData = new FormData();
+
+      formData.append("data", JSON.stringify(payload));
+
+      // Append image file if exists
+      if (image instanceof File) {
+        formData.append("image", image);
+      }
+
+
+      const res = await createStaff(formData).unwrap();
       console.log("Staff created successfully:", res);
       if (res?.success) {
         showSuccessToast(res?.message || "Staff created successfully!");
@@ -135,8 +153,8 @@ export default function CreateStaffPage() {
         </p>
         <FormWrapper
           onSubmit={onSubmit}
-          schema={staffSchema}
-          defaultValues={defaultValues}
+        // schema={staffSchema}
+        // defaultValues={defaultValues}
         >
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">
