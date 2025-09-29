@@ -57,7 +57,7 @@ const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <Image
-            src={partner?.logo || userDummyImage}
+            src={partner?.image || userDummyImage}
             alt={name || "Partner Image"}
             width={50}
             height={50}
