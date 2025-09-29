@@ -8,6 +8,7 @@ import { useAddOfficeLocationMutation } from "@/store/firmFeatures/firmApiServic
 import React, { useState } from "react";
 import { z } from "zod";
 import LocationCombobox from "./LocationCombobox";
+import { Loader } from "lucide-react";
 
 const locationSchema = z.object({
   name: z.string().min(1, { message: "*Required" }),
@@ -64,11 +65,6 @@ export default function AddLocationModal({ refetchLocations }) {
           name="name"
           placeholder="Location Name"
         />
-        {/* <ZipCodeCombobox
-          label="Zip Code"
-          name="zipCode"
-          placeholder={"select zip code"}
-        /> */}
 
         <LocationCombobox
           label="Zip Code"
@@ -82,8 +78,19 @@ export default function AddLocationModal({ refetchLocations }) {
             className="w-full h-full rounded-lg border"
           />
         </div> */}
-        <Button type="submit" className="w-full bg-[var(--primary-color)]">
+        {/* <Button type="submit" className="w-full bg-[var(--primary-color)]">
           Save Location
+        </Button> */}
+
+        <Button
+          type="submit"
+          className="w-full bg-[var(--primary-color)]"
+          disabled={isLoading}
+        >
+          {isLoading && (
+            <Loader className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          {isLoading ? "Saving..." : "Save Location"}
         </Button>
       </FormWrapper>
     </Modal>
