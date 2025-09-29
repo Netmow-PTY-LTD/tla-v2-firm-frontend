@@ -38,7 +38,8 @@ const AddPartnerModal = ({ refetchPartners }) => {
   const [open, setOpen] = useState(false);
   const onCancel = () => setOpen(!open);
 
-  const [createPartner, { isLoading: addPartnerIsLoading }] = useCreatePartnerMutation();
+  const [createPartner, { isLoading: addPartnerIsLoading }] =
+    useCreatePartnerMutation();
   const defaultValues = {
     name: "",
     position: "",
@@ -48,7 +49,7 @@ const AddPartnerModal = ({ refetchPartners }) => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("values ==>", values);
+    //console.log("values ==>", values);
     const { name, position, email, phone, partnerImage } = values;
 
     const payload = {
@@ -63,13 +64,9 @@ const AddPartnerModal = ({ refetchPartners }) => {
     const formData = new FormData();
     formData.append("data", JSON.stringify(payload));
 
-    console.log("partnerImage ==>", partnerImage);
-
     if (partnerImage instanceof File) {
       formData.append("partnerImage", partnerImage);
     }
-
-    console.log("partnerImage after append", formData.get("partnerImage"));
 
     try {
       // Send request to backend
@@ -117,7 +114,14 @@ const AddPartnerModal = ({ refetchPartners }) => {
               name="phone"
               placeholder="Enter phone number"
             />
+
             <AvatarUploader name="partnerImage" />
+            <label
+              htmlFor="partnerImage"
+              className="text-[var(--color-black)] font-medium"
+            >
+              Upload Photo
+            </label>
 
             {/* <TextInput
               label="Bar Association"
@@ -140,12 +144,12 @@ const AddPartnerModal = ({ refetchPartners }) => {
               className="cursor-pointer"
               onClick={onCancel}
               disabled={addPartnerIsLoading} // disable while loading
-
             >
               Cancel
             </Button>
             <Button
-              type="submit" variant={"default"}
+              type="submit"
+              variant={"default"}
               className="cursor-pointer bg-[#ff8602]"
               disabled={addPartnerIsLoading} // disable while loading
             >
