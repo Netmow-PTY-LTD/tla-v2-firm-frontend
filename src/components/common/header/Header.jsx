@@ -16,7 +16,7 @@ export default function Header() {
   const token = useSelector(selectCurrentToken);
   const validToken = checkTokenValidity(token);
 
-  console.log("Header token:", token);
+  //console.log("Header token:", token);
 
   // ✅ Call API conditionally
   //   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
