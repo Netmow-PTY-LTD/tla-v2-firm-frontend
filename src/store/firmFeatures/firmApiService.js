@@ -29,7 +29,7 @@ const firmApiService = firmBaseApi.injectEndpoints({
         url: `/firm-media`,
         method: "GET",
       }),
-      providesTags: ["media", "photo", "video"],
+      providesTags: ["media"],
     }),
     updateFirmMedia: builder.mutation({
       query: (formData) => ({
@@ -37,7 +37,7 @@ const firmApiService = firmBaseApi.injectEndpoints({
         method: "PATCH",
         body: formData,
       }),
-      invalidatesTags: ["media", "photo", "video"],
+      invalidatesTags: ["media"],
     }),
     deleteFirmMedia: builder.mutation({
       query: (body) => ({
@@ -45,7 +45,7 @@ const firmApiService = firmBaseApi.injectEndpoints({
         method: "DELETE",
         body,
       }),
-      invalidatesTags: ["media", "photo", "video"],
+      invalidatesTags: ["media"],
     }),
     addOfficeLocation: builder.mutation({
       query: (body) => ({

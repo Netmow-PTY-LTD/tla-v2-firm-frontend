@@ -52,8 +52,6 @@ export default function LawFirmRegisterStepOne() {
   };
 
 
-  console.log('firm data ==>',formData)
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
