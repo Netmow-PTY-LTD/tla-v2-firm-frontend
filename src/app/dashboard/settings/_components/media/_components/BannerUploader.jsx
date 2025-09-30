@@ -15,6 +15,7 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 
 
+
 export default function BannerUploader({
   name = "banner",
   accept = "image/*",
@@ -43,15 +44,14 @@ export default function BannerUploader({
       return () => URL.revokeObjectURL(objectUrl);
     }
 
-    if (typeof file === "string" && file) {
-      setPreview(file);
-      return;
-    }
-
-    if ((!file || file === "") && firmMediaInfo?.data?.bannerImage) {
+    // Backend banner image
+    if (firmMediaInfo?.data?.bannerImage) {
       setPreview(firmMediaInfo.data.bannerImage);
+    } else {
+      // No banner
+      setPreview(null);
     }
-  }, [file, firmMediaInfo]);
+  }, [file, firmMediaInfo?.data?.bannerImage]);
 
   // Handle file upload
   const handleChange = async (e) => {
@@ -79,7 +79,7 @@ export default function BannerUploader({
       if (res?.success) {
         showSuccessToast(res?.message || "Banner uploaded successfully");
         setPreview(res?.data?.bannerImage);
-        refetch?.();
+        refetch();
       }
     } catch (error) {
       const errorMessage = error?.data?.message || "Upload failed";
@@ -97,7 +97,7 @@ export default function BannerUploader({
         showSuccessToast(res?.message || "Banner deleted successfully");
         setPreview("");
         setValue(name, "", { shouldValidate: true });
-        refetch?.();
+        refetch();
       }
     } catch (error) {
       const errorMessage = error?.data?.message || "Delete failed";
