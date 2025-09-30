@@ -69,6 +69,7 @@ const ZipCodeCombobox = ({
           >
             <div className="relative">
               <ComboboxInput
+                autoComplete="off"
                 className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4  text-sm font-medium leading-[27px] placeholder:text-[12px] placeholder:font-normal"
                 displayValue={(val) =>
                   options.find((o) => o.value === val)?.label || ""

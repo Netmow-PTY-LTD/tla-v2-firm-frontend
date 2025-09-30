@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
@@ -8,49 +8,51 @@ import {
   nextStep,
   setFormData,
 } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
+import PasswordInput from "@/components/form/PasswordInput";
 import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
 import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
 import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
 
-export default function LawFirmRegisterStepOne() {
+export default function LawFirmRegisterStepOneTest() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
   const defaultValues = {
-    firmName: formData.firmData.firmName,
-    registrationNumber: formData.firmData.registrationNumber,
-    yearEstablished: formData.firmData.yearEstablished,
-    country: formData.firmData.contactInfo.country,
-    city: formData.firmData.contactInfo.city,
-    zipCode: formData.firmData.contactInfo.zipCode,
-    phone: formData.firmData.contactInfo.phone,
-    email: formData.firmData.contactInfo.email,
-    website: formData.firmData.contactInfo.officialWebsite,
+    firmName: formData.firmName,
+    registrationNumber: formData.registrationNumber,
+    yearEstablished: formData.yearEstablished,
+    officeAddress: formData.contactInfo.officeAddress,
+    country: formData.contactInfo.country,
+    city: formData.contactInfo.city,
+    zipCode: formData.contactInfo.zipCode, // optional if needed
+    phone: formData.contactInfo.phone,
+    email: formData.contactInfo.email,
+    password: formData.password,
+
+    website: formData.contactInfo.officialWebsite,
   };
 
   const onSubmit = (data) => {
-
     dispatch(
       setFormData({
-        firmData: {
-          firmName: data.firmName,
-          registrationNumber: data.registrationNumber,
-          yearEstablished: data.yearEstablished,
-          contactInfo: {
-            country: data.country,
-            city: data.city,
-            zipCode: data.zipCode,
-            phone: data.phone,
-            email: data.email,
-            officialWebsite: data.website,
-          },
+        firmName: data.firmName,
+        registrationNumber: data.registrationNumber,
+        yearEstablished: data.yearEstablished,
+        email: data.email,
+        password: data.password,
+        contactInfo: {
+          zipCode: data.zipCode, // optional if needed
+          country: data.country,
+          city: data.city,
+          phone: data.phone,
+          email: data.email,
+          officialWebsite: data.website,
         },
       })
     );
 
     dispatch(nextStep());
   };
-
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -80,6 +82,8 @@ export default function LawFirmRegisterStepOne() {
                 triggerClassName={"w-full"}
               />
 
+
+              {/*   Name will be real time firm checker logic based on country */}
               <TextInput
                 name="firmName"
                 label="Law Firm Name"
@@ -101,10 +105,17 @@ export default function LawFirmRegisterStepOne() {
                 placeholder="Select a Zipcode or Address"
 
               />
+
               <TextInput
                 name="email"
                 label="Email"
                 placeholder="i.e. abc@example.com"
+              />
+              <PasswordInput
+                name="password"
+                label="Password"
+                placeholder="e.g. AbcFirm@2025"
+                type="password"
               />
               <TextInput
                 name="phone"
