@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
@@ -12,7 +12,6 @@ import {
   useGetSingleStaffByIdQuery,
   useUpdateStaffMutation,
 } from "@/store/firmFeatures/staff/staffApiService";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
@@ -23,20 +22,39 @@ import PasswordInput from "@/components/form/PasswordInput";
 const staffSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
-  email: z.email("Invalid email"),
+  email: z.email("Please enter a valid email address"),
+  image: z
+    .any()
+    .transform((val) => {
+      if (!val) return undefined;
+
+      // If user uploads a File
+      if (val instanceof File) return val;
+
+      // If user uploads via input (FileList)
+      if (val instanceof FileList && val.length > 0) return val[0];
+
+      // If it's already a URL string
+      if (typeof val === "string" && val.startsWith("http")) return val;
+
+      return undefined;
+    })
+    .optional(),
+
   password: z
     .string()
     .optional()
     .refine((val) => !val || typeof val === "string", {
       message: "Password must be a string",
     })
-    .refine((val) => !val || val.length >= 4, {
-      message: "Password must be at least 4 characters",
+    .refine((val) => !val || val.length >= 6, {
+      message: "Password must be at least 6 characters",
     })
     .transform((val) => (val === "" ? undefined : val)), // ignore empty string
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
+
   }),
   // permissions: z
   //   .object({
@@ -86,8 +104,9 @@ export default function EditStaffPage() {
       email: staff?.userId?.email || "",
       password: staff?.userId?.password || "",
       phone: staff?.phone || "",
-      status: staff?.status || "",
+      status: staff?.userId?.accountStatus || "",
       permissions: staff?.permissions || [],
+      image: staff?.image || ''
     }),
     [staff]
   );
@@ -105,6 +124,7 @@ export default function EditStaffPage() {
       phone,
       status,
       permissions,
+      image
     } = values;
 
     const payload = {
@@ -117,9 +137,21 @@ export default function EditStaffPage() {
       permissions,
     };
     console.log("Payload to send:", payload);
+
+
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(payload));
+
+    // Append image file if exists
+    if (image instanceof File) {
+      formData.append("image", image);
+    }
+
+
     try {
       const res = await updateStaff({
-        ...payload,
+        data: formData,
         staffId: staffId,
       });
       console.log("Staff updated successfully:", res);
@@ -151,7 +183,7 @@ export default function EditStaffPage() {
         >
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">
-              <AvatarUploader name="companyLogo" />
+              <AvatarUploader name="image" />
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col gap-4">
