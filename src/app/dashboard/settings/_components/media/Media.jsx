@@ -50,7 +50,14 @@ export default function Media() {
 
 
         <div className="flex flex-col gap-3 ">
-          <BannerUploader name="banner"   />
+          <div className="mb-1">
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Company Banner Image</h2>
+            <p className="text-sm text-gray-500">
+              Showcase your company with a professional banner. This image will appear at the top of your public profile and helps create a strong first impression for clients and partners.<br />
+            
+            </p>
+          </div>
+          <BannerUploader name="banner" />
         </div>
 
         <div className="flex flex-col gap-3 ">
