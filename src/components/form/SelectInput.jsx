@@ -42,7 +42,7 @@ export default function SelectInput({
             {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
             <FormControl>
               <Select
-                disabled={disabled}
+                // disabled={disabled}
                 // onValueChange={field.onChange}
                 onValueChange={(val) => {
                   field.onChange(val); // maintain react-hook-form behavior
@@ -62,7 +62,7 @@ export default function SelectInput({
                 </SelectTrigger>
                 <SelectContent>
                   {options?.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
+                    <SelectItem key={opt.key || opt.value} value={opt.value}>
                       {opt.label}
                     </SelectItem>
                   ))}
@@ -76,4 +76,3 @@ export default function SelectInput({
     />
   );
 }
-

@@ -29,7 +29,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
       control={control}
       name={name}
       render={({ field, fieldState }) => (
-        <div className="mb-4">
+        <div className="w-full">
           <label className="block text-sm font-medium mb-1">{label}</label>
           <Combobox
             value={field.value}
@@ -40,7 +40,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
           >
             <div className="relative">
               <ComboboxInput
-                className=" w-full"
+                className=" w-full border border-gray-300 rounded-md pl-3 pr-10 py-2 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-200 focus:border-gray-200 h-[44px]"
                 displayValue={(val) =>
                   options?.find((o) => o.value === val)?.label || ""
                 }
@@ -52,7 +52,7 @@ const InputCombobox = ({ name, label, options, placeholder, onSelect }) => {
               </ComboboxButton>
 
               {filteredOptions?.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-gray-200 ring-opacity-5 focus:outline-none">
                   {filteredOptions.map((item, index) => (
                     <ComboboxOption
                       key={index}

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -15,15 +14,21 @@ import { cn } from "@/lib/utils";
 
 // API hook import
 import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
-const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
+const ZipCodeCombobox = ({
+  name,
+  label,
+  placeholder,
+  disabled = false,
+  onSelect,
+}) => {
   const { control } = useFormContext();
   const [query, setQuery] = useState("");
 
   // ✅ watch selected country from form
   const selectedCountry = useWatch({ control, name: "country" });
 
-  // ✅ fetch zip codes dynamically when country changes
   const { data, isLoading } = useGetZipCodeListQuery(
     {
       page: 1,
@@ -31,7 +36,7 @@ const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
       search: query,
       countryId: selectedCountry,
     },
-    { skip: !selectedCountry } // don't fetch until country is selected
+    { skip: !selectedCountry }
   );
 
   // ✅ transform API data → options
@@ -43,6 +48,10 @@ const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
     }));
   }, [data]);
 
+
+
+  const isDisabled = disabled || !selectedCountry;
+
   return (
     <Controller
       control={control}
@@ -51,14 +60,16 @@ const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">{label}</label>
           <Combobox
-            value={field.value}
+            value={field.value ?? ""}
             onChange={(val) => {
               field.onChange(val);
               if (onSelect) onSelect(val);
             }}
+            disabled={isDisabled}
           >
             <div className="relative">
               <ComboboxInput
+                autoComplete="off"
                 className="w-full h-11 text-black bg-white border border-[#dce2ea] rounded-lg px-4  text-sm font-medium leading-[27px] placeholder:text-[12px] placeholder:font-normal"
                 displayValue={(val) =>
                   options.find((o) => o.value === val)?.label || ""
@@ -69,7 +80,6 @@ const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4" />
               </ComboboxButton>
-
 
               <ComboboxOptions
                 className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md 
@@ -113,14 +123,17 @@ const ZipCodeCombobox = ({ name, label, placeholder, onSelect }) => {
                     </ComboboxOption>
                   ))
                 ) : (
-                  <div className="p-2 text-gray-500 text-center">No zip codes found</div>
+                  <div className="p-2 text-gray-500 text-center">
+                    No zip codes found
+                  </div>
                 )}
               </ComboboxOptions>
-
             </div>
           </Combobox>
           {fieldState.error && (
-            <p className="text-red-600 text-sm mt-1">{fieldState.error.message}</p>
+            <p className="text-red-600 text-sm mt-1">
+              {fieldState.error.message}
+            </p>
           )}
         </div>
       )}

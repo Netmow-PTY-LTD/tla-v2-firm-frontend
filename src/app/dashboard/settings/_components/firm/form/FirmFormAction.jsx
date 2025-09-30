@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Loader } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { Loader } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
 export default function FirmFormAction({ initialValues, isLoading }) {
   const { reset, control } = useFormContext();
@@ -33,10 +33,10 @@ export default function FirmFormAction({ initialValues, isLoading }) {
       <button
         type="submit"
         disabled={!isDirty || isLoading}
-        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white text-sm transition-all duration-150 ${
+        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white text-sm transition-all duration-150 cursor-pointer ${
           isDirty && !isLoading
-            ? 'bg-[#12C7C4] hover:bg-[#10b0ae]'
-            : 'bg-gray-300 cursor-not-allowed'
+            ? "bg-[#ff8602] hover:bg-black"
+            : "bg-gray-300 cursor-not-allowed"
         }`}
       >
         {isLoading ? (

@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { CloudUpload, X } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { userDummyImage } from '@/data/data';
-import resizeAndConvertToWebP from './resizeAndConvertToWebP';
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { CloudUpload, X } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { userDummyImage } from "@/data/data";
+import resizeAndConvertToWebP from "./resizeAndConvertToWebP";
 
 export default function AvatarUploader({
-  name = 'avatar',
-  accept = 'image/*',
+  name = "avatar",
+  accept = "image/*",
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
+  defaultImage = userDummyImage,
 }) {
   const { register, setValue, watch, getValues } = useFormContext();
   const file = watch(name);
@@ -25,15 +26,15 @@ export default function AvatarUploader({
       return () => URL.revokeObjectURL(objectUrl);
     }
 
-    if (typeof file === 'string') {
+    if (typeof file === "string") {
       setPreview(file); // from backend or default
     }
   }, [file]);
 
   // Handle file input
-  const handleChange =async (e) => {
+  const handleChange = async (e) => {
     const uploaded = e.target.files?.[0];
-        const webpFile = await resizeAndConvertToWebP(uploaded, 500, 0.8);
+    const webpFile = await resizeAndConvertToWebP(uploaded, 500, 0.8);
     if (webpFile) {
       setValue(name, webpFile, { shouldValidate: true });
     }
@@ -41,8 +42,8 @@ export default function AvatarUploader({
 
   // Handle remove image
   const handleRemove = () => {
-    setValue(name, '', { shouldValidate: true });
-    setPreview('');
+    setValue(name, "", { shouldValidate: true });
+    setPreview("");
   };
 
   return (
@@ -50,7 +51,7 @@ export default function AvatarUploader({
       {preview ? (
         <div className="relative h-28 w-28 md:h-32 md:w-32 lg:h-36 lg:w-36">
           <Avatar className="h-full w-full rounded-lg">
-            <AvatarImage src={preview} />
+            <AvatarImage src={preview} className="object-cover" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
@@ -68,7 +69,11 @@ export default function AvatarUploader({
       ) : (
         <div className="max-w-sm relative w-28 h-28 md:h-32 md:w-32 lg:h-36 lg:w-36 z-[1]">
           <Avatar className="h-full w-full rounded-lg absolute top-0 left-0 z-[-1] opacity-50">
-            <AvatarImage src={userDummyImage} />
+            <AvatarImage
+              src={defaultImage}
+              alt="Profile"
+              className="object-cover"
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <label

@@ -210,4 +210,5 @@ export const {
   useCreateRatingMutation,
   useGetLawCertificationsListQuery,
   useGetCityListQuery,
+  useLazyGetZipCodeListQuery
 } = publicApiService;

@@ -31,8 +31,6 @@ export function Modal({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange} className="z-[99999]">
-      <DialogOverlay overlayBg={overlayBg} className="bg-transparent" />
-
       {buttonName && (
         <DialogTrigger asChild>
           <Button

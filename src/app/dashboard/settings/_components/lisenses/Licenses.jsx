@@ -9,128 +9,196 @@ import SelectInput from "@/components/form/SelectInput";
 import AddCoreLicenseModal from "../modal/AddCoreLicenseModal";
 import { Edit, Trash, Trash2 } from "lucide-react";
 import AddOptionalLicenseModal from "../modal/AddOptionalLicenses";
+import { z } from "zod";
+import { useGetLicensesAndCertificationsListQuery } from "@/store/firmFeatures/certificateLicensesApiService";
+import { is } from "zod/v4/locales";
+import EditCoreLicenseModal from "../modal/EditCoreLicenseModal";
+import EditOptionalLicenseModal from "../modal/EditOptionalLicensesModal";
+import LicenseCard from "../modal/LicenseCard";
+
+const licenseSchema = z.object({
+  certificationId: z.string().min(1, { message: "*Required" }),
+  licenseNumber: z.string().min(1, { message: "*Required" }),
+  issuedBy: z.string().optional(),
+  additionalNote: z.string().optional(),
+  validUntil: z.string().min(1, { message: "*Required" }),
+});
 
 export default function License() {
-  const [logo, setLogo] = useState(null);
+  const [isEditCoreLicenseModalOpen, setIsEditCoreLicenseModalOpen] =
+    useState(false);
+  const [selectedLicense, setSelectedLicense] = useState(null);
+  const [isEditOptionalLicenseModalOpen, setIsEditOptionalLicenseModalOpen] =
+    useState(false);
+  const [selectedOptionalLicense, setSelectedOptionalLicense] = useState(null);
+
+  const handleOpenEditCoreLicenseModal = (license) => {
+    setSelectedLicense(license);
+    setIsEditCoreLicenseModalOpen(true);
+  };
+
+  const handleOpenEditOptionalLicenseModal = (license) => {
+    setSelectedOptionalLicense(license);
+    setIsEditOptionalLicenseModalOpen(true);
+  };
+
+  const handleDeleteMandatoryLicense = (licenseId) => {
+    console.log("Delete mandatory license with ID:", licenseId);
+  };
 
   const initialValues = {
-    licenseType: "",
+    certificationId: "",
     licenseNumber: "",
-    issuedBy: "",
     validUntil: "",
-    notes: "",
+    additionalNote: "",
   };
 
-  const onSubmit = (data) => {
-    console.log("License form submitted:", data);
-  };
+  const {
+    data: licensesList,
+    isLoading: isCoreLicensesLoading,
+    refetch: refetchLicenses,
+  } = useGetLicensesAndCertificationsListQuery();
+
+  console.log("licensesList", licensesList);
+
+  const mandatoryLicenses = licensesList?.data?.filter(
+    (item) => item.type === "mandatory"
+  );
+  const optionalLicenses = licensesList?.data?.filter(
+    (item) => item.type === "optional"
+  );
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={onSubmit} defaultValues={initialValues}>
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h3 className="text-black font-semibold heading-lg mb-2">
-              Core Legal Certifications
-            </h3>
-            <p className="text-gray-600">
-              Provide accurate licensing information to verify your firm’s legal
-              credentials.
-            </p>
-          </div>
-          <div className="flex justify-end">
-            <AddCoreLicenseModal />
-          </div>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h3 className="text-black font-semibold heading-lg mb-2">
+            Core Legal Certifications
+          </h3>
+          <p className="text-gray-600">
+            Provide accurate licensing information to verify your firm’s legal
+            credentials.
+          </p>
         </div>
-
+        <div className="flex justify-end">
+          <AddCoreLicenseModal
+            defaultValues={initialValues}
+            schema={licenseSchema}
+            refetchLicenses={refetchLicenses}
+          />
+        </div>
+      </div>
+      {/* Mandatory Licenses */}
+      {mandatoryLicenses?.length > 0 ? (
+        <div className="space-y-4">
+          {mandatoryLicenses.map((license) => (
+            <LicenseCard
+              key={license?._id}
+              license={license}
+              handleOpenEditCoreLicenseModal={handleOpenEditCoreLicenseModal}
+              refetchLicenses={refetchLicenses}
+            />
+          ))}
+        </div>
+      ) : (
         <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-200 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start gap-4">
             <div className="flex flex-col">
               <h5 className="heading-base font-semibold text-gray-800 mb-2">
-                Bar Certification / License
+                No core licenses found
               </h5>
-              <div className="space-y-1">
-                <p className="text-sm text-[#6e6e6e]">
-                  <b>License Number</b>: ABC1234567 | <b> Valid Until: </b> 31
-                  Dec 2025
-                </p>
-                <p className="text-sm text-[#6e6e6e]">
-                  <b> Note: </b> This is a sample note for the license.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button
-                className="text-blue-500 hover:text-blue-700 cursor-pointer"
-                // onClick={() => handleEditClick(partner)}
-              >
-                <Edit size={18} />
-              </button>
-              <button
-                className="text-red-500 hover:text-red-700 cursor-pointer"
-                // onClick={() => handleDeleteClick(partner?._id)}
-              >
-                <Trash2 size={18} />
-              </button>
             </div>
           </div>
         </div>
+      )}
 
-        <div className="border-t border-white my-14" />
+      {isEditCoreLicenseModalOpen && selectedLicense && (
+        <EditCoreLicenseModal
+          isOpen={isEditCoreLicenseModalOpen}
+          onClose={() => setIsEditCoreLicenseModalOpen(false)}
+          defaultValues={{
+            certificationId: selectedLicense?.certificationId?._id || "",
+            licenseNumber: selectedLicense?.licenseNumber || "",
+            validUntil:
+              new Date(selectedLicense.validUntil)
+                .toISOString()
+                .split("T")[0] || "",
+            additionalNote: selectedLicense?.additionalNote || "",
+          }}
+          schema={licenseSchema}
+          refetchLicenses={refetchLicenses}
+          selectedLicense={selectedLicense}
+        />
+      )}
 
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h3 className="text-black font-semibold heading-lg mb-2">
-              Optional Legal Certifications
-            </h3>
-            <p className="text-gray-600">
-              Provide accurate licensing information to verify your firm’s legal
-              credentials.
-            </p>
-          </div>
-          <div className="flex justify-end">
-            <AddOptionalLicenseModal />
-          </div>
+      <div className="border-t border-white my-14" />
+
+      {/* Optional Licenses */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h3 className="text-black font-semibold heading-lg mb-2">
+            Optional Legal Certifications
+          </h3>
+          <p className="text-gray-600">
+            Provide accurate licensing information to verify your firm’s legal
+            credentials.
+          </p>
         </div>
+        <div className="flex justify-end">
+          <AddOptionalLicenseModal
+            defaultValues={initialValues}
+            schema={licenseSchema}
+            refetchLicenses={refetchLicenses}
+          />
+        </div>
+      </div>
 
+      {optionalLicenses?.length > 0 ? (
+        <div className="space-y-4">
+          {optionalLicenses?.map((license) => (
+            <LicenseCard
+              key={license?._id}
+              license={license}
+              handleOpenEditCoreLicenseModal={
+                handleOpenEditOptionalLicenseModal
+              }
+              refetchLicenses={refetchLicenses}
+            />
+          ))}
+        </div>
+      ) : (
         <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-200 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start gap-4">
             <div className="flex flex-col">
               <h5 className="heading-base font-semibold text-gray-800 mb-2">
-                Bar Certification / License
+                No optional licenses found
               </h5>
-              <div className="space-y-1">
-                <p className="text-sm text-[#6e6e6e]">
-                  <b>License Number</b>: ABC1234567 | <b> Valid Until: </b> 31
-                  Dec 2025
-                </p>
-                <p className="text-sm text-[#6e6e6e]">
-                  <b> Note: </b> This is a sample note for the license.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button
-                className="text-blue-500 hover:text-blue-700 cursor-pointer"
-                // onClick={() => handleEditClick(partner)}
-              >
-                <Edit size={18} />
-              </button>
-              <button
-                className="text-red-500 hover:text-red-700 cursor-pointer"
-                // onClick={() => handleDeleteClick(partner?._id)}
-              >
-                <Trash2 size={18} />
-              </button>
             </div>
           </div>
         </div>
+      )}
 
-        <div className="border-t border-white mt-8" />
+      {isEditOptionalLicenseModalOpen && selectedOptionalLicense && (
+        <EditOptionalLicenseModal
+          isOpen={isEditOptionalLicenseModalOpen}
+          onClose={() => setIsEditOptionalLicenseModalOpen(false)}
+          defaultValues={{
+            certificationId:
+              selectedOptionalLicense?.certificationId?._id || "",
+            licenseNumber: selectedOptionalLicense?.licenseNumber || "",
+            validUntil:
+              new Date(selectedOptionalLicense.validUntil)
+                .toISOString()
+                .split("T")[0] || "",
+            additionalNote: selectedOptionalLicense?.additionalNote || "",
+          }}
+          schema={licenseSchema}
+          refetchLicenses={refetchLicenses}
+          selectedLicense={selectedOptionalLicense}
+        />
+      )}
 
-        {/* Footer Buttons */}
-        <BillingTaxFormAction isLoading={false} initialValues={initialValues} />
-      </FormWrapper>
+
     </div>
   );
 }

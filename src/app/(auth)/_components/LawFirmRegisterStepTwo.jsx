@@ -1,79 +1,43 @@
-
-
 import React, { useState } from "react";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
-import SelectInput from "@/components/form/SelectInput";
-
 import { useDispatch, useSelector } from "react-redux";
-import { previousStep, resetRegistration, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
+import {
+  nextStep,
+  previousStep,
+  setFormData,
+} from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
+import PasswordInput from "@/components/form/PasswordInput";
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
-import { useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
-import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
-import { useRouter } from "next/navigation";
 
 export default function LawFirmRegisterStepTwo() {
   const dispatch = useDispatch();
-  const formData = useSelector((state) => state.lawFirmRegistration.formData); // get previous step data
-  const router = useRouter()
-  const [firmRegister, { isLoading }] = useRegisterFirmMutation();
+  const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
+  // Default values from userData slice
   const defaultValues = {
-    certificationId: formData.licenseDetails.certificationId,
-    licenseNumber: formData.licenseDetails.licenseNumber,
-    issuedBy: formData.licenseDetails.issuedBy,
-    validUntil: formData.licenseDetails.validUntil,
+    name: formData.userData.name,
+    email: formData.userData.email,
+    password: formData.userData.password,
+    phone: formData.userData.phone,
   };
 
-  const onSubmit = async (data) => {
-    try {
-
-
-      // 1️ Save Step 2 data inside licenseDetails
-      dispatch(
-        setFormData({
-          licenseDetails: {
-            certificationId: data.certificationId,
-            licenseNumber: data.licenseNumber,
-            issuedBy: data.issuedBy,
-            validUntil: data.validUntil,
-          },
-        })
-      );
-
-      // 2️ Combine all steps data from Redux
-      const finalData = {
-        ...formData,
-        licenseDetails: {
-          ...formData.licenseDetails,
-          ...data,
+  const onSubmit = (data) => {
+    dispatch(
+      setFormData({
+        userData: {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          phone: data.phone,
         },
-      };
+      })
+    );
 
-
-
-      // 3️ API call to finish registration
-      const res = await firmRegister(finalData).unwrap();
-      console.log("API Response ==>", res);
-
-      if (res.success) {
-        showSuccessToast(res?.message || "Firm registered successfully");
-        dispatch(resetRegistration())
-        router.push("/dashboard"); // ✅ redirect after success
-      }
-
-    } catch (error) {
-      const errorMessage = error?.data?.message || "An error occurred";
-      showErrorToast(errorMessage);
-      console.error(
-        "Registration failed:",
-        error?.response?.data || error.message
-      );
-
-
-    }
+    dispatch(nextStep());
   };
 
+  console.log('form data  ===>',formData)
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -82,48 +46,40 @@ export default function LawFirmRegisterStepTwo() {
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
-          <h3 className="tla-auth-title mb-3 text-center uppercase">
-            License Details
+
+          <h3 className="tla-auth-title mb-3 text-center">
+            Create Your Account
           </h3>
-          <p className="tla-auth-subtitle mb-8 text-center text-muted">
-            Provide accurate licensing information to verify your firm’s legal credentials.
+          <p className="tla-auth-subtitle mb-8 text-center">
+            Enter your details to create your account and start using our services.
           </p>
+
           <FormWrapper
             onSubmit={onSubmit}
-            schema={lawFirmRegStepTwoSchema}
+            schema={lawFirmRegStepTwoSchema} // Your zod schema for user info
             defaultValues={defaultValues}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput
-                name="certificationId"
-                label="License"
-                placeholder="i.e. Law Firm License"
+                name="name"
+                label="Full Name"
+                placeholder="Enter your full name"
               />
-
               <TextInput
-                name="licenseNumber"
-                label="License Number"
-                placeholder="i.e. ABC1234567"
+                name="email"
+                label="Email"
+                placeholder="i.e. abc@example.com"
               />
-
-              <SelectInput
-                name="issuedBy"
-                label="Issued By"
-                placeholder="Select a body"
-                multiple={true}
-                options={[
-                  { value: "bar-council", label: "Bar Council of Australia" },
-                  { value: "legal-services-commission", label: "Legal Services Commission" },
-                ]}
-                triggerClassName="w-full"
-
+              <PasswordInput
+                name="password"
+                label="Password"
+                placeholder="e.g. Abc123@2025"
+                type="password"
               />
-
               <TextInput
-                name="validUntil"
-                label="Valid Until"
-                type="date"
-                inputClassName="h-[44px] inline-block  focus-visible:ring-inset"
+                name="phone"
+                label="Phone Number"
+                placeholder="i.e. +1 (123) 456-7890"
               />
             </div>
 
@@ -132,22 +88,24 @@ export default function LawFirmRegisterStepTwo() {
                 type="button"
                 className="btn-default btn-outline-black"
                 onClick={() => dispatch(previousStep())}
-                disabled={isLoading} //  prevent step change while submitting
+    
               >
                 Back
               </button>
               <button
                 type="submit"
                 className="btn-default bg-[var(--color-special)]"
-                disabled={isLoading} //  disable while submitting
+              
               >
-                {isLoading ? "Submitting..." : "Finish"}
+              Next
               </button>
             </div>
           </FormWrapper>
+
+
         </div>
       </div>
     </div>
+
   );
 }
-

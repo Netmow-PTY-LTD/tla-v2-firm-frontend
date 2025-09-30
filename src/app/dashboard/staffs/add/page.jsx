@@ -7,24 +7,50 @@ import FormWrapper from "@/components/form/FormWrapper";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
 import TextInput from "@/components/form/TextInput";
 import CheckboxInput from "@/components/form/CheckboxInput";
+import { useCreateStaffMutation } from "@/store/firmFeatures/staff/staffApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useRouter } from "next/navigation";
+import SelectInput from "@/components/form/SelectInput";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import PasswordInput from "@/components/form/PasswordInput";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 
 // ---------------- Schema ----------------
+
 const staffSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
-  designation: z.string().min(2, "Designation is required"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 chars"),
-  permissions: z
-    .object({
-      view_clients: z.boolean(),
-      manage_cases: z.boolean(),
-      access_billing: z.boolean(),
-      admin_rights: z.boolean(),
-    })
-    .refine((val) => Object.values(val).some(Boolean), {
-      message: "At least one permission must be selected",
-    }),
+  firmProfileId: z.string().min(1, "Firm profile ID is required"),
+  fullName: z.string().min(1, "Full name is required"),
+  designation: z.string().min(1, "Designation is required"),
+  email: z.email("Please enter a valid email address"),
+  password: z.string().min(4, "Password must be at least 6 chars"),
+  image: z
+    .union([z.instanceof(File), z.url()])
+    .or(z.any().transform((val) => (val?.[0] instanceof File ? val[0] : undefined)))
+    .optional(),
+  phone: z.string().min(1, "Phone number is required"),
+  status: z.enum(["active", "inactive"], {
+    errorMap: () => ({ message: "Status is required" }),
+  }),
+  // permissions: z
+  //   .object({
+  //     view_clients: z.boolean().optional(),
+  //     manage_cases: z.boolean().optional(),
+  //     access_billing: z.boolean().optional(),
+  //     admin_rights: z.boolean().optional(),
+  //   })
+  //   .superRefine((val, ctx) => {
+  //     if (!Object.values(val).some(Boolean)) {
+  //       ctx.addIssue({
+  //         code: z.ZodIssueCode.custom,
+  //         message: "At least one permission must be selected",
+  //       });
+  //     }
+  //   })
+  //   .optional(),
 });
+
 
 const permissions = [
   { label: "View Clients", value: "view_clients" },
@@ -33,62 +59,81 @@ const permissions = [
   { label: "Admin Rights", value: "admin_rights" },
 ];
 
-const defaultValues = {
-  fullName: "",
-  designation: "",
-  email: "",
-  password: "",
-  permissions: {
-    view_clients: false,
-    manage_cases: false,
-    access_billing: false,
-    admin_rights: false,
-  },
-};
-
 export default function CreateStaffPage() {
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const currentuser = useSelector(selectCurrentUser)
+  // Only pass firmId if currentuser exists and role is "firm"
+  const firmProfileId = currentuser?.firmProfileId;
 
-  // <-- No TypeScript types here (JS file)
-  async function onSubmit(values) {
-    setLoading(true);
+  const [createStaff] = useCreateStaffMutation();
+
+  const onSubmit = async (values) => {
+    const {
+      fullName,
+      designation,
+      email,
+      password,
+      phone,
+      status,
+      permissions,
+      image
+    } = values;
+
+
+    const payload = {
+      firmProfileId,
+      fullName,
+      designation,
+      email,
+      password,
+      phone,
+      status,
+      permissions,
+
+    };
+
+
 
     try {
-      const payload = {
-        fullName: values.fullName,
-        designation: values.designation,
-        email: values.email,
-        password: values.password,
-        permissions: values.permissions,
-      };
 
-      console.log("Payload to send:", payload);
+      const formData = new FormData();
 
-      const res = await fetch("/api/staff", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      formData.append("data", JSON.stringify(payload));
 
-      if (!res.ok) {
-        throw new Error("Failed to create staff");
+      // Append image file if exists
+      if (image instanceof File) {
+        formData.append("image", image);
       }
 
-      const data = await res.json();
-      console.log("✅ Staff created successfully:", data);
 
-      alert("Staff created successfully!");
-      // optionally reset form via FormWrapper API if it exposes a reset prop
-
-    } catch (err) {
-      console.error("❌ Error creating staff:", err);
-      alert("Error creating staff. Please try again.");
-    } finally {
-      setLoading(false);
+      const res = await createStaff(formData).unwrap();
+      console.log("Staff created successfully:", res);
+      if (res.success) {
+        showSuccessToast(res?.message || "Staff created successfully!");
+        router.push("/dashboard/staffs/list");
+      }
+    } catch (error) {
+      console.error("Failed to create staff:", error);
+      showErrorToast(
+        "Error creating staff: " + error?.data?.message || error.error
+      );
     }
   }
+
+
+
+  const defaultValues = {
+    firmProfileId: firmProfileId || "",
+    fullName: "",
+    designation: "",
+    email: "",
+    password: "",
+    phone: "",
+    status: "active",
+    permissions: {},
+    image: undefined,
+  };
+
 
   return (
     <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
@@ -108,7 +153,7 @@ export default function CreateStaffPage() {
           {/* form contents (kept same as your original) */}
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">
-              <AvatarUploader name="companyLogo" />
+              <AvatarUploader name="image" />
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col gap-4">
@@ -134,7 +179,7 @@ export default function CreateStaffPage() {
               placeholder="example@example.com"
               textColor="text-[#4b4949]"
             />
-            <TextInput
+            <PasswordInput
               type="password"
               name="password"
               label="Password"
@@ -142,7 +187,24 @@ export default function CreateStaffPage() {
               textColor="text-[#4b4949]"
             />
           </div>
-
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+            <TextInput
+              name="phone"
+              label="Phone"
+              placeholder="+1XXXXXXXXX"
+              textColor="text-[#4b4949]"
+            />
+            <SelectInput
+              name="status"
+              label="Status"
+              placeholder="Select Status"
+              textColor="text-[#4b4949]"
+              options={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
+            />
+          </div>
           <div className="border-t border-[#f2f2f2] h-1 mt-10" />
           <h3 className="text-black font-semibold heading-lg mt-6">
             Set Permissions
@@ -158,9 +220,16 @@ export default function CreateStaffPage() {
             />
           ))}
 
-          <div className="flex justify-center mt-6">
-            <Button type="submit" disabled={loading} className="cursor-pointer">
-              {loading ? "Creating..." : "Create Staff"}
+          <div className="flex justify-between items-center mt-10">
+            <Link
+              href="/dashboard/staffs/list"
+              className="text-sm flex items-center hover:underline bg-black text-white px-4 py-2 rounded-md"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span>Back to Staffs List</span>
+            </Link>
+            <Button type="submit" className="cursor-pointer">
+              Create Staff
             </Button>
           </div>
         </FormWrapper>

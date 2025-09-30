@@ -5,73 +5,95 @@ import FormWrapper from "@/components/form/FormWrapper";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import FirmFormAction from "./form/FirmFormAction";
-import CompanyProfile from "./components/CompanyProfile";
-import CompanyLocation from "./components/CompanyLocation";
-import CompanyAbout from "./components/CompanyAbout";
-import { useState } from "react";
+import CompanyProfile from "./_components/CompanyProfile";
+import CompanyLocation from "./_components/CompanyLocation";
+import CompanyAbout from "./_components/CompanyAbout";
+import { use, useMemo, useState } from "react";
+import {
+  useGetFirmInfoQuery,
+  useUpdateFirmInfoMutation,
+} from "@/store/firmFeatures/firmApiService";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function Firm() {
-  const [zipCode, setZipCode] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [postalCode, setPostalCode] = useState("");
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useGetFirmUserInfoQuery();
 
-  const initialValues = {
-    firmName: "",
-    logo: "",
-    registrationNumber: "",
-    vatTaxId: "",
-    yearEstablished: "",
-    legalFocusAreas: "",
-    contactInfo: {
-      officeAddress: "",
-      country: "",
-      city: "",
-      phone: "",
-      email: "",
-      officialWebsite: "",
-    },
-    overview: "",
-  };
+  // console.log("currentUser in Firm", currentUser);
 
-  const onSubmit = (data) => {
-    console.log("data ===>", data);
+  const {
+    data: companyInfo,
+    isLoading: isCompanyInfoLoading,
+    refetch: refetchCompanyInfo,
+  } = useGetFirmInfoQuery();
+
+  const defaultValues = useMemo(
+    () => ({
+      firmName: companyInfo?.data?.firmName || "",
+      companyLogo: companyInfo?.data?.logo || "",
+      email: companyInfo?.data?.contactInfo?.email || "",
+      phone: companyInfo?.data?.contactInfo?.phone || "",
+      website: companyInfo?.data?.contactInfo?.officialWebsite || "",
+      registrationNumber: companyInfo?.data?.registrationNumber || "",
+      vatTaxId: companyInfo?.data?.vatTaxId || "",
+      yearEstablished: companyInfo?.data?.yearEstablished || "",
+      legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
+      zipCode: companyInfo?.data?.contactInfo?.zipCode
+        ? {
+            value: companyInfo.data.contactInfo.zipCode._id,
+            label: companyInfo.data.contactInfo.zipCode.zipcode,
+          }
+        : null,
+      companySize: companyInfo?.data?.companySize || "",
+      yearsInBusiness: companyInfo?.data?.yearsInBusiness || "",
+      description: companyInfo?.data?.description || "",
+    }),
+    [companyInfo]
+  );
+
+  const [updateFirmInfo, { isLoading: isUpdatingFirmInfoLoading }] =
+    useUpdateFirmInfoMutation();
+
+  const onSubmit = async (data) => {
+    //console.log("form data after submit==>", data);
+
     const {
       companyLogo,
-      companyName,
-      contactEmail,
-      phoneNumber,
+      firmName,
+      email,
+      phone,
       website,
       registrationNumber,
       vatTaxId,
       companySize,
-      yearInBusiness,
+      yearsInBusiness,
       description,
+      zipCode,
       ...rest
     } = data;
+
+    console.log("companyLogo", companyLogo);
+
     const payload = {
-      companyProfile: {
-        companyName,
-        contactEmail,
-        phoneNumber,
-        website,
-        registrationNumber,
-        vatTaxId,
+      firmName,
+      registrationNumber,
+      vatTaxId,
+      contactInfo: {
+        country:
+          currentUser?.data?.contactInfo?.country ||
+          currentUser?.data?.contactInfo?.country?._id, // Use country from current user profile
+        city:
+          currentUser?.data?.contactInfo?.city ||
+          currentUser?.data?.contactInfo?.city?._id,
+        zipCode: zipCode?.value,
+        phone,
+        email,
+        officialWebsite: website,
       },
-      companyLocation: {
-        address: rest.location.address,
-        hideFromProfile: rest.location.hideFromProfile,
-        locationReason: rest.location.locationReason,
-        coordinates: {
-          lat: rest.location?.coordinates?.lat,
-          lng: rest.location?.coordinates?.lng,
-        },
-      },
-      companyAbout: {
-        companySize,
-        yearInBusiness,
-        description,
-      },
+      companySize,
+      yearsInBusiness,
+      description,
     };
 
     console.log("Payload to send:", payload);
@@ -84,7 +106,9 @@ export default function Firm() {
       formData.append("companyLogo", companyLogo);
     }
 
-    console.log("FormData to send:", JSON.parse(formData.get("data")));
+    console.log("companyLogo after append", formData.get("companyLogo"));
+
+    //console.log("FormData to send:", JSON.parse(formData.get("data")));
 
     // ✅ Console all formData key-value pairs
     for (let [key, value] of formData.entries()) {
@@ -92,25 +116,38 @@ export default function Firm() {
     }
 
     // TODO: send values to API (e.g. /api/staff)
+    try {
+      const res = await updateFirmInfo(formData).unwrap();
+      console.log("Firm info updated successfully:", res);
+      if (res?.success) {
+        // show success message
+        showSuccessToast(
+          res?.message || "Firm information updated successfully"
+        );
+        refetchCompanyInfo();
+      }
+    } catch (error) {
+      console.error("Failed to update firm info:", error);
+      // Handle error (e.g., show error message)
+      showErrorToast(
+        error?.data?.message || "Failed to update firm information"
+      );
+    }
   };
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={onSubmit}>
+      <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
         <CompanyProfile />
         <div className="border-t border-white" />
-        <CompanyLocation
-          setZipCode={setZipCode}
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
-          setPostalCode={setPostalCode}
-        />
+        <CompanyLocation companyInfo={companyInfo?.data} />
+
         <div className="border-t border-white" />
-        <CompanyAbout />
+        <CompanyAbout companyInfo={companyInfo?.data} />
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <FirmFormAction isLoading={false} initialValues={initialValues} />
+        <FirmFormAction isLoading={isUpdatingFirmInfoLoading} defaultValues={defaultValues} />
       </FormWrapper>
     </div>
   );

@@ -1,34 +1,39 @@
-
-
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   currentStep: 1,
+  totalSteps: 3,
   formData: {
-    // Root level
-    email: '',
-    password: '',
-    firmName: '',
-    registrationNumber: '',
-    yearEstablished: '',
-    // Contact Info
-    contactInfo: {
-      zipCode: '',
-      country: '',
-      city: '',
-      phone: '',
+    // Step 1: User-specific data
+    userData: {
       email: '',
-      officialWebsite: '',
+      password: '',
+      phone: '',
+      name: '',
     },
-    // License Details
-    licenseDetails: {
+    // Step 2: Law firm-specific data
+    firmData: {
+      firmName: '',
+      registrationNumber: '',
+      yearEstablished: '',
+      contactInfo: {
+        zipCode: '',
+        country: '',
+        city: '',
+        phone: '',
+        email: '',
+        officialWebsite: '',
+      },
+    },
+    // Step 3: License-specific data
+    licenseData: {
       certificationId: '',
       licenseNumber: '',
       issuedBy: '',
       validUntil: '',
+      type: '',
     },
   },
-  totalSteps: 2, // Step 1 = General info, Step 2 = License info
 };
 
 const lawFirmRegistrationSlice = createSlice({
@@ -36,19 +41,32 @@ const lawFirmRegistrationSlice = createSlice({
   initialState,
   reducers: {
     setFormData: (state, action) => {
-      // Merge deeply instead of overwriting entire formData
-      state.formData = {
-        ...state.formData,
-        ...action.payload,
-        contactInfo: {
-          ...state.formData.contactInfo,
-          ...action.payload.contactInfo,
-        },
-        licenseDetails: {
-          ...state.formData.licenseDetails,
-          ...action.payload.licenseDetails,
-        },
-      };
+      const { userData, firmData, licenseData } = action.payload;
+
+      if (userData) {
+        state.formData.userData = {
+          ...state.formData.userData,
+          ...userData,
+        };
+      }
+
+      if (firmData) {
+        state.formData.firmData = {
+          ...state.formData.firmData,
+          ...firmData,
+          contactInfo: {
+            ...state.formData.firmData.contactInfo,
+            ...firmData.contactInfo,
+          },
+        };
+      }
+
+      if (licenseData) {
+        state.formData.licenseData = {
+          ...state.formData.licenseData,
+          ...licenseData,
+        };
+      }
     },
     setCurrentStep: (state, action) => {
       state.currentStep = action.payload;

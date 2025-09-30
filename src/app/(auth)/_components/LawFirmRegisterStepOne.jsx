@@ -1,53 +1,49 @@
-
 import React from "react";
 import Link from "next/link";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import { lawFirmRegStepOneSchema } from "@/schema/auth/authValidation.schema";
 import { useDispatch, useSelector } from "react-redux";
-import { nextStep, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
-import PasswordInput from "@/components/form/PasswordInput";
+import {
+  nextStep,
+  setFormData,
+} from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
 import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
 import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
-
-
 
 export default function LawFirmRegisterStepOne() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
   const defaultValues = {
-    firmName: formData.firmName,
-    registrationNumber: formData.registrationNumber,
-    yearEstablished: formData.yearEstablished,
-    officeAddress: formData.contactInfo.officeAddress,
-    country: formData.contactInfo.country,
-    city: formData.contactInfo.city,
-    zipCode: formData.contactInfo.zipCode, // optional if needed
-    phone: formData.contactInfo.phone,
-    email: formData.contactInfo.email,
-    password: formData.password,
-
-    website: formData.contactInfo.officialWebsite,
+    firmName: formData.firmData.firmName,
+    registrationNumber: formData.firmData.registrationNumber,
+    yearEstablished: formData.firmData.yearEstablished,
+    country: formData.firmData.contactInfo.country,
+    city: formData.firmData.contactInfo.city,
+    zipCode: formData.firmData.contactInfo.zipCode,
+    phone: formData.firmData.contactInfo.phone,
+    email: formData.firmData.contactInfo.email,
+    website: formData.firmData.contactInfo.officialWebsite,
   };
 
   const onSubmit = (data) => {
 
     dispatch(
       setFormData({
-        firmName: data.firmName,
-        registrationNumber: data.registrationNumber,
-        yearEstablished: data.yearEstablished,
-        email: data.email,
-        password: data.password,
-        contactInfo: {
-          zipCode: data.zipCode, // optional if needed
-          country: data.country,
-          city: data.city,
-          phone: data.phone,
-          email: data.email,
-          officialWebsite: data.website,
+        firmData: {
+          firmName: data.firmName,
+          registrationNumber: data.registrationNumber,
+          yearEstablished: data.yearEstablished,
+          contactInfo: {
+            country: data.country,
+            city: data.city,
+            zipCode: data.zipCode,
+            phone: data.phone,
+            email: data.email,
+            officialWebsite: data.website,
+          },
         },
       })
     );
@@ -56,6 +52,8 @@ export default function LawFirmRegisterStepOne() {
   };
 
 
+  console.log('firm data ==>',formData)
+
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
@@ -63,29 +61,31 @@ export default function LawFirmRegisterStepOne() {
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
-          <h3 className="tla-auth-title mb-3 text-center">List Your Law Firm</h3>
+          <h3 className="tla-auth-title mb-3 text-center">
+            List Your Law Firm
+          </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
-            Create your firm’s account to add lawyers and oversee their activities
+            Create your firm’s account to add lawyers and oversee their
+            activities
           </p>
 
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepOneSchema}
             defaultValues={defaultValues}
-
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <TextInput
-                name="firmName"
-                label="Law Firm Name"
-                placeholder="i.e. ABC LLC"
-              />
-
               <CountrySelect
                 name="country"
                 label="Country"
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
+              />
+
+              <TextInput
+                name="firmName"
+                label="Law Firm Name"
+                placeholder="i.e. ABC LLC"
 
               />
 
@@ -103,17 +103,10 @@ export default function LawFirmRegisterStepOne() {
                 placeholder="Select a Zipcode or Address"
 
               />
-
               <TextInput
                 name="email"
                 label="Email"
                 placeholder="i.e. abc@example.com"
-              />
-              <PasswordInput
-                name="password"
-                label="Password"
-                placeholder="e.g. AbcFirm@2025"
-                type="password"
               />
               <TextInput
                 name="phone"
@@ -167,12 +160,3 @@ export default function LawFirmRegisterStepOne() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-

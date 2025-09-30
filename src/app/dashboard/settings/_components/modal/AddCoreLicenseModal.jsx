@@ -1,22 +1,32 @@
 import { Modal } from "@/components/common/components/Modal";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import InputCombobox from "@/components/form/ComboboxInput";
+import FormWrapper from "@/components/form/FormWrapper";
 import SelectInput from "@/components/form/SelectInput";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
 import { Button } from "@/components/ui/button";
+import { useAddFirmWiseLicenseAndCertificationMutation } from "@/store/firmFeatures/certificateLicensesApiService";
 import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
-import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { useGetLawCertificationsListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import Cookies from "js-cookie";
-import React from "react";
-import { useSelector } from "react-redux";
+import { Loader } from "lucide-react";
+import React, { useState } from "react";
 
-export default function AddCoreLicenseModal() {
+export default function AddCoreLicenseModal({
+  defaultValues,
+  schema,
+  refetchLicenses,
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const onCancel = () => setIsOpen(!isOpen);
+
   const token = Cookies.get("token");
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
     });
-  console.log("currentUser in AddCoreLicenseModal", currentUser);
+  //console.log("currentUser in AddCoreLicenseModal", currentUser);
 
   const countryId =
     currentUser?.data?.firmProfile?.contactInfo?.country ||
@@ -29,14 +39,46 @@ export default function AddCoreLicenseModal() {
     isError,
   } = useGetLawCertificationsListQuery({
     countryId: countryId,
-    type: "optional",
+    type: "mandatory",
     page: 1,
     limit: 10,
   });
-  console.log("Certifications List:", certificationsList);
-  const handleAddCoreLicense = () => {
-    // Logic to open the modal
-    console.log("Add Core License");
+  //console.log("Certifications List:", certificationsList);
+
+  const [addLicenseAndCertification, { isLoading: addCoreLicenseIsLoading }] =
+    useAddFirmWiseLicenseAndCertificationMutation();
+  const handleMandatoryLicenseSubmit = async (data) => {
+    // console.log("Mandatory License form submitted:", data);
+    const { certificationId, licenseNumber, validUntil, additionalNote } = data;
+
+    const payload = {
+      certificationId,
+      licenseNumber,
+      validUntil,
+      additionalNote,
+      type: "mandatory",
+    };
+
+    console.log("Payload to be sent:", payload);
+
+    try {
+      const res = await addLicenseAndCertification(payload).unwrap();
+      console.log("Response after adding license and certification:", res);
+      if (res?.success) {
+        // Show success message or toast
+        showSuccessToast(
+          res?.message || "License and certification added successfully"
+        );
+        refetchLicenses();
+        onCancel();
+      }
+    } catch (error) {
+      console.error("Error adding license and certification:", error);
+      // Show error message or toast
+      showErrorToast(
+        error?.data?.message || "Failed to add license and certification"
+      );
+    }
   };
   return (
     <Modal
@@ -44,58 +86,74 @@ export default function AddCoreLicenseModal() {
       description="Add a new license to your firm"
       buttonName="+ Add License"
       width="max-w-[600px]"
+      onOpenChange={setIsOpen}
+      open={isOpen}
     >
       <div className="modal-header">
         <h4 className="text-lg font-semibold ">Add Core License</h4>
       </div>
-      <div className="grid grid-cols-1 gap-5 mt-6">
-        <SelectInput
-          label="License Type"
-          name="licenseType"
-          placeholder="Licensing Type"
-          options={[
-            { label: "Bar Council of Australia", value: "bar-council" },
-            {
-              label: "Legal Services Commission",
-              value: "legal-services-commission",
-            },
-          ]}
-          triggerClassName="w-full " // set custom width here
-        />
+      <FormWrapper
+        onSubmit={handleMandatoryLicenseSubmit}
+        defaultValues={defaultValues}
+        schema={schema}
+      >
+        <div className="grid grid-cols-1 gap-5 mt-6">
+          <InputCombobox
+            label="License Type"
+            name="certificationId"
+            placeholder="Licensing Type"
+            options={
+              certificationsList?.data?.map((cert) => ({
+                value: cert._id,
+                label: cert.certificationName,
+              })) || []
+            }
+            triggerClassName="w-full " // set custom width here
+          />
 
-        <TextInput
-          label="License Number"
-          name="licenseNumber"
-          placeholder="i.e. ABC1234567"
-        />
+          <TextInput
+            label="License Number"
+            name="licenseNumber"
+            placeholder="i.e. ABC1234567"
+          />
 
-        <TextInput
-          label="Valid Until"
-          name="validUntil"
-          type="date"
-          inputClassName="h-[44px] inline-block  focus-visible:ring-inset w-full"
-        />
+          <TextInput
+            label="Valid Until"
+            name="validUntil"
+            type="date"
+            inputClassName="h-[44px] inline-block  focus-visible:ring-inset w-full"
+          />
 
-        <TextareaInput
-          label="Additional Notes"
-          name="notes"
-          placeholder="Any extra notes"
-          className="w-full"
-        />
-      </div>
-      <div className="flex justify-between gap-4 mt-8">
-        <Button type="button" variant={"outline"} className="cursor-pointer">
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          variant={"default"}
-          className="cursor-pointer"
-          onClick={handleAddCoreLicense}
-        >
-          Add License
-        </Button>
-      </div>
+          <TextareaInput
+            label="Additional Notes"
+            name="additionalNote"
+            placeholder="Any extra notes"
+            className="w-full"
+          />
+        </div>
+        <div className="flex justify-between gap-4 mt-8">
+          <Button
+            type="button"
+            variant={"outline"}
+            className="cursor-pointer"
+            onClick={onCancel}
+            disabled={addCoreLicenseIsLoading} // disable while loading
+
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit" variant={"default"}
+            className="cursor-pointer bg-[#ff8602]"
+            disabled={addCoreLicenseIsLoading} // disable while loading
+          >
+            {addCoreLicenseIsLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {addCoreLicenseIsLoading ? "Adding..." : "Add License"}
+          </Button>
+        </div>
+      </FormWrapper>
     </Modal>
   );
 }

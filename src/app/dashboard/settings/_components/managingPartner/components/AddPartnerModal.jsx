@@ -1,45 +1,86 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import TextInput from '@/components/form/TextInput';
-import FormWrapper from '@/components/form/FormWrapper';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { z } from 'zod';
-import { Modal } from '@/components/common/components/Modal';
+import React, { useState } from "react";
+import TextInput from "@/components/form/TextInput";
+import FormWrapper from "@/components/form/FormWrapper";
+import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { json, z } from "zod";
+import { Modal } from "@/components/common/components/Modal";
+import { useCreatePartnerMutation } from "@/store/firmFeatures/partner/partnerApiService";
+import { Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+import AvatarUploader from "@/components/common/components/AvaterUploader";
 // import { useCreatePartnerMutation } from '@/redux/features/partner/partnerApi'; // example
 
 // Zod Schema
 const partnerSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
-  position: z.string().min(1, { message: 'Position is required' }),
-  email: z.string().email({ message: 'Invalid email address' }),
-  phone: z.string().min(1, { message: 'Phone is required' }),
-  barAssociation: z.string().min(1, { message: 'Bar Association is required' }),
-  licenseNo: z.string().min(1, { message: 'License No is required' }),
+  name: z.string().min(1, { message: "Name is required" }),
+  position: z.string().min(1, { message: "Position is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string().min(1, { message: "Phone is required" }),
+  partnerImage: z.any().refine(
+    (file) =>
+      file === null ||
+      file === undefined ||
+      file instanceof File ||
+      typeof file === "string", // in case of existing image URL in edit form
+    {
+      message: "Invalid image file",
+    }
+  ),
+
+  // barAssociation: z.string().min(1, { message: "Bar Association is required" }),
+  // licenseNo: z.string().min(1, { message: "License No is required" }),
 });
 
-const AddPartnerModal = ({ refetch }) => {
+const AddPartnerModal = ({ refetchPartners }) => {
   const [open, setOpen] = useState(false);
   const onCancel = () => setOpen(!open);
 
-  // const [createPartner] = useCreatePartnerMutation();
+  const [createPartner, { isLoading: addPartnerIsLoading }] =
+    useCreatePartnerMutation();
+  const defaultValues = {
+    name: "",
+    position: "",
+    email: "",
+    phone: "",
+    partnerImage: null,
+  };
 
   const handleSubmit = async (values) => {
-    console.log('values ==>',values)
+    //console.log("values ==>", values);
+    const { name, position, email, phone, partnerImage } = values;
+
+    const payload = {
+      name,
+      position,
+      email,
+      phone,
+    };
+
+    console.log("payload ==>", payload);
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(payload));
+
+    if (partnerImage instanceof File) {
+      formData.append("partnerImage", partnerImage);
+    }
+
     try {
       // Send request to backend
-      // const res = await createPartner(values).unwrap();
-      const res = { success: true, message: 'Partner created successfully' }; // mock
-
+      const res = await createPartner(formData).unwrap();
+      console.log("res after creating partner", res);
       if (res?.success === true) {
-        showSuccessToast(res?.message || 'Partner created successfully');
-        // refetch();
+        showSuccessToast(res?.message || "Partner created successfully");
+        refetchPartners();
         onCancel();
       }
     } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
+      const errorMessage = error?.data?.message || "An error occurred";
       showErrorToast(errorMessage);
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -52,12 +93,36 @@ const AddPartnerModal = ({ refetch }) => {
         onOpenChange={setOpen}
         open={open}
       >
-        <FormWrapper onSubmit={handleSubmit} schema={partnerSchema}>
+        <h3 className="text-black font-semibold heading-lg mb-5">
+          Add Partner
+        </h3>
+        <FormWrapper
+          onSubmit={handleSubmit}
+          schema={partnerSchema}
+          defaultValues={defaultValues}
+        >
           <div className="space-y-5">
             <TextInput label="Name" name="name" placeholder="Enter name" />
-            <TextInput label="Position" name="position" placeholder="Enter position" />
+            <TextInput
+              label="Position"
+              name="position"
+              placeholder="Enter position"
+            />
             <TextInput label="Email" name="email" placeholder="Enter email" />
-            <TextInput label="Phone" name="phone" placeholder="Enter phone number" />
+            <TextInput
+              label="Phone"
+              name="phone"
+              placeholder="Enter phone number"
+            />
+
+            <AvatarUploader name="partnerImage" />
+            <label
+              htmlFor="partnerImage"
+              className="text-[var(--color-black)] font-medium"
+            >
+              Upload Photo
+            </label>
+
             {/* <TextInput
               label="Bar Association"
               name="barAssociation"
@@ -71,20 +136,28 @@ const AddPartnerModal = ({ refetch }) => {
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex justify-between items-center pt-4">
-            <button
-              onClick={onCancel}
+
+          <div className="flex justify-between gap-4 mt-4">
+            <Button
               type="button"
-              className="text-sm text-gray-600 hover:text-gray-800"
+              variant={"outline"}
+              className="cursor-pointer"
+              onClick={onCancel}
+              disabled={addPartnerIsLoading} // disable while loading
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
+              variant={"default"}
+              className="cursor-pointer bg-[#ff8602]"
+              disabled={addPartnerIsLoading} // disable while loading
             >
-              Save
-            </button>
+              {addPartnerIsLoading && (
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {addPartnerIsLoading ? "Adding..." : "Add Partner"}
+            </Button>
           </div>
         </FormWrapper>
       </Modal>

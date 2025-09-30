@@ -56,7 +56,9 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         //     method: 'POST',
         //   }).catch(console.error);
 
-        await api.dispatch(firmBaseApi.endpoints.logoutFirm.initiate()).unwrap();
+        await api
+          .dispatch(firmBaseApi.endpoints.authLogOut.initiate())
+          .unwrap();
       }
     } catch (err) {
       api.dispatch(logOut());
@@ -65,7 +67,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
       //     method: 'POST',
       //   }).catch(console.error);
 
-      await api.dispatch(firmBaseApi.endpoints.logoutFirm.initiate()).unwrap();
+      await api.dispatch(firmBaseApi.endpoints.authLogOut.initiate()).unwrap();
     }
   }
 
@@ -77,8 +79,21 @@ export const firmBaseApi = createApi({
   reducerPath: "firmBaseApi",
   baseQuery: baseQueryWithRefreshToken,
   tagTypes: [
-    "firmInfo",   // for individual firm info queries/mutations
-    "all-firms",  // for admin-level firm list updates
+    "firmInfo", // for individual firm info queries/mutations
+    "all-firms", // for admin-level firm list updates
+    "staff", // for individual staff member updates
+    "staff-list", // for firm-wide staff list updates
+    "partner", // for individual partner member updates
+    "lawfirm-certification",
+    "license",
+    "certificate",
+    "media",
+    "photo",
+    "video",
+    "location",
+    "firm",
+    "certification",
+    "city-list",
   ],
   endpoints: () => ({}),
 });
