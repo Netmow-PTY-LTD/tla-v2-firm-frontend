@@ -18,8 +18,6 @@ import {
   useGetFirmWiseStaffListQuery,
 } from "@/store/firmFeatures/staff/staffApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 
 
 const pageSizeOptions = [5, 10, 20];
@@ -151,6 +149,7 @@ export default function StaffsList() {
                 <Link
                   href={`/dashboard/staffs/edit/${staff?.userId?._id}`}
                   className="flex gap-2"
+                  
                 >
                   <Pencil className="w-4 h-4" />
                   Edit

@@ -22,11 +22,12 @@ const staffSchema = z.object({
   firmProfileId: z.string().min(1, "Firm profile ID is required"),
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(4, "Password must be at least 4 chars"),
+  email: z.email("Please enter a valid email address"),
+  password: z.string().min(4, "Password must be at least 6 chars"),
   image: z
-    .union([z.string().url(), z.instanceof(File)])
-    .optional(), // Accept File object or URL string
+    .union([z.instanceof(File), z.url()])
+    .or(z.any().transform((val) => (val?.[0] instanceof File ? val[0] : undefined)))
+    .optional(),
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
@@ -59,34 +60,13 @@ const permissions = [
 
 export default function CreateStaffPage() {
   const router = useRouter();
-
   const currentuser = useSelector(selectCurrentUser)
   // Only pass firmId if currentuser exists and role is "firm"
   const firmProfileId = currentuser?.firmProfileId;
 
-
-  const defaultValues = {
-    fullName: "",
-    designation: "",
-    role: "",
-    phone: "",
-    status: "active",
-    email: "",
-    password: "",
-    permissions: {
-      view_clients: false,
-      manage_cases: false,
-      access_billing: false,
-      admin_rights: false,
-    },
-    image: ''
-  };
-
   const [createStaff] = useCreateStaffMutation();
 
-  async function onSubmit(values) {
-    //console.log("New staff data:", values);
-
+  const onSubmit = async (values) => {
     const {
       fullName,
       designation,
@@ -97,7 +77,7 @@ export default function CreateStaffPage() {
       permissions,
       image
     } = values;
-    // TODO: send values to API (e.g. /api/staff)
+
 
     const payload = {
       firmProfileId,
@@ -110,8 +90,8 @@ export default function CreateStaffPage() {
       permissions,
 
     };
-    console.log("Payload to send:", payload);
 
+ 
 
     try {
 
@@ -139,6 +119,21 @@ export default function CreateStaffPage() {
     }
   }
 
+
+
+  const defaultValues = {
+    firmProfileId: firmProfileId || "",
+    fullName: "",
+    designation: "",
+    email: "",
+    password: "",
+    phone: "",
+    status: "active",
+    permissions: {},
+    image: undefined,
+  };
+
+
   return (
     <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
       <div className="w-full">
@@ -153,8 +148,8 @@ export default function CreateStaffPage() {
         </p>
         <FormWrapper
           onSubmit={onSubmit}
-        // schema={staffSchema}
-        // defaultValues={defaultValues}
+          schema={staffSchema}
+          defaultValues={defaultValues}
         >
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">

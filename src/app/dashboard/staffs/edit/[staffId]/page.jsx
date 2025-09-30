@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
@@ -12,7 +12,6 @@ import {
   useGetSingleStaffByIdQuery,
   useUpdateStaffMutation,
 } from "@/store/firmFeatures/staff/staffApiService";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
