@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import FormWrapper from "@/components/form/FormWrapper";
 import AvatarUploader from "@/components/common/components/AvaterUploader";
@@ -46,20 +47,47 @@ const defaultValues = {
 };
 
 export default function CreateStaffPage() {
-  function onSubmit(values) {
-    console.log("New staff data:", values);
+  const [loading, setLoading] = useState(false);
 
-    const { fullName, designation, email, password, permissions } = values;
-    // TODO: send values to API (e.g. /api/staff)
+  // <-- No TypeScript types here (JS file)
+  async function onSubmit(values) {
+    setLoading(true);
 
-    const payload = {
-      fullName,
-      designation,
-      email,
-      password,
-      permissions,
-    };
-    console.log("Payload to send:", payload);
+    try {
+      const payload = {
+        fullName: values.fullName,
+        designation: values.designation,
+        email: values.email,
+        password: values.password,
+        permissions: values.permissions,
+      };
+
+      console.log("Payload to send:", payload);
+
+      const res = await fetch("/api/staff", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create staff");
+      }
+
+      const data = await res.json();
+      console.log("✅ Staff created successfully:", data);
+
+      alert("Staff created successfully!");
+      // optionally reset form via FormWrapper API if it exposes a reset prop
+
+    } catch (err) {
+      console.error("❌ Error creating staff:", err);
+      alert("Error creating staff. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -70,15 +98,14 @@ export default function CreateStaffPage() {
         </h3>
         <p className="text-[#6e6e6e] mt-2 text-sm">
           This is the first detail clients will see when searching for legal
-          services on TheLawApp. If you're a sole practitioner, simply use your
-          full name. If you're part of a firm, enter your official business name
-          to ensure consistency and credibility across your profile.
+          services on TheLawApp...
         </p>
         <FormWrapper
           onSubmit={onSubmit}
           schema={staffSchema}
           defaultValues={defaultValues}
         >
+          {/* form contents (kept same as your original) */}
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
             <div className="w-full md:w-1/2">
               <AvatarUploader name="companyLogo" />
@@ -115,16 +142,13 @@ export default function CreateStaffPage() {
               textColor="text-[#4b4949]"
             />
           </div>
+
           <div className="border-t border-[#f2f2f2] h-1 mt-10" />
           <h3 className="text-black font-semibold heading-lg mt-6">
             Set Permissions
           </h3>
           <p className="text-[#6e6e6e] mt-2 text-sm">
-            This is the first detail clients will see when searching for legal
-            services on TheLawApp. If you're a sole practitioner, simply use
-            your full name. If you're part of a firm, enter your official
-            business name to ensure consistency and credibility across your
-            profile.
+            Select at least one permission for this staff member.
           </p>
           {permissions.map((perm) => (
             <CheckboxInput
@@ -134,92 +158,13 @@ export default function CreateStaffPage() {
             />
           ))}
 
-          <div className="flex justify-center">
-            <Button type="submit" className="cursor-pointer">
-              Create Staff
+          <div className="flex justify-center mt-6">
+            <Button type="submit" disabled={loading} className="cursor-pointer">
+              {loading ? "Creating..." : "Create Staff"}
             </Button>
           </div>
         </FormWrapper>
       </div>
-      {/* <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="flex flex-wrap space-y-4">
-            <div className="w-full md:w-1/2">
-              <Card className="h-full">
-                <CardTitle className="pb-4 border-b px-6">
-                  Permissions
-                </CardTitle>
-                <CardContent className="h-full">
-                  <div className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="permissions"
-                      render={() => (
-                        <FormItem>
-                          <div className="space-y-3">
-                            {[
-                              "View Clients",
-                              "Manage Cases",
-                              "Access Billing",
-                              "Admin Rights",
-                            ].map((perm) => (
-                              <FormField
-                                key={perm}
-                                control={form.control}
-                                name="permissions"
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem
-                                      key={perm}
-                                      className="flex flex-row items-start space-y-0"
-                                    >
-                                      <FormControl>
-                                        <input
-                                          type="checkbox"
-                                          className="h-4 w-4"
-                                          checked={field.value?.includes(perm)}
-                                          onChange={(e) => {
-                                            if (e.target.checked) {
-                                              field.onChange([
-                                                ...(field.value || []),
-                                                perm,
-                                              ]);
-                                            } else {
-                                              field.onChange(
-                                                field.value.filter(
-                                                  (val) => val !== perm
-                                                )
-                                              );
-                                            }
-                                          }}
-                                        />
-                                      </FormControl>
-                                      <FormLabel className="font-normal cursor-pointer">
-                                        {perm}
-                                      </FormLabel>
-                                    </FormItem>
-                                  );
-                                }}
-                              />
-                            ))}
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Button type="submit" className="cursor-pointer">
-              Create Staff
-            </Button>
-          </div>
-        </form>
-      </Form> */}
     </div>
   );
 }
