@@ -29,7 +29,7 @@ const staffApiService = firmBaseApi.injectEndpoints({
       query: (body) => ({
         url: `/staffs/${body?.staffId}/update`,
         method: "PUT",
-        body,
+        body:body.data,
       }),
       invalidatesTags: ["staff"],
     }),
