@@ -14,9 +14,9 @@ import EditLocationModal from "./_components/EditLocationModal";
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 
 export default function Locations() {
-  const [isOpen, setIsOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [openModalId, setOpenModalId] = useState(null);
 
   const handleEditModalOpen = (location) => {
     setEditModalOpen(true);
@@ -68,7 +68,7 @@ export default function Locations() {
       {locations?.data?.length > 0 && (
         <div className="grid md:grid-cols-2 gap-4">
           {locations?.data?.map((loc) => (
-            <Card key={loc._id} className="shadow-md">
+            <Card key={loc?._id} className="shadow-md">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{loc?.name}</CardTitle>
                 <div className="flex gap-2">
@@ -81,11 +81,17 @@ export default function Locations() {
                   </Button>
                   <ConfirmationModal
                     onConfirm={() => handleDelete(loc?._id)}
-                    open={isOpen}
-                    onOpenChange={setIsOpen}
-                    description="You Want to  delete this Location "
+                    open={openModalId === loc?._id}
+                    onOpenChange={(isOpen) =>
+                      setOpenModalId(isOpen ? loc?._id : null)
+                    }
+                    description="You want to delete this location?"
                     trigger={
-                      <Button variant="destructive" size="icon">
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => setOpenModalId(loc?._id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     }
