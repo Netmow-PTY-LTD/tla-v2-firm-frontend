@@ -30,8 +30,6 @@ const LawCertificationCombobox = ({
   const selectedCountry = useWatch({ control, name: "country" });
 
 
-  console.log(' countryId', countryId)
-
   // ✅ fetch certification list
   const {
     data,
