@@ -78,12 +78,12 @@ export default function LawFirmProfileDropDown({
                   src={
                     currentUser?.firmProfile?.profilePicture ?? userDummyImage
                   }
-                  alt={currentUser?.firmProfile?.name || "Admin"}
+                  alt={currentUser?.firmName || "Admin"}
                 />
                 <AvatarFallback>USER</AvatarFallback>
               </Avatar>
               <span className="font-medium text-[14px]">
-                {currentUser?.firmProfile?.firmName?.split(" ")[0] || "Admin"}
+                {currentUser?.firmName?.split(" ")[0] || "Admin"}
               </span>
               <ChevronDown className="w-5 h-5" />
             </div>
@@ -100,9 +100,7 @@ export default function LawFirmProfileDropDown({
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href={`/company-profile/${slugify(
-                  currentUser?.firmProfile?.firmName
-                )}`}
+                href={`/company-profile/${slugify(currentUser?.firmName)}`}
                 target="_blank"
                 className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >
