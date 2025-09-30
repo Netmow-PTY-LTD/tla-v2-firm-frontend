@@ -48,7 +48,7 @@ export default function BannerUploader({
   return (
     <div className="flex items-center gap-4">
       {preview ? (
-        <div className="relative h-32 w-64 md:h-40 md:w-96 lg:h-48 lg:w-[32rem]">
+        <div className="relative w-full max-w-2xl h-48 md:h-60 lg:h-72 z-[1]">
           <img
             src={preview}
             alt="Banner Preview"
@@ -66,7 +66,7 @@ export default function BannerUploader({
           )}
         </div>
       ) : (
-        <div className="max-w-2xl relative w-64 h-32 md:h-40 md:w-96 lg:h-48 lg:w-[32rem] z-[1]">
+        <div className="relative w-full max-w-2xl h-48 md:h-60 lg:h-72 z-[1]">
           <img
             src={defaultImage}
             alt="Banner Default"
@@ -74,7 +74,7 @@ export default function BannerUploader({
           />
           <label
             htmlFor={`file-upload-${name}`}
-            className="flex flex-col items-center justify-center h-32 w-64 md:h-40 md:w-96 lg:h-48 lg:w-[32rem] px-2 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition"
+            className="flex flex-col items-center justify-center h-48 w-full md:h-60 lg:h-72 px-2 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition"
           >
             {icon}
             <input
