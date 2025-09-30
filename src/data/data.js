@@ -1,5 +1,20 @@
 export const userDummyImage = "/user-dummy-img.jpg";
 
+export const DEFAULT_IMAGES = {
+  BANNER: '/assets/img/default-banner.png',
+  AVATAR: '/user-dummy-img.jpg',
+  LOGO: '/assets/img/dummylogo.jpg',
+};
+
+
+
+
+
+
+
+
+
+
 export const lawyers = [
   {
     id: 1,
