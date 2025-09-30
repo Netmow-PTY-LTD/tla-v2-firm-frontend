@@ -38,9 +38,6 @@ export const lawFirmRegStepOneSchema = z.object({
 
   email: z.email("Invalid email address"),
 
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters long"),
 
   website: z.url("Invalid website URL")
     .optional(),
@@ -50,7 +47,7 @@ export const lawFirmRegStepOneSchema = z.object({
     .min(3, "Registration Number must be at least 3 characters")
     .max(50, "Registration Number must be less than 50 characters"),
 
-   yearEstablished: z
+  yearEstablished: z
     .string()
     .regex(
       /^(19|20)\d{2}$/,
@@ -61,9 +58,52 @@ export const lawFirmRegStepOneSchema = z.object({
 
 
 
-
 // -------------------- Step Two --------------------
+
 export const lawFirmRegStepTwoSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "Full Name must be at least 2 characters" })
+    .max(50, { message: "Full Name must be at most 50 characters" }),
+
+  email: z.email({ message: "Invalid email address" }),
+
+ password: z
+  .string()
+  .min(6, { message: "Password must be at least 6 characters" }),
+  // .regex(
+  //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+  //   { message: "Password must contain letters, numbers, and special characters" }
+  // ),
+
+
+  phone: z
+    .string()
+    .min(8, { message: "Phone number must be at least 8 digits" })
+    .max(20, { message: "Phone number must be at most 20 digits" })
+    .regex(
+      /^[\d +()-]+$/,
+      { message: "Invalid phone number format" }
+    ),
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------- Step There --------------------
+export const lawFirmRegStepThereSchema = z.object({
   certificationId: z
     .string()
     .min(2, "License Type is required")
@@ -78,3 +118,7 @@ export const lawFirmRegStepTwoSchema = z.object({
     .min(1, "Valid Until date is required")
     .refine((date) => !isNaN(Date.parse(date)), "Enter a valid date"),
 });
+
+
+
+
