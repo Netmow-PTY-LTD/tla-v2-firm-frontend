@@ -91,7 +91,7 @@ export default function CreateStaffPage() {
 
     };
 
- 
+
 
     try {
 
@@ -107,7 +107,7 @@ export default function CreateStaffPage() {
 
       const res = await createStaff(formData).unwrap();
       console.log("Staff created successfully:", res);
-      if (res?.success) {
+      if (res.success) {
         showSuccessToast(res?.message || "Staff created successfully!");
         router.push("/dashboard/staffs/list");
       }
