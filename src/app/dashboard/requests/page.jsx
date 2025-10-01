@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { userDummyImage } from '@/data/data';
-import { formatRelativeTime } from '@/helpers/formatTime';
-import { useGetAllRequestsFromClientQuery } from '@/store/tlaFeatures/public/publicApiService';
-import Link from 'next/link';
-import React from 'react';
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { userDummyImage } from "@/data/data";
+import { formatRelativeTime } from "@/helpers/formatTime";
+import { useGetAllRequestsFromClientQuery } from "@/store/tlaFeatures/public/publicApiService";
+import Link from "next/link";
+import React from "react";
 
 export default function Requests() {
   const { data: requestsFromClients, isLoading: isClientRequestsLoading } =
@@ -14,76 +14,61 @@ export default function Requests() {
   // const requests = requestsFromClients?.data;
   //console.log('requests', requests);
 
-// Demo requests data
-const requests = [
-  {
-    _id: "req1",
-    message: "Looking for legal advice on a property dispute.",
-    status: "Pending",
-    createdAt: "2025-09-15T10:30:00Z",
-    leadId: {
-      _id: "lead1",
-      userProfileId: {
-        name: "John Doe",
-        profilePicture:
-          "https://randomuser.me/api/portraits/men/32.jpg",
+  // Demo requests data
+  const requests = [
+    {
+      _id: "req1",
+      message: "Looking for legal advice on a property dispute.",
+      status: "Pending",
+      createdAt: "2025-09-15T10:30:00Z",
+      leadId: {
+        _id: "lead1",
+        userProfileId: {
+          name: "John Doe",
+          profilePicture: "https://randomuser.me/api/portraits/men/32.jpg",
+        },
       },
     },
-  },
-  {
-    _id: "req2",
-    message: "Need help drafting a business contract.",
-    status: "In Review",
-    createdAt: "2025-09-14T08:20:00Z",
-    leadId: {
-      _id: "lead2",
-      userProfileId: {
-        name: "Sarah Johnson",
-        profilePicture:
-          "https://randomuser.me/api/portraits/women/45.jpg",
+    {
+      _id: "req2",
+      message: "Need help drafting a business contract.",
+      status: "In Review",
+      createdAt: "2025-09-14T08:20:00Z",
+      leadId: {
+        _id: "lead2",
+        userProfileId: {
+          name: "Sarah Johnson",
+          profilePicture: "https://randomuser.me/api/portraits/women/45.jpg",
+        },
       },
     },
-  },
-  {
-    _id: "req3",
-    message: "Seeking advice for family law case.",
-    status: "Closed",
-    createdAt: "2025-09-12T14:45:00Z",
-    leadId: {
-      _id: "lead3",
-      userProfileId: {
-        name: "Michael Brown",
-        profilePicture:
-          "https://randomuser.me/api/portraits/men/60.jpg",
+    {
+      _id: "req3",
+      message: "Seeking advice for family law case.",
+      status: "Closed",
+      createdAt: "2025-09-12T14:45:00Z",
+      leadId: {
+        _id: "lead3",
+        userProfileId: {
+          name: "Michael Brown",
+          profilePicture: "https://randomuser.me/api/portraits/men/60.jpg",
+        },
       },
     },
-  },
-  {
-    _id: "req4",
-    message: "Need consultation for immigration application.",
-    status: "Pending",
-    createdAt: "2025-09-10T09:00:00Z",
-    leadId: {
-      _id: "lead4",
-      userProfileId: {
-        name: "Emily Davis",
-        profilePicture:
-          "https://randomuser.me/api/portraits/women/68.jpg",
+    {
+      _id: "req4",
+      message: "Need consultation for immigration application.",
+      status: "Pending",
+      createdAt: "2025-09-10T09:00:00Z",
+      leadId: {
+        _id: "lead4",
+        userProfileId: {
+          name: "Emily Davis",
+          profilePicture: "https://randomuser.me/api/portraits/women/68.jpg",
+        },
       },
     },
-  },
-];
-
-
-
-
-
-
-
-
-
-
-
+  ];
 
   if (isClientRequestsLoading) {
     return (
@@ -127,8 +112,8 @@ const requests = [
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">All Requests</h2>
-        <div className="h-1 w-[20%] bg-[#e79d13] mt-2 rounded"></div>
+        <h2 className="text-black font-semibold heading-lg">All Requests</h2>
+        <div className="h-0.5 w-[12%] bg-[#e79d13] mt-2 rounded"></div>
       </div>
       <div>
         {requests?.length === 0 && (
@@ -168,7 +153,7 @@ const requests = [
             {requests?.map((request, index) => (
               <div
                 className={`flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${
-                  index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
+                  index === 0 && index === requests?.length - 1 ? "" : "mb-4"
                 }`}
                 key={index}
               >
@@ -179,7 +164,7 @@ const requests = [
                         request?.leadId?.userProfileId?.profilePicture ||
                         userDummyImage
                       }
-                      alt={request?.leadId?.userProfileId?.name || ''}
+                      alt={request?.leadId?.userProfileId?.name || ""}
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   </div>
