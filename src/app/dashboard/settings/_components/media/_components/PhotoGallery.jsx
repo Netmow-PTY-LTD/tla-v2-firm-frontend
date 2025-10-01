@@ -6,7 +6,7 @@ import React from "react";
 export default function PhotoGallery({ firmMediaInfo, refetch }) {
   return (
     <div>
-      <h3 className=" text-black font-semibold text-lg">Photos</h3>
+      <h3 className=" text-black font-semibold heading-lg">Photos</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
         Showcase your professionalism — while legal services may not be visual
         by nature, clients still value seeing photos of your office, team,

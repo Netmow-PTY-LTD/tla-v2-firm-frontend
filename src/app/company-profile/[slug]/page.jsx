@@ -14,6 +14,8 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import CompanyLawyersList from "../_components/CompanyLawyersList";
 import LocationsList from "../_components/LocationsList";
+import CompanyPhotoGallery from "../_components/CompanyPhotoGallery";
+import CompanyVideos from "../_components/CompanyVideos";
 
 const slides = [
   { id: 1, image: "/assets/img/org-logo1.webp" },
@@ -46,7 +48,7 @@ export default function CompanyProfile() {
   return (
     <MainLayout>
       <section
-        className="bg-cover bg-no-repeat bg-center py-20 h-[482px] mb-[150px]"
+        className="bg-cover bg-no-repeat bg-center py-20 h-[482px] mb-[100px]"
         style={{
           backgroundImage: `url('/assets/img/company-profile-bg.webp')`,
         }}
@@ -83,7 +85,7 @@ export default function CompanyProfile() {
           </div>
         </div>
       </section>
-      <section className="py-20">
+      <section className="py-[50px]">
         <div className="container">
           <div className="flex flex-wrap justify-between items-center gap-4">
             <div className="flex flex-col gap-4">
@@ -185,7 +187,7 @@ export default function CompanyProfile() {
           </div>
         </div>
       </section>
-      <section className="py-20">
+      <section className="py-[50px]">
         <div className="container">
           <h2 className="profile-heading text-[36px] font-semibold mb-8 text-[var(--color-black)]">
             About
@@ -206,13 +208,20 @@ export default function CompanyProfile() {
           </p>
         </div>
       </section>
-      <section className="py-20 relative">
+      <section className="py-[50px] relative z-[1]">
         <div className="container">
           <div className="text-base font-normal mb-8 text-[var(--color-black)] text-center">
             Accredited & Certified By
           </div>
           <div className="">
-            <div className="absolute top-0 left-0 max-w-[541px] w-full max-h-[181px] h-full bg-gradient-to-b from-transparent to-white"></div>
+            <div
+              className="absolute top-0 left-0 max-w-[541px] w-full max-h-[181px] h-full z-[9]"
+              style={{
+                background:
+                  "linear-gradient(90deg, #FFF 50%, rgba(255, 255, 255, 0.00) 100%)",
+              }}
+            ></div>
+
             <Carousel
               plugins={[autoplay]}
               opts={{
@@ -236,12 +245,20 @@ export default function CompanyProfile() {
               {/* <CarouselPrevious />
               <CarouselNext /> */}
             </Carousel>
-            <div className="absolute top-0 right-0 max-w-[541px] w-full max-h-[181px] h-full bg-gradient-to-b from-transparent to-white"></div>
+            <div
+              className="absolute top-0 right-0 max-w-[541px] w-full max-h-[181px] h-full z-[9] bg-linear-to-l from-transparent to-white"
+              // style={{
+              //   background:
+              //     "linear-gradient(90deg, #FFF 50%, rgba(255, 255, 255, 0.00) 100%)",
+              // }}
+            ></div>
           </div>
         </div>
       </section>
       <CompanyLawyersList />
       <LocationsList />
+      <CompanyPhotoGallery />
+      <CompanyVideos />
     </MainLayout>
   );
 }

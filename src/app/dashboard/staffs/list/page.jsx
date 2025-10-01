@@ -19,12 +19,10 @@ import {
 } from "@/store/firmFeatures/staff/staffApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 
-
 const pageSizeOptions = [5, 10, 20];
 
 export default function StaffsList() {
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
-
 
   const {
     data: staffList,
@@ -63,7 +61,6 @@ export default function StaffsList() {
 
     // ✅ Role
 
-
     {
       accessorKey: "designation",
       header: "Designation",
@@ -75,8 +72,8 @@ export default function StaffsList() {
       accessorKey: "role",
       header: "Role",
       cell: ({ row }) => {
-        const original = row.original
-        return <div>{original?.userId?.role}</div>
+        const original = row.original;
+        return <div>{original?.userId?.role}</div>;
       },
     },
 
@@ -85,10 +82,9 @@ export default function StaffsList() {
       accessorKey: "email",
       header: "Email",
       cell: ({ row }) => {
-        const original = row.original
+        const original = row.original;
 
-
-        return <div>{original?.userId?.email}</div>
+        return <div>{original?.userId?.email}</div>;
       },
     },
 
@@ -99,14 +95,18 @@ export default function StaffsList() {
       header: "Status",
       cell: ({ row }) => {
         const status = row.getValue("status"); // From StaffProfile
-        const accountStatus = row.original?.userId?.accountStatus?.toLowerCase(); // From FirmUser
+        const accountStatus =
+          row.original?.userId?.accountStatus?.toLowerCase(); // From FirmUser
 
         const isActive = accountStatus === "active";
 
         return (
           <span
-            className={`px-2 py-1 rounded text-xs capitalize ${isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-              }`}
+            className={`px-2 py-1 rounded text-xs capitalize ${
+              isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
           >
             {status || (isActive ? "Active" : "Inactive")}
           </span>
@@ -114,16 +114,14 @@ export default function StaffsList() {
       },
     },
 
-
     // ✅ Last Login
     {
       accessorKey: "lastLogin",
       header: "Last Login",
       cell: ({ row }) => {
-        const original = row.original
+        const original = row.original;
 
-
-        return <div>{original?.userId?.lastSeen ?? "-"}</div>
+        return <div>{original?.userId?.lastSeen ?? "-"}</div>;
       },
     },
 
@@ -149,7 +147,6 @@ export default function StaffsList() {
                 <Link
                   href={`/dashboard/staffs/edit/${staff?.userId?._id}`}
                   className="flex gap-2"
-                  
                 >
                   <Pencil className="w-4 h-4" />
                   Edit
@@ -191,7 +188,9 @@ export default function StaffsList() {
 
   return (
     <div className="max-w-[1200px] mx-auto bg-white p-6 rounded-lg shadow-sm">
-      <h2 className="text-2xl font-bold mb-6">List of Staffs</h2>
+      <h2 className="text-black font-semibold heading-lg mb-6">
+        List of Staffs
+      </h2>
       <StaffDataTable
         data={staffList?.data || []}
         columns={columns}

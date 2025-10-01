@@ -9,14 +9,11 @@ import React from "react";
 export default function CompanyProfile() {
   return (
     <div className="py-5 w-full">
-      <h3 className="text-black font-semibold heading-lg">
-        Company Information
-      </h3>
+      <h3 className="text-black font-semibold heading-lg">Basic Information</h3>
       <p className="text-[#6e6e6e] mt-2">
-        This is the first detail clients will see when searching for legal
-        services on TheLawApp. If you're a sole practitioner, simply use your
-        full name. If you're part of a firm, enter your official business name
-        to ensure consistency and credibility across your profile.
+        Enter your full name (if solo) or your official business name (if a
+        firm) to ensure consistency, build credibility, and help clients easily
+        recognize your services.
       </p>
 
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">

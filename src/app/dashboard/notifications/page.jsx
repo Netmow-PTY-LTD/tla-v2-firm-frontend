@@ -158,7 +158,9 @@ export default function NotificationPreview() {
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
-      <h2 className="text-xl font-semibold mb-4">All Notifications</h2>
+      <h2 className="text-black font-semibold heading-lg mb-4">
+        All Notifications
+      </h2>
       <div className="">
         {groupedData.length > 0 && (
           <div className="bg-white rounded-lg relative p-4">
