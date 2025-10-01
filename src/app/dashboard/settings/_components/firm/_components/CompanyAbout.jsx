@@ -31,12 +31,11 @@ export default function CompanyAbout({ companyInfo }) {
 
   return (
     <div className="py-9">
-      <h3 className="text-black font-semibold heading-lg">About the company</h3>
+      <h3 className="text-black font-semibold heading-lg">About</h3>
       <p className="mt-[10px] text-[#6e6e6e] mb-7">
-        Give potential clients a clear introduction to your law firm. Share your
-        mission, areas of legal expertise, years of experience, and what sets
-        your firm apart. This is your opportunity to build trust and make a
-        strong first impression.
+        We are a dedicated law firm with years of experience, offering expert
+        legal services across various areas. Our mission is to deliver trusted,
+        client-focused solutions with integrity.
       </p>
 
       <div className="space-y-7">

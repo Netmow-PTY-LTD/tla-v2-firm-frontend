@@ -12,7 +12,7 @@ import { MoreHorizontal, Pencil, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
 export default function CompanyLawyersList() {
   return (
-    <section>
+    <section className="py-[50px]">
       <div className="container">
         <h2 className="profile-heading text-[36px] font-semibold mb-8 text-[var(--color-black)]">
           Lawyers
@@ -45,7 +45,7 @@ export default function CompanyLawyersList() {
                       </div>
                       <div className="text-white">
                         <Link
-                          href={`/dashboard/lawyers/${lawyer.slug}`}
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/profile/${lawyer.slug}`}
                           className="hover:underline"
                         >
                           <h5 className="text-base font-semibold">
@@ -86,7 +86,7 @@ export default function CompanyLawyersList() {
                     {/* View Button */}
                     <div className="w-full flex justify-center">
                       <Link
-                        href={`/dashboard/lawyers/${lawyer.slug}`}
+                        href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/profile/${lawyer.slug}`}
                         className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md"
                       >
                         View Profile
