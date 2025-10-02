@@ -132,6 +132,24 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    updateCurrentUserInfo: builder.mutation({
+      query: (data) => ({
+        url: "/auth/user/me",
+        method: "PATCH",
+        body: data,
+        invalidatesTags: ["userInfo"],
+      }),
+    }),
+    currentUserInfo: builder.query({
+      query: () => ({
+        url: "/auth/user/me",
+        method: "GET",
+      }),
+      providesTags: ["userInfo"],
+    }),
+
+
   }),
 });
 
@@ -151,4 +169,6 @@ export const {
   useSendFirmOtpMutation,
   useVerifyFirmOtpMutation,
   useChangeFirmEmailMutation,
+  useUpdateCurrentUserInfoMutation,
+  useCurrentUserInfoQuery
 } = firmAuthApi;
