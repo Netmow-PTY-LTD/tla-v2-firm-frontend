@@ -1,16 +1,6 @@
-import { lawyers } from "@/data/data";
 import React from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pencil, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
-export default function CompanyLawyersList() {
+export default function CompanyLawyersList({ lawyers }) {
   return (
     <section className="py-[50px]">
       <div className="container">
@@ -97,6 +87,13 @@ export default function CompanyLawyersList() {
               </div>
             </div>
           ))}
+          {lawyers.length === 0 && (
+            <div className="col-span-1 md:col-span-2 lg:col-span-3">
+              <p className="text-center text-gray-500">
+                There are currently no lawyers affiliated with this firm.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </section>
