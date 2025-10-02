@@ -4,20 +4,23 @@ import Link from "next/link";
 
 import { userDummyImage } from "@/data/data";
 import { BadgeAlert } from "lucide-react";
-export default function CompanyProfileCard() {
+export default function CompanyProfileCard({ companyInfo }) {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-[10px] relative z-[9] shadow-sm">
         {/* Left section: Avatar and text */}
         <div className="flex flex-wrap items-center gap-4">
           <Avatar className="h-[70px] w-[70px] border border-gray-300">
-            <AvatarImage src={userDummyImage} alt="Profile" />
+            <AvatarImage
+              src={companyInfo?.logo || userDummyImage}
+              alt="Profile"
+            />
             <AvatarFallback>PI</AvatarFallback>
           </Avatar>
           <div>
             <div className="flex items-center gap-4">
               <h2 className="text-lg font-semibold text-gray-800 heading">
-                {"Company Name"}
+                {companyInfo?.firmName || "Company Name"}
               </h2>
 
               {/* Show Warning Badge If Not Approved */}

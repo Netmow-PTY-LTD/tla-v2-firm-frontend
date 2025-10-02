@@ -84,6 +84,13 @@ const firmApiService = firmBaseApi.injectEndpoints({
       }),
       invalidatesTags: ["location"],
     }),
+    getCompanyProfileBySlug: builder.query({
+      query: (slug) => ({
+        url: `/public/firm/by-slug/${slug}`, // ✅ correct URL format
+        method: "GET",
+      }),
+      providesTags: ["companyProfile"],
+    }),
   }),
 });
 
@@ -99,4 +106,5 @@ export const {
   useGetSingleOfficeLocationQuery,
   useUpdateOfficeLocationMutation,
   useDeleteOfficeLocationMutation,
+  useGetCompanyProfileBySlugQuery,
 } = firmApiService;
