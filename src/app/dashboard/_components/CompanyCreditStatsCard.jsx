@@ -10,7 +10,9 @@ export default function CompanyCreditStatsCard() {
     <Card className="w-full bg-white shadow-sm rounded-2xl">
       <div className="flex justify-between items-center gap-4">
         <div className="w-full text-center md:text-left border-b px-4 pb-4">
-          <h3 className="text-xl font-semibold text-black">Credits Overview</h3>
+          <h3 className="heading-lg font-semibold text-black">
+            Credits Overview
+          </h3>
         </div>
       </div>
       <div className="w-full px-4 grid grid-cols-1 md:grid-cols-2 gap-4 ">
