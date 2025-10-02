@@ -14,24 +14,6 @@ const publicApiService = baseApi.injectEndpoints({
 });
 
 export const {
-  useAddCountryMutation,
-  useGetSingleCountryQuery,
-  useEditCountryMutation,
   useGetCountryListQuery,
-  useDeleteCountryMutation,
-  useAddZipCodeMutation,
-  useGetZipCodeListQuery,
-  useGetSingleZipCodeQuery,
-  useEditZipCodeMutation,
-  useDeleteZipCodeMutation,
-  useAddRangeMutation,
-  useGetSingleRangeQuery,
-  useGetRangeListQuery,
-  useEditRangeMutation,
-  useDeleteRangeMutation,
-  useGetUserProfileListQuery,
-  useGetUserProfileBySlugQuery,
-  useGetAllRequestsFromClientQuery,
-  useGetRequestFromClientByIdQuery,
-  useCreateRatingMutation,
+ 
 } = publicApiService;
