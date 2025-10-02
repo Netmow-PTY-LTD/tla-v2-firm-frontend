@@ -137,7 +137,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
   };
   return (
     <div className="mt-10">
-      <h3 className="text-black font-semibold text-lg">Videos</h3>
+      <h3 className="text-black font-semibold heading-lg">Videos</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
         Add YouTube videos to highlight your legal expertise — share recordings
         of public seminars, legal webinars, client education sessions, or media

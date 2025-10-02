@@ -10,11 +10,11 @@ export default function CompanyLocation({ companyInfo }) {
 
   return (
     <div className="">
-      <h3 className="text-black font-semibold heading-lg">Company location</h3>
+      <h3 className="text-black font-semibold heading-lg">Location</h3>
       <p className="mt-[10px] text-[#8E8E8E] mb-7">
-        Provide a specific business address to improve visibility for clients
-        searching for legal services in your area. A clear and accurate location
-        helps build trust and connects you with local clients more effectively.
+        Add a clear business address to boost visibility in local searches. This
+        builds trust and helps clients nearby find and connect with your legal
+        services more easily.
       </p>
 
       <ZipCodeComboboxMap
