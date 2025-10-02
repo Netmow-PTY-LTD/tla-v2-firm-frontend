@@ -67,6 +67,7 @@ export default function CompanyProfile() {
     companyProfileInfo?.data?.logo || "/assets/img/company-dummy-logo.png";
   const description = companyProfileInfo?.data?.description || "";
   const certifications = companyProfileInfo?.data?.certification || [];
+  const lawyers = companyProfileInfo?.data?.lawyers || [];
   const locations = companyProfileInfo?.data?.location || [];
   const contactInfo = companyProfileInfo?.data?.contactInfo || null;
   const photos = companyProfileInfo?.data?.media?.photos || [];
@@ -289,7 +290,7 @@ export default function CompanyProfile() {
           )}
         </div>
       </section>
-      <CompanyLawyersList />
+      <CompanyLawyersList lawyers={lawyers} />
       <LocationsList locations={locations} contactInfo={contactInfo} />
       <CompanyPhotoGallery photos={photos} />
       <CompanyVideos videos={videos} />
