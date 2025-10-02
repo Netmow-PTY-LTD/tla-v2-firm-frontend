@@ -94,6 +94,7 @@ export const firmBaseApi = createApi({
     "firm",
     "certification",
     "city-list",
+    "userInfo", // for current user info
   ],
   endpoints: () => ({}),
 });
