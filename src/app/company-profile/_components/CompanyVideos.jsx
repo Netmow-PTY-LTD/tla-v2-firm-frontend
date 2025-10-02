@@ -1,12 +1,12 @@
 import React from "react";
 import { id } from "zod/v4/locales";
 
-const videos = [
-  { id: 1, url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
-  { id: 2, url: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ" },
-  { id: 3, url: "https://www.youtube.com/watch?v=L_jWHffIx5E" },
-];
-export default function CompanyVideos() {
+// const videos = [
+//   { id: 1, url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
+//   { id: 2, url: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ" },
+//   { id: 3, url: "https://www.youtube.com/watch?v=L_jWHffIx5E" },
+// ];
+export default function CompanyVideos({ videos }) {
   function extractYouTubeVideoId(url) {
     const regex =
       /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^\s&?/]+)/;
@@ -23,7 +23,7 @@ export default function CompanyVideos() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {videos?.length > 0 ? (
             videos?.map((video, index) => {
-              const videoId = extractYouTubeVideoId(video?.url);
+              const videoId = extractYouTubeVideoId(video);
               return (
                 <div
                   key={`video-${index}`}

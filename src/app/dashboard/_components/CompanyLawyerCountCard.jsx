@@ -8,8 +8,8 @@ export default function CompanyLawyerCountCard() {
   return (
     <Card className="w-full shadow-sm rounded-2xl">
       {/* Header */}
-      <div className="flex justify-between px-4 border-b">
-        <h3 className="text-xl font-semibold text-black pb-4">Lawyers</h3>
+      <div className="flex justify-between px-4 border-b pb-4">
+        <h3 className="heading-lg font-semibold text-black">Lawyers</h3>
         <Link href="/dashboard/lawyers">
           <Button variant="outline" size="sm">
             View
