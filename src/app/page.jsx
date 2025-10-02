@@ -196,7 +196,7 @@ export default function LawListingHome() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/create-listing"
+                href="/register"
                 className="px-5 py-3 rounded-xl bg-black text-white hover:bg-black/90"
               >
                 Create free listing
@@ -400,18 +400,31 @@ export default function LawListingHome() {
       <footer className="border-t bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-gray-600 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-gray-700">
-            <Building2 className="w-5 h-5" /> LawList
+            <Link href="/">
+              <Image
+                src="/assets/img/company-logo.png"
+                alt="TLA Logo"
+                width={166}
+                height={40}
+              />
+            </Link>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-black">
+            <Link
+              href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/terms`}
+              className="hover:text-black"
+            >
               Terms
-            </a>
-            <a href="#" className="hover:text-black">
+            </Link>
+            <Link
+              href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/privacy-policy`}
+              className="hover:text-black"
+            >
               Privacy
-            </a>
-            <a href="#faq" className="hover:text-black">
+            </Link>
+            <Link href="#faq" className="hover:text-black">
               FAQ
-            </a>
+            </Link>
           </div>
           <div>© {new Date().getFullYear()} LawList. All rights reserved.</div>
         </div>

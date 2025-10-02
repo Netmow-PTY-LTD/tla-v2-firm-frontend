@@ -1,21 +1,6 @@
 import { useState } from "react";
-import { id } from "zod/v4/locales";
 
-const photos = [
-  { id: 1, url: "/assets/img/gallery/gallery-1.webp" },
-  { id: 2, url: "/assets/img/gallery/gallery-2.webp" },
-  { id: 3, url: "/assets/img/gallery/gallery-3.webp" },
-  { id: 4, url: "/assets/img/gallery/gallery-4.webp" },
-  { id: 5, url: "/assets/img/gallery/gallery-5.webp" },
-  { id: 6, url: "/assets/img/gallery/gallery-6.webp" },
-  { id: 7, url: "/assets/img/gallery/gallery-7.webp" },
-  { id: 8, url: "/assets/img/gallery/gallery-8.webp" },
-  { id: 9, url: "/assets/img/gallery/gallery-9.webp" },
-  { id: 10, url: "/assets/img/gallery/gallery-10.webp" },
-  { id: 11, url: "/assets/img/gallery/gallery-11.webp" },
-];
-
-export default function CompanyPhotoGallery() {
+export default function CompanyPhotoGallery({ photos }) {
   if (!photos.length) return null;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -41,15 +26,15 @@ export default function CompanyPhotoGallery() {
               Photos
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {photos.length > 0 ? (
-                photos.map((photo, index) => (
+              {photos?.length > 0 ? (
+                photos?.map((photo, index) => (
                   <button
                     key={`photo-${index}`}
                     onClick={() => openLightbox(index)}
                     className="focus:outline-none cursor-pointer"
                   >
                     <img
-                      src={photo.url}
+                      src={photo}
                       alt={`Gallery Image ${index + 1}`}
                       className="w-full h-[200px] rounded-lg object-cover"
                     />
@@ -81,7 +66,7 @@ export default function CompanyPhotoGallery() {
             &#10094;
           </button>
           <img
-            src={photos[currentIndex].url}
+            src={photos[currentIndex]}
             alt={`Preview ${currentIndex + 1}`}
             className="max-w-full max-h-[80vh] rounded-lg z-40"
           />
