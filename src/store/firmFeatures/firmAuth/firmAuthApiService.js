@@ -132,6 +132,23 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    updateCurrentUserInfo: builder.mutation({
+      query: (data) => ({
+        url: "/auth/user/me",
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    currentUserInfo: builder.query({
+      query: () => ({
+        url: "/auth/user/me",
+        method: "GET",
+        body: data,
+      }),
+    }),
+
+
   }),
 });
 
