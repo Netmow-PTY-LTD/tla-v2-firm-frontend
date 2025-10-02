@@ -31,7 +31,7 @@ export default function LawFirmProfileDropDown({
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
-  console.log("currentUser from dropdown", currentUser);
+  //console.log("currentUser from dropdown", currentUser);
 
   useEffect(() => {
     setIsClient(true);
@@ -100,7 +100,7 @@ export default function LawFirmProfileDropDown({
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href={`/company-profile/${slugify(currentUser?.firmName)}`}
+                href={`/company-profile/${currentUser?.slug}`}
                 target="_blank"
                 className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >
