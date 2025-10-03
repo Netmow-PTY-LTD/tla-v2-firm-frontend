@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -13,7 +14,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCheckFirmNameMutation } from "@/store/firmFeatures/public/firmPublicApiService";
 
-
 export default function FirmNameInput({
   name,
   label,
@@ -25,26 +25,20 @@ export default function FirmNameInput({
   labelClassName = "",
   textColor = "text-black",
 }) {
-  const { control, setError, clearErrors } = useFormContext();
+  const { control, setError, clearErrors, getValues } = useFormContext();
 
-  // watch country field
   const countryId = useWatch({ control, name: "country" });
-
-  // watch firmName field
   const firmName = useWatch({ control, name });
-
   const [checkFirmName, { isLoading }] = useCheckFirmNameMutation();
-
   const [debouncedFirmName, setDebouncedFirmName] = useState(firmName);
   const [apiMessage, setApiMessage] = useState(null);
   const [apiError, setApiError] = useState(false);
 
-  // debounce input
+  // Debounce input
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedFirmName(firmName);
     }, 500);
-
     return () => clearTimeout(handler);
   }, [firmName]);
 
@@ -53,19 +47,18 @@ export default function FirmNameInput({
     if (!debouncedFirmName || !countryId) {
       setApiMessage(null);
       setApiError(false);
+      clearErrors(name); // clear error if empty
       return;
     }
 
     checkFirmName({ firmName: debouncedFirmName, countryId })
       .unwrap()
       .then((res) => {
-
         setApiMessage(res?.message || "Firm name is available ✅");
-        setApiError(!res?.success); // error if success = false
+
         if (res.success) {
           setApiError(false);
-          // clearErrors(name); // clear any previous errors
-
+          clearErrors(name); // clear any previous errors
         } else {
           setApiError(true);
           setError(name, { message: res.message || "Firm name already taken ❌" });
@@ -76,7 +69,7 @@ export default function FirmNameInput({
         setApiError(true);
         setError(name, { message: err?.data?.message || "Something went wrong ❌" });
       });
-  }, [debouncedFirmName, countryId, checkFirmName, setError, clearErrors, name]);
+  }, [debouncedFirmName, countryId, checkFirmName, name, setError, clearErrors]);
 
   return (
     <FormField
@@ -112,7 +105,6 @@ export default function FirmNameInput({
               />
             </FormControl>
 
-            {/* Show API response */}
             <FormMessage className={apiError ? "text-red-500" : "text-green-500"}>
               {isLoading ? "Checking firm name..." : apiMessage || ""}
             </FormMessage>
