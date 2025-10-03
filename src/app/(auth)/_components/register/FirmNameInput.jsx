@@ -25,7 +25,7 @@ export default function FirmNameInput({
   labelClassName = "",
   textColor = "text-black",
 }) {
-  const { control } = useFormContext();
+  const { control, setError, clearErrors } = useFormContext();
 
   // watch country field
   const countryId = useWatch({ control, name: "country" });
@@ -59,15 +59,24 @@ export default function FirmNameInput({
     checkFirmName({ firmName: debouncedFirmName, countryId })
       .unwrap()
       .then((res) => {
-        // Use API message from backend
+
         setApiMessage(res?.message || "Firm name is available ✅");
         setApiError(!res?.success); // error if success = false
+        if (res.success) {
+          setApiError(false);
+          // clearErrors(name); // clear any previous errors
+
+        } else {
+          setApiError(true);
+          setError(name, { message: res.message || "Firm name already taken ❌" });
+        }
       })
       .catch((err) => {
         setApiMessage(err?.data?.message || "Something went wrong ❌");
         setApiError(true);
+        setError(name, { message: err?.data?.message || "Something went wrong ❌" });
       });
-  }, [debouncedFirmName, countryId, checkFirmName]);
+  }, [debouncedFirmName, countryId, checkFirmName, setError, clearErrors, name]);
 
   return (
     <FormField
@@ -91,7 +100,7 @@ export default function FirmNameInput({
                 ref={ref}
                 type={type}
                 placeholder={placeholder}
-                  disabled={disabled || !countryId}
+                disabled={disabled || !countryId}
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value ?? ""}
