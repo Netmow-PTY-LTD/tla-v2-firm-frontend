@@ -13,7 +13,6 @@ export default function PartnerList({
   refetchPartners,
   firmId,
 }) {
-
   return (
     <div className="mt-6 space-y-4">
       {partners?.length > 0 ? (
@@ -37,7 +36,7 @@ export default function PartnerList({
 
 const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
   const { name, position, email, phone } = partner;
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const [deletePartner] = useDeletePartnerMutation();
 
   const handleDeletePartner = async (partnerId) => {
@@ -83,18 +82,13 @@ const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
             onConfirm={() => handleDeletePartner(partner?._id)}
             open={isOpen}
             onOpenChange={setIsOpen}
-            description="You Want to to delete your Partner "
+            description="Do you want to delete your Partner?"
             trigger={
-
-              <button
-                className="text-red-500 hover:text-red-700 cursor-pointer"
-
-              >
+              <button className="text-red-500 hover:text-red-700 cursor-pointer">
                 <Trash2 size={18} />
               </button>
             }
           />
-
         </div>
       </div>
     </div>
