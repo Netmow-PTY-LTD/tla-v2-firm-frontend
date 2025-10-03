@@ -54,12 +54,13 @@ export default function FirmNameInput({
     checkFirmName({ firmName: debouncedFirmName, countryId })
       .unwrap()
       .then((res) => {
-        setApiMessage(res?.message || "Firm name is available ✅");
-
+    
         if (res.success) {
+          setApiMessage(res?.message || "Firm name is available ✅");
           setApiError(false);
           clearErrors(name); // clear any previous errors
         } else {
+          setApiMessage(res?.message || "Firm name is available ✅");
           setApiError(true);
           setError(name, { message: res.message || "Firm name already taken ❌" });
         }
@@ -114,3 +115,6 @@ export default function FirmNameInput({
     />
   );
 }
+
+
+
