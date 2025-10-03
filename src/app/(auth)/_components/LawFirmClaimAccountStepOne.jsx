@@ -76,7 +76,7 @@ export default function LawFirmClaimAccountStepOne() {
 
   const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
 
-  //const { data: countryList } = useGetCountryListQuery();
+
 
   const defaultCountry = countries?.find(
     (country) => country?.slug === cookieCountry?.slug

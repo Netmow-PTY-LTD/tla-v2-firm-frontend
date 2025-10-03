@@ -1,18 +1,11 @@
-import { baseApi } from "../../baseApi/baseApi";
+import { firmBaseApi } from "@/store/baseApi/firmBaseApi";
 
-const publicApiService = baseApi.injectEndpoints({
+
+const publicApiService = firmBaseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCountryList: builder.query({
-      query: () => ({
-        url: `/country/list`,
-        method: "GET",
-        params: {},
-      }),
-      providesTags: ["Country-list"],
-    }),
     checkFirmName: builder.mutation({
       query: (body) => ({
-        url: `/country/list`,
+        url: `/public/check-firm-name`,
         method: "POST",
         body,
        
@@ -23,7 +16,7 @@ const publicApiService = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetCountryListQuery,
+
   useCheckFirmNameMutation
  
 } = publicApiService;

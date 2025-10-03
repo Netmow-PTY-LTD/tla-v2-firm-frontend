@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import clsx from "clsx"; // for conditional class merging
+import clsx from "clsx";
 import {
   FormControl,
   FormField,
@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCheckFirmNameMutation } from "@/store/firmFeatures/public/firmPublicApiService";
 
 
 export default function FirmNameInput({
@@ -23,19 +24,50 @@ export default function FirmNameInput({
   itemClassName = "",
   labelClassName = "",
   textColor = "text-black",
-  ...props
 }) {
   const { control } = useFormContext();
 
-  const countryId = useWatch({
-    control,
-    name: "country",   // only watch this field
-  });
+  // watch country field
+  const countryId = useWatch({ control, name: "country" });
 
+  // watch firmName field
+  const firmName = useWatch({ control, name });
 
-  console.log("countryId", countryId);
+  const [checkFirmName, { isLoading }] = useCheckFirmNameMutation();
 
+  const [debouncedFirmName, setDebouncedFirmName] = useState(firmName);
+  const [apiMessage, setApiMessage] = useState(null);
+  const [apiError, setApiError] = useState(false);
 
+  // debounce input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedFirmName(firmName);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [firmName]);
+
+  // Call API when debouncedFirmName changes
+  useEffect(() => {
+    if (!debouncedFirmName || !countryId) {
+      setApiMessage(null);
+      setApiError(false);
+      return;
+    }
+
+    checkFirmName({ firmName: debouncedFirmName, countryId })
+      .unwrap()
+      .then((res) => {
+        // Use API message from backend
+        setApiMessage(res?.message || "Firm name is available ✅");
+        setApiError(!res?.success); // error if success = false
+      })
+      .catch((err) => {
+        setApiMessage(err?.data?.message || "Something went wrong ❌");
+        setApiError(true);
+      });
+  }, [debouncedFirmName, countryId, checkFirmName]);
 
   return (
     <FormField
@@ -47,7 +79,7 @@ export default function FirmNameInput({
         return (
           <FormItem className={itemClassName}>
             {label && (
-              <FormLabel className={`${labelClassName}`} htmlFor={name}>
+              <FormLabel className={labelClassName} htmlFor={name}>
                 {label}
               </FormLabel>
             )}
@@ -59,7 +91,7 @@ export default function FirmNameInput({
                 ref={ref}
                 type={type}
                 placeholder={placeholder}
-                disabled={disabled}
+                  disabled={disabled || !countryId}
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value ?? ""}
@@ -68,10 +100,13 @@ export default function FirmNameInput({
                   textColor,
                   inputClassName
                 )}
-                {...props}
               />
             </FormControl>
-            <FormMessage />
+
+            {/* Show API response */}
+            <FormMessage className={apiError ? "text-red-500" : "text-green-500"}>
+              {isLoading ? "Checking firm name..." : apiMessage || ""}
+            </FormMessage>
           </FormItem>
         );
       }}

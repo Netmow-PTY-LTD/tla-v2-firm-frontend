@@ -81,12 +81,6 @@ export default function LawFirmRegisterStepOne() {
                 triggerClassName={"w-full"}
               />
 
-              {/* <TextInput
-                name="firmName"
-                label="Law Firm Name"
-                placeholder="i.e. ABC LLC"
-
-              /> */}
 
               <FirmNameInput
                 name="firmName"
