@@ -53,7 +53,7 @@ export default function EditOptionalLicenseModal({
       skip: !selectedLicense?._id,
     });
   // console.log("singleLicense in EditCoreLicenseModal", singleLicense);
-  const [updateLicenseAndCertification,{isLoading:updateLicenseIsLoading}] =
+  const [updateLicenseAndCertification, { isLoading: updateLicenseIsLoading }] =
     useUpdateLicenseAndCertificationMutation();
   const handleOptionalLicenseSubmit = async (data) => {
     // console.log("Mandatory License form submitted:", data);
@@ -92,7 +92,6 @@ export default function EditOptionalLicenseModal({
     }
   };
 
-  console.log("defaultValues in EditOptionalLicenseModal", defaultValues);
   return (
     <Modal
       title="Add Core License"
@@ -145,19 +144,19 @@ export default function EditOptionalLicenseModal({
           />
         </div>
 
-         <div className="flex justify-between gap-4 mt-8">
+        <div className="flex justify-between gap-4 mt-8">
           <Button
             type="button"
             variant={"outline"}
             className="cursor-pointer"
             onClick={onClose}
             disabled={updateLicenseIsLoading} // disable while loading
-
           >
             Cancel
           </Button>
           <Button
-            type="submit" variant={"default"}
+            type="submit"
+            variant={"default"}
             className="cursor-pointer bg-[#ff8602]"
             disabled={updateLicenseIsLoading} // disable while loading
           >

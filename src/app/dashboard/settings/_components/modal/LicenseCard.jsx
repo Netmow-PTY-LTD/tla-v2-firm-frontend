@@ -10,7 +10,7 @@ export default function LicenseCard({
   handleOpenEditCoreLicenseModal,
   refetchLicenses,
 }) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const [deleteLicense] = useDeleteLicenseAndCertificationMutation();
 
   const handleDeleteLicense = async (licenseId) => {
@@ -41,10 +41,10 @@ export default function LicenseCard({
               <b>Valid Until:</b>{" "}
               {license?.validUntil
                 ? new Date(license?.validUntil).toLocaleDateString("en-US", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
                 : "—"}
             </p>
             <p className="text-sm text-[#6e6e6e]">
@@ -63,13 +63,9 @@ export default function LicenseCard({
             onConfirm={() => handleDeleteLicense(license?._id)}
             open={isOpen}
             onOpenChange={setIsOpen}
-            description="You Want to to delete your Legal Certifications "
+            description="Do you want to delete your Legal Certifications?"
             trigger={
-
-              <button
-                className="text-red-500 hover:text-red-700 cursor-pointer"
-
-              >
+              <button className="text-red-500 hover:text-red-700 cursor-pointer">
                 <Trash2 size={18} />
               </button>
             }
