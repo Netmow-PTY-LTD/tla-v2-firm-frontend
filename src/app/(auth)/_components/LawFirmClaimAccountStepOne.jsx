@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -35,42 +35,39 @@ import Cookies from "js-cookie";
 import { nextStep } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { useDispatch } from "react-redux";
 import MultipleTagSelector from "@/components/form/MultipleTagSelector";
-import { useGetZipCodeListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useGetFirmBySearchQuery } from "@/store/firmFeatures/firmApiService";
 
-const germanCities = [
-  { id: 1, name: "Berlin" },
-  { id: 2, name: "Hamburg" },
-  { id: 3, name: "Munich" },
-  { id: 4, name: "Cologne" },
-  { id: 5, name: "Frankfurt" },
-  { id: 6, name: "Stuttgart" },
-  { id: 7, name: "Düsseldorf" },
-  { id: 8, name: "Dortmund" },
-  { id: 9, name: "Leipzig" },
-  { id: 10, name: "Bremen" },
+const dummyCompanies = [
+  { id: "1", name: "Smith & Associates LLP" },
+  { id: "2", name: "Johnson Legal Group" },
+  { id: "3", name: "Anderson & Co." },
+  { id: "4", name: "Brown Law Firm" },
+  { id: "5", name: "Davis Legal Solutions" },
+  { id: "6", name: "Miller & Partners" },
+  { id: "7", name: "Wilson Legal Advisory" },
+  { id: "8", name: "Taylor Law Offices" },
+  { id: "9", name: "Clark Legal Consultants" },
+  { id: "10", name: "Lopez & Associates" },
 ];
 
-const companies = [
-  { id: 1, name: "Siemens" },
-  { id: 2, name: "BMW" },
-  { id: 3, name: "Volkswagen" },
-  { id: 4, name: "SAP" },
-  { id: 5, name: "BASF" },
-  { id: 6, name: "Allianz" },
-  { id: 7, name: "Deutsche Bank" },
-  { id: 8, name: "Adidas" },
-  { id: 9, name: "Lufthansa" },
-  { id: 10, name: "Bosch" },
-];
+const stepOneSchema = z.object({
+  country: z.string().min(1, "Country is required"),
+  lawFirmName: z.string().min(1, "Law Firm Name is required"),
+  lawFirmEmail: z.string().email("Invalid email address"),
+  lawFirmRegistrationNumber: z
+    .string()
+    .min(1, "Registration Number is required"),
+  website: z.string().url("Invalid URL").optional().or(z.literal("")),
+  knownAdminEmails: z
+    .array(z.string().email("Invalid email address"))
+    .optional(),
+});
 
-export default function LawFirmClaimAccountStepOne() {
-  const [city, setCity] = useState(germanCities[0].name);
-  const [zipcode, setZipcode] = useState("");
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitude] = useState(0);
-  const [postalCode, setPostalCode] = useState("");
-  const [address, setAddress] = useState("");
+export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
 
   const dispatch = useDispatch();
 
@@ -82,31 +79,52 @@ export default function LawFirmClaimAccountStepOne() {
     (country) => country?.slug === cookieCountry?.slug
   );
 
-  console.log("defaultCountry in step 2", defaultCountry);
+  //console.log("defaultCountry in step 2", defaultCountry);
 
-  const paramsPayload = {
-    countryId: defaultCountry?.countryId,
-    search: query || "",
-  };
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
 
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery(paramsPayload, {
-      skip: !defaultCountry?.countryId,
-    });
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
 
-  const filteredZipCodes = allZipCodes?.data?.filter((z) =>
-    z.zipcode?.toLowerCase()?.includes(query.toLowerCase())
+  const { data: firmsBySearch, isLoading: isLoadingFirmBySearch } =
+    useGetFirmBySearchQuery(
+      {
+        countryId: defaultCountry?.countryId || "",
+        search: debouncedQuery,
+      },
+      {
+        skip: !defaultCountry?.countryId || debouncedQuery.length < 2,
+      }
+    );
+
+  console.log("firmsBySearch", firmsBySearch);
+
+  const filteredCompanies = firmsBySearch?.data?.filter((company) =>
+    company?.firmName?.toLowerCase().includes(query.toLowerCase())
   );
 
   const form = useForm({
-    defaultValues: {
-      name: "",
+    resolver: zodResolver(stepOneSchema),
+    defaultValues: initialValues || {
+      country: "",
+      lawFirmName: "",
+      lawFirmEmail: "",
+      lawFirmRegistrationNumber: "",
+      website: "",
+      knownAdminEmails: [],
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, watch, handleSubmit } = form;
+  const selectedCountry = watch("country");
   const onSubmit = (data) => {
     console.log(data);
+    onNext(data);
     dispatch(nextStep());
   };
 
@@ -142,12 +160,13 @@ export default function LawFirmClaimAccountStepOne() {
                           <FormLabel>Country</FormLabel>
                           <FormControl>
                             <Select
-                              {...field}
-                              onChange={(e) => {
-                                field.onChange(e);
-                              }}
+                              value={field.value}
+                              onValueChange={field.onChange}
                             >
-                              <SelectTrigger className="w-full h-[44px] bg-[#F2F2F2]">
+                              <SelectTrigger
+                                className="w-full bg-[#F2F2F2]"
+                                style={{ height: "44px" }}
+                              >
                                 <SelectValue placeholder="Select a country" />
                               </SelectTrigger>
                               <SelectContent>
@@ -155,7 +174,7 @@ export default function LawFirmClaimAccountStepOne() {
                                   <SelectLabel>Countries</SelectLabel>
                                   {countries.map((country) => (
                                     <SelectItem
-                                      value={country?.slug}
+                                      value={country?.countryId}
                                       key={country?.countryId}
                                     >
                                       {country?.name}
@@ -175,25 +194,14 @@ export default function LawFirmClaimAccountStepOne() {
                   <div className="w-full md:w-1/2 md:pr-5">
                     <FormField
                       control={form.control}
-                      name="company_name"
+                      name="lawFirmName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Law Firm Name</FormLabel>
                           <Combobox
-                            value={field.value}
+                            value={field.value ?? ""}
                             onChange={(val) => {
-                              //console.log('val', val);
-                              field.onChange(val);
-                              setZipcode(val);
-                              const selectedZipcode = allZipCodes?.data?.find(
-                                (z) => z._id === val
-                              );
-                              if (selectedZipcode) {
-                                setLatitude(selectedZipcode.latitude);
-                                setLongitude(selectedZipcode.longitude);
-                                setPostalCode(selectedZipcode.postalCode);
-                                setAddress(selectedZipcode.zipcode);
-                              }
+                              field.onChange(val); // save selected company ID to form
                             }}
                           >
                             <div className="relative">
@@ -203,19 +211,22 @@ export default function LawFirmClaimAccountStepOne() {
                                   setQuery(event.target.value)
                                 }
                                 displayValue={(val) =>
-                                  allZipCodes?.data?.find((z) => z._id === val)
-                                    ?.zipcode || ""
+                                  firmsBySearch?.data?.find(
+                                    (c) => c._id === val
+                                  )?.firmName || ""
                                 }
-                                placeholder="Select a Zipcode"
+                                placeholder="Select a firm name"
+                                autoComplete="off"
+                                disabled={!selectedCountry}
                               />
-                              {filteredZipCodes?.length > 0 && (
+                              {filteredCompanies?.length > 0 && (
                                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                  {filteredZipCodes
+                                  {filteredCompanies
                                     ?.slice(0, 10)
-                                    .map((item) => (
+                                    .map((company) => (
                                       <ComboboxOption
-                                        key={item._id}
-                                        value={item._id}
+                                        key={company._id}
+                                        value={company._id}
                                         className={({ active }) =>
                                           cn(
                                             "cursor-pointer select-none relative py-2 pl-10 pr-4",
@@ -233,7 +244,7 @@ export default function LawFirmClaimAccountStepOne() {
                                                 "font-normal": !selected,
                                               })}
                                             >
-                                              {item.zipcode}
+                                              {company?.firmName}
                                             </span>
                                             {selected && (
                                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
@@ -256,7 +267,7 @@ export default function LawFirmClaimAccountStepOne() {
                   <div className="w-full md:w-1/2 md:pl-5">
                     <FormField
                       control={control}
-                      name="name"
+                      name="lawFirmEmail"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Email</FormLabel>
@@ -269,6 +280,7 @@ export default function LawFirmClaimAccountStepOne() {
                               onChange={(e) => {
                                 field.onChange(e);
                               }}
+                              autoComplete="new-email"
                             />
                           </FormControl>
                           <FormMessage />
@@ -281,7 +293,7 @@ export default function LawFirmClaimAccountStepOne() {
                   <div className="w-full md:w-1/2 md:pr-5">
                     <FormField
                       control={control}
-                      name="name"
+                      name="lawFirmRegistrationNumber"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Law Firm Registration Number</FormLabel>
@@ -303,7 +315,7 @@ export default function LawFirmClaimAccountStepOne() {
                   <div className="w-full md:w-1/2 md:pl-5">
                     <FormField
                       control={control}
-                      name="name"
+                      name="website"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Website</FormLabel>
@@ -329,7 +341,7 @@ export default function LawFirmClaimAccountStepOne() {
                     Known Admin Emails
                   </FormLabel>
                   <MultipleTagSelector
-                    name="known_admins"
+                    name="knownAdminEmails"
                     placeholder="Type and press Enter"
                   />
                 </div>

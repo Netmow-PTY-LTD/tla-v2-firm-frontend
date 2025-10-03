@@ -9,19 +9,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { previousStep } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import { CloudUpload, Download, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-export default function LawFirmClaimAccountStepTwo() {
+export default function LawFirmClaimAccountStepTwo({ onSubmitFinal }) {
   const [previews, setPreviews] = useState([]);
 
   const dispatch = useDispatch();
   const form = useForm({
     defaultValues: {
-      name: "",
+      claimerName: "",
+      claimerEmail: "",
+      claimerRole: "",
+      issueDescription: "",
     },
   });
 
@@ -49,10 +53,18 @@ export default function LawFirmClaimAccountStepTwo() {
     });
   };
 
-  console.log("previews", previews);
+  //console.log("previews", previews);
 
   const onSubmit = (data) => {
     console.log("Form submitted:", data);
+    const {
+      claimerName,
+      claimerEmail,
+      claimerRole,
+      issueDescription,
+      claimer_proof,
+    } = data;
+    onSubmitFinal(data);
   };
 
   return (
@@ -75,7 +87,7 @@ export default function LawFirmClaimAccountStepTwo() {
                 <div className="w-full md:w-1/2 md:pr-5">
                   <FormField
                     control={control}
-                    name="reporter_name"
+                    name="claimerName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Your Full Name</FormLabel>
@@ -97,7 +109,7 @@ export default function LawFirmClaimAccountStepTwo() {
                 <div className="w-full md:w-1/2 md:pl-5">
                   <FormField
                     control={control}
-                    name="reporter_email"
+                    name="claimerEmail"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Your Work Email</FormLabel>
@@ -122,7 +134,7 @@ export default function LawFirmClaimAccountStepTwo() {
                 <div className="w-full md:w-1/2 md:pr-5">
                   <FormField
                     control={control}
-                    name="reporter_role"
+                    name="claimerRole"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Your Role</FormLabel>
@@ -142,16 +154,38 @@ export default function LawFirmClaimAccountStepTwo() {
                   />
                 </div>
                 <div className="w-full md:w-1/2 md:pl-5">
-                  <Label className="mb-3 inline-block">
-                    Attach Proof of Ownership
-                  </Label>
-                  <FileUploader
-                    name="reporter_proof"
-                    multiple={true}
-                    icon={<CloudUpload className="w-4 h-4" />}
-                    onChange={handleFilesChange}
+                  <FormField
+                    control={control}
+                    name="issueDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Issue Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Describe the issue"
+                            className="bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
+              </div>
+              <div className="w-full">
+                <Label className="mb-3 inline-block">
+                  Attach Proof of Ownership
+                </Label>
+                <FileUploader
+                  name="claimer_proof"
+                  multiple={true}
+                  icon={<CloudUpload className="w-4 h-4" />}
+                  onChange={handleFilesChange}
+                />
               </div>
               {previews.length > 0 && (
                 <>
