@@ -85,7 +85,7 @@ export default function Locations() {
                     onOpenChange={(isOpen) =>
                       setOpenModalId(isOpen ? loc?._id : null)
                     }
-                    description="You want to delete this location?"
+                    description="Do you want to delete this location?"
                     trigger={
                       <Button
                         variant="destructive"
