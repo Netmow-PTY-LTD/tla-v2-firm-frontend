@@ -11,6 +11,7 @@ import {
 import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
 import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
 import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
+import FirmNameInput from "./register/FirmNameInput";
 
 export default function LawFirmRegisterStepOne() {
   const dispatch = useDispatch();
@@ -80,11 +81,17 @@ export default function LawFirmRegisterStepOne() {
                 triggerClassName={"w-full"}
               />
 
-              <TextInput
+              {/* <TextInput
                 name="firmName"
                 label="Law Firm Name"
                 placeholder="i.e. ABC LLC"
 
+              /> */}
+
+              <FirmNameInput
+                name="firmName"
+                label="Law Firm Name"
+                placeholder="i.e. ABC LLC"
               />
 
               {/* City */}

@@ -10,10 +10,20 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       providesTags: ["Country-list"],
     }),
+    checkFirmName: builder.mutation({
+      query: (body) => ({
+        url: `/country/list`,
+        method: "POST",
+        body,
+       
+      }),
+     
+    }),
   }),
 });
 
 export const {
   useGetCountryListQuery,
+  useCheckFirmNameMutation
  
 } = publicApiService;
