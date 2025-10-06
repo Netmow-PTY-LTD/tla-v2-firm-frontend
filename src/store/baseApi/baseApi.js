@@ -130,6 +130,7 @@ export const baseApi = createApi({
     "lawfirm-certification",
     "certification",
     "city-list",
+    "pages-list",
   ],
   endpoints: () => ({}),
 });
