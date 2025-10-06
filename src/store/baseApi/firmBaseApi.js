@@ -96,6 +96,8 @@ export const firmBaseApi = createApi({
     "city-list",
     "userInfo", // for current user info
     "companyProfile",
+    "LawyerRequest",
+    "LawyerRequest-list",
   ],
   endpoints: () => ({}),
 });
