@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 
 export default function LawFirmClaimAccountStepTwo({ onSubmitFinal }) {
   const [previews, setPreviews] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const dispatch = useDispatch();
   const form = useForm({
@@ -26,44 +27,71 @@ export default function LawFirmClaimAccountStepTwo({ onSubmitFinal }) {
       claimerEmail: "",
       claimerRole: "",
       issueDescription: "",
+      proofOwnFiles: [],
     },
   });
 
   const { control, handleSubmit } = form;
 
+  // const handleFilesChange = (e) => {
+  //   const selectedFiles = Array.from(e.target.files);
+
+  //   const newFiles = selectedFiles.map((file) => {
+  //     const url = URL.createObjectURL(file);
+  //     return { name: file.name, url, type: file.type };
+  //   });
+
+  //   setPreviews((prev) => {
+  //     const combined = [...prev, ...newFiles];
+  //     return combined.slice(0, 5); // limit max 5 files
+  //   });
+  // };
+
   const handleFilesChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
+    const newFiles = Array.from(e.target.files);
 
-    const newFiles = selectedFiles.map((file) => {
-      const url = URL.createObjectURL(file);
-      return { name: file.name, url, type: file.type };
-    });
+    // Optional: prevent duplicates by file name
+    const uniqueNewFiles = newFiles.filter(
+      (newFile) => !selectedFiles.some((f) => f.name === newFile.name)
+    );
 
-    setPreviews((prev) => {
-      const combined = [...prev, ...newFiles];
-      return combined.slice(0, 5); // limit max 5 files
-    });
+    const updatedFiles = [...selectedFiles, ...uniqueNewFiles].slice(0, 5); // Max 5 files
+    setSelectedFiles(updatedFiles);
+
+    // Update RHF manually
+    form.setValue("proofOwnFiles", updatedFiles); // <-- ⬅️ Sync aggregated files to RHF
+
+    // Update previews
+    const newPreviews = uniqueNewFiles.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+      type: file.type,
+    }));
+    setPreviews((prev) => [...prev, ...newPreviews].slice(0, 5));
   };
 
   const handleRemove = (index) => {
-    setPreviews((prev) => {
-      const updated = [...prev];
-      updated.splice(index, 1);
-      return updated;
-    });
+    const updatedFiles = selectedFiles.filter((_, i) => i !== index);
+    const updatedPreviews = previews.filter((_, i) => i !== index);
+
+    setSelectedFiles(updatedFiles);
+    setPreviews(updatedPreviews);
+    form.setValue("proofOwnFiles", updatedFiles); // ✅ Update RHF
   };
+
+  // const handleRemove = (index) => {
+  //   setPreviews((prev) => {
+  //     const updated = [...prev];
+  //     updated.splice(index, 1);
+  //     return updated;
+  //   });
+  // };
 
   //console.log("previews", previews);
 
   const onSubmit = (data) => {
     console.log("Form submitted:", data);
-    const {
-      claimerName,
-      claimerEmail,
-      claimerRole,
-      issueDescription,
-      claimer_proof,
-    } = data;
+
     onSubmitFinal(data);
   };
 
@@ -181,7 +209,7 @@ export default function LawFirmClaimAccountStepTwo({ onSubmitFinal }) {
                   Attach Proof of Ownership
                 </Label>
                 <FileUploader
-                  name="claimer_proof"
+                  name="proofOwnFiles"
                   multiple={true}
                   icon={<CloudUpload className="w-4 h-4" />}
                   onChange={handleFilesChange}
