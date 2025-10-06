@@ -11,6 +11,22 @@ import {
 import { CloudUpload, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { getEmbedUrl } from "../mediaValidation";
+import z from "zod";
+import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
+
+const videoSchema = z.object({
+  video_url: z
+    .string()
+    .min(1, "Video URL is required")
+    .url("Please enter a valid URL")
+    .refine(
+      (val) => {
+        const embed = getEmbedUrl(val);
+        return embed !== null;
+      },
+      { message: "This video link cannot be embedded." }
+    ),
+});
 
 export default function VideoGallery({ firmMediaInfo, refetch }) {
   // const {
@@ -31,6 +47,7 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
 
   const [open, setOpen] = useState(false);
   const [newLink, setNewLink] = useState("");
+  const [openModalId, setOpenModalId] = useState(null);
 
   useEffect(() => {
     if (firmMediaInfo?.data?.videos) {
@@ -162,13 +179,21 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
-              <button
-                type="button"
-                className="absolute top-2 right-2 bg-white p-1 rounded-full shadow group-hover:opacity-100 opacity-0 transition cursor-pointer"
-                onClick={() => handleDeleteFirmMedia(index)}
-              >
-                <Trash2 className="w-4 h-4 text-red-500" />
-              </button>
+              <ConfirmationModal
+                onConfirm={() => handleDeleteFirmMedia(index)}
+                open={openModalId === index}
+                onOpenChange={(isOpen) => setOpenModalId(isOpen ? index : null)}
+                description="Do you want to delete this video?"
+                trigger={
+                  <button
+                    type="button"
+                    className="absolute top-2 right-2 bg-white p-1 rounded-full shadow group-hover:opacity-100 opacity-0 transition cursor-pointer"
+                    onClick={() => setOpenModalId(index)}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-500" />
+                  </button>
+                }
+              />
             </div>
           );
         })}
@@ -188,12 +213,15 @@ export default function VideoGallery({ firmMediaInfo, refetch }) {
         <FormWrapper
           onSubmit={handlePhotoUpload}
           // schema={lawyerSettingsMediaFormSchema}
+          schema={videoSchema}
         >
-          <TextInput
-            label=""
-            name="video_url"
-            placeholder="https://www.youtube.com/watch?v=example"
-          />
+          <div className="mt-8">
+            <TextInput
+              label=""
+              name="video_url"
+              placeholder="https://www.youtube.com/watch?v=example"
+            />
+          </div>
           {/* {errors.videos && (
             <p className="text-sm text-red-500 mt-2">{errors.videos.message}</p>
           )} */}

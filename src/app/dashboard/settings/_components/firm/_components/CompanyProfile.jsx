@@ -11,9 +11,10 @@ export default function CompanyProfile() {
     <div className="py-5 w-full">
       <h3 className="text-black font-semibold heading-lg">Basic Information</h3>
       <p className="text-[#6e6e6e] mt-2">
-        Enter your full name (if solo) or your official business name (if a
-        firm) to ensure consistency, build credibility, and help clients easily
-        recognize your services.
+        Provide the essential details about your company to create a
+        professional profile. Include your official business name, contact
+        details, and a short description. This information will appear publicly
+        and help clients recognize and trust your firm.
       </p>
 
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
