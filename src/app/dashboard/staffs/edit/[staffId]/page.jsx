@@ -174,12 +174,10 @@ export default function EditStaffPage() {
       <div className="w-full">
         <h3 className="text-black font-semibold heading-lg">Edit Staff</h3>
         <p className="text-[#6e6e6e] mt-2 text-sm">
-          This is the first detail clients will see when searching for legal
-          services on TheLawApp. If you're a sole practitioner, simply use your
-          full name. If you're part of a firm, enter your official business name
-          to ensure consistency and credibility across your profile.
+          Update the details and permissions of your staff member to keep their
+          profile accurate and up-to-date. This helps manage their access and
+          roles effectively within TheLawApp.
         </p>
-        {isLoadingPermissions && <div>Loading permissions...</div>}
 
         <FormWrapper
           onSubmit={onSubmit}
@@ -245,11 +243,8 @@ export default function EditStaffPage() {
             Set Permissions
           </h3>
           <p className="text-[#6e6e6e] mt-2 text-sm">
-            This is the first detail clients will see when searching for legal
-            services on TheLawApp. If you're a sole practitioner, simply use
-            your full name. If you're part of a firm, enter your official
-            business name to ensure consistency and credibility across your
-            profile.
+            Choose which pages this staff member can access. Select from the
+            list below to assign permissions.
           </p>
           {permissionOptions?.length > 0 && (
             <div className="flex flex-wrap gap-4">

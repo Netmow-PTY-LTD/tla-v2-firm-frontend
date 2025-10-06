@@ -155,12 +155,13 @@ export default function CreateStaffPage() {
           Create New Staff
         </h3>
         <p className="text-[#6e6e6e] mt-2 text-sm">
-          This is the first detail clients will see when searching for legal
-          services on TheLawApp. If you're a sole practitioner, simply use your
-          full name. If you're part of a firm, enter your official business name
-          to ensure consistency and credibility across your profile.
+          Add individual staff members to your company profile to showcase your
+          team. Each staff account can include personal details, role, and
+          specialization, ensuring clients can see who they will be working
+          with. You can also assign permissions to control access within the
+          company dashboard.
         </p>
-        {isLoadingPermissions && <div>Loading permissions...</div>}
+
         <FormWrapper
           onSubmit={onSubmit}
           schema={staffSchema}
@@ -225,11 +226,8 @@ export default function CreateStaffPage() {
             Set Permissions
           </h3>
           <p className="text-[#6e6e6e] mt-2 text-sm">
-            This is the first detail clients will see when searching for legal
-            services on TheLawApp. If you're a sole practitioner, simply use
-            your full name. If you're part of a firm, enter your official
-            business name to ensure consistency and credibility across your
-            profile.
+            Choose which pages this staff member can access. Select from the
+            list below to assign permissions.
           </p>
 
           {permissionOptions?.length > 0 && (

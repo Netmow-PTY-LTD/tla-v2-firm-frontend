@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useFormContext, useFormState } from "react-hook-form";
-import { CloudUpload, Trash, X } from "lucide-react";
+import { CloudUpload, Trash, Trash2, X } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { showErrorToast, showSuccessToast } from "../toasts";
 import { useUpdateFirmDataMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
@@ -11,6 +11,7 @@ import {
   useUpdateFirmInfoMutation,
   useUpdateFirmMediaMutation,
 } from "@/store/firmFeatures/firmApiService";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 export default function MultipleFileUploaderTest({
   name = "avatar",
@@ -25,6 +26,7 @@ export default function MultipleFileUploaderTest({
     useUpdateFirmMediaMutation();
   const { register, getValues } = useFormContext();
 
+  const [openModalId, setOpenModalId] = useState(null);
   const [previews, setPreviews] = useState([]);
 
   //console.log("firmMediaInfo", firmMediaInfo?.data?.photos);
@@ -109,34 +111,41 @@ export default function MultipleFileUploaderTest({
               <AvatarImage src={src} />
               <AvatarFallback>Img</AvatarFallback>
             </Avatar>
-            <button
-              type="button"
-              className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100 cursor-pointer transition-all duration-300"
-              onClick={() => handleDeleteFirmMedia(index)}
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <ConfirmationModal
+              onConfirm={() => handleDeleteFirmMedia(index)}
+              open={openModalId === index}
+              onOpenChange={(isOpen) => setOpenModalId(isOpen ? index : null)}
+              description="Do you want to delete this photo?"
+              trigger={
+                <button
+                  type="button"
+                  className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100 cursor-pointer transition-all duration-300"
+                  onClick={() => setOpenModalId(index)}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              }
+            />
           </div>
         ))}
-      </div>
-
-      {/* Upload input */}
-      <div className="max-w-sm">
-        <label
-          htmlFor={`file-upload-${name}`}
-          className="flex flex-col items-center justify-center w-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"
-        >
-          {icon}
-          <input
-            id={`file-upload-${name}`}
-            type="file"
-            className="hidden"
-            onChange={handleChange}
-            accept={accept}
-            multiple={multiple}
-          />
-        </label>
-        <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
+        {/* Upload input */}
+        <div className="max-w-sm">
+          <label
+            htmlFor={`file-upload-${name}`}
+            className="flex flex-col items-center justify-center w-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"
+          >
+            {icon}
+            <input
+              id={`file-upload-${name}`}
+              type="file"
+              className="hidden"
+              onChange={handleChange}
+              accept={accept}
+              multiple={multiple}
+            />
+          </label>
+          <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
+        </div>
       </div>
     </div>
   );
