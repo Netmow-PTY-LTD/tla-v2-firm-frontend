@@ -184,6 +184,15 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       providesTags: ["city-list"],
     }),
+
+    //pages permission
+    getPagesList: builder.query({
+      query: () => ({
+        url: `/pages/list`, // ✅ correct URL format
+        method: "GET",
+      }),
+      providesTags: ["pages-list"],
+    }),
   }),
 });
 
@@ -210,5 +219,6 @@ export const {
   useCreateRatingMutation,
   useGetLawCertificationsListQuery,
   useGetCityListQuery,
-  useLazyGetZipCodeListQuery
+  useLazyGetZipCodeListQuery,
+  useGetPagesListQuery,
 } = publicApiService;

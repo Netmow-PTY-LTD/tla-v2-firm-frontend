@@ -60,8 +60,6 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
 
   const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
 
-
-
   const defaultCountry = countries?.find(
     (country) => country?.slug === cookieCountry?.slug
   );
@@ -188,7 +186,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                           <Combobox
                             value={field.value ?? ""}
                             onChange={(val) => {
-                              field.onChange(val); // save selected company ID to form
+                              field.onChange(val?.firmName || ""); // save selected company ID to form
                             }}
                           >
                             <div className="relative">
@@ -197,11 +195,12 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                                 onChange={(event) =>
                                   setQuery(event.target.value)
                                 }
-                                displayValue={(val) =>
-                                  firmsBySearch?.data?.find(
-                                    (c) => c._id === val
-                                  )?.firmName || ""
-                                }
+                                // displayValue={(val) =>
+                                //   firmsBySearch?.data?.find(
+                                //     (c) => c._id === val
+                                //   )?.firmName || ""
+                                // }
+                                displayValue={(val) => val || ""}
                                 placeholder="Search a firm name..."
                                 autoComplete="off"
                                 disabled={!selectedCountry}
@@ -213,7 +212,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                                     .map((company) => (
                                       <ComboboxOption
                                         key={company._id}
-                                        value={company._id}
+                                        value={company}
                                         className={({ active }) =>
                                           cn(
                                             "cursor-pointer select-none relative py-2 pl-10 pr-4",
