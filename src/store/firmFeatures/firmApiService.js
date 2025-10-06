@@ -102,7 +102,7 @@ const firmApiService = firmBaseApi.injectEndpoints({
     //claim account
     claimAccount: builder.mutation({
       query: (body) => ({
-        url: `/claims`, // ✅ correct URL format
+        url: `/public/claim`, // ✅ correct URL format
         method: "POST",
         body,
       }),

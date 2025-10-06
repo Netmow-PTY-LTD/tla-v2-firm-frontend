@@ -15,8 +15,9 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader, Loader2 } from "lucide-react";
 import PasswordInput from "@/components/form/PasswordInput";
+import { useGetPagesListQuery } from "@/store/tlaFeatures/public/publicApiService";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -54,37 +55,13 @@ const staffSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
-
   }),
-  // permissions: z
-  //   .object({
-  //     view_clients: z.boolean(),
-  //     manage_cases: z.boolean(),
-  //     access_billing: z.boolean(),
-  //     admin_rights: z.boolean(),
-  //   })
-  //   .superRefine((val, ctx) => {
-  //     if (val && !Object.values(val).some(Boolean)) {
-  //       ctx.addIssue({
-  //         code: z.ZodIssueCode.custom,
-  //         message: "At least one permission must be selected",
-  //       });
-  //     }
-  //   })
-  //   .optional(),
+  permissions: z.any().optional(),
 });
-
-const permissions = [
-  { label: "View Clients", value: "view_clients" },
-  { label: "Manage Cases", value: "manage_cases" },
-  { label: "Access Billing", value: "access_billing" },
-  { label: "Admin Rights", value: "admin_rights" },
-];
 
 export default function EditStaffPage() {
   const params = useParams();
   const staffId = params?.staffId;
-
 
   const { data: staffData, isLoading: isStaffDataLoading } =
     useGetSingleStaffByIdQuery(
@@ -95,23 +72,44 @@ export default function EditStaffPage() {
     );
 
   const staff = staffData?.data;
-  console.log("staff:", staff);
+  console.log("staff:", staff?.userId?.permissions);
 
-  const defaultValues = useMemo(
-    () => ({
+  const { data: permissions, isLoading: isLoadingPermissions } =
+    useGetPagesListQuery();
+
+  //console.log("permissions", permissions);
+
+  const permissionOptions = permissions?.data?.map((perm) => ({
+    label: perm.title,
+    value: perm._id,
+  }));
+
+  const defaultValues = useMemo(() => {
+    // Transform array of permissions into { [pageId]: boolean }
+    const transformedPermissions = (permissions?.data || []).reduce(
+      (acc, perm) => {
+        acc[perm._id] = !!staff?.userId?.permissions?.find(
+          (p) => p.pageId === perm._id
+        )?.permission;
+        return acc;
+      },
+      {}
+    );
+
+    return {
       fullName: staff?.fullName || "",
       designation: staff?.designation || "",
       email: staff?.userId?.email || "",
       password: staff?.userId?.password || "",
       phone: staff?.phone || "",
       status: staff?.userId?.accountStatus || "",
-      permissions: staff?.permissions || [],
-      image: staff?.image || ''
-    }),
-    [staff]
-  );
+      image: staff?.image || "",
+      permissions: transformedPermissions || {}, // ✅ now in the correct shape
+    };
+  }, [staff]);
 
-  const [updateStaff] = useUpdateStaffMutation();
+  const [updateStaff, { isLoading: isStaffUpdateLoading }] =
+    useUpdateStaffMutation();
 
   async function onSubmit(values) {
     console.log("New staff data:", values);
@@ -124,8 +122,15 @@ export default function EditStaffPage() {
       phone,
       status,
       permissions,
-      image
+      image,
     } = values;
+
+    const transformedPermissions = Object.entries(permissions || {}).map(
+      ([pageId, permission]) => ({
+        pageId,
+        permission,
+      })
+    );
 
     const payload = {
       fullName,
@@ -134,10 +139,9 @@ export default function EditStaffPage() {
       password,
       phone,
       status,
-      permissions,
+      permissions: transformedPermissions,
     };
     console.log("Payload to send:", payload);
-
 
     const formData = new FormData();
 
@@ -147,7 +151,6 @@ export default function EditStaffPage() {
     if (image instanceof File) {
       formData.append("image", image);
     }
-
 
     try {
       const res = await updateStaff({
@@ -176,6 +179,8 @@ export default function EditStaffPage() {
           full name. If you're part of a firm, enter your official business name
           to ensure consistency and credibility across your profile.
         </p>
+        {isLoadingPermissions && <div>Loading permissions...</div>}
+
         <FormWrapper
           onSubmit={onSubmit}
           schema={staffSchema}
@@ -199,7 +204,6 @@ export default function EditStaffPage() {
                 placeholder="i.e. Manager, Lawyer etc"
                 textColor="text-[#4b4949]"
               />
-
             </div>
           </div>
 
@@ -247,13 +251,18 @@ export default function EditStaffPage() {
             business name to ensure consistency and credibility across your
             profile.
           </p>
-          {permissions.map((perm) => (
-            <CheckboxInput
-              key={perm.value}
-              name={`permissions.${perm.value}`}
-              label={perm.label}
-            />
-          ))}
+          {permissionOptions?.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {permissionOptions.map((perm) => (
+                <div className="w-full md:w-[calc(50%-12px)]" key={perm.value}>
+                  <CheckboxInput
+                    name={`permissions.${perm.value}`}
+                    label={perm.label}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="flex justify-between items-center mt-10">
             <Link
@@ -263,13 +272,23 @@ export default function EditStaffPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               <span>Back to Staffs List</span>
             </Link>
-            <Button type="submit" className="cursor-pointer">
-              Update Staff
+            <Button
+              type="submit"
+              className="cursor-pointer"
+              disabled={isStaffUpdateLoading}
+            >
+              {isStaffUpdateLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                  <span>Updating Staff...</span>
+                </div>
+              ) : (
+                "Update Staff"
+              )}
             </Button>
           </div>
         </FormWrapper>
       </div>
-
     </div>
   );
 }

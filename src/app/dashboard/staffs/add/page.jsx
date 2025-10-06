@@ -11,10 +11,12 @@ import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useRouter } from "next/navigation";
 import SelectInput from "@/components/form/SelectInput";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader, Loader2 } from "lucide-react";
 import PasswordInput from "@/components/form/PasswordInput";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
+import { useGetPagesListQuery } from "@/store/tlaFeatures/public/publicApiService";
+import { useMemo } from "react";
 
 // ---------------- Schema ----------------
 
@@ -22,51 +24,75 @@ const staffSchema = z.object({
   firmProfileId: z.string().min(1, "Firm profile ID is required"),
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(4, "Password must be at least 6 chars"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(4, "Password must be at least 4 characters"),
   image: z
-    .union([z.instanceof(File), z.url()])
-    .or(z.any().transform((val) => (val?.[0] instanceof File ? val[0] : undefined)))
+    .union([z.instanceof(File), z.string().url()])
+    .or(
+      z
+        .any()
+        .transform((val) => (val?.[0] instanceof File ? val[0] : undefined))
+    )
     .optional(),
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
   }),
-  // permissions: z
-  //   .object({
-  //     view_clients: z.boolean().optional(),
-  //     manage_cases: z.boolean().optional(),
-  //     access_billing: z.boolean().optional(),
-  //     admin_rights: z.boolean().optional(),
-  //   })
-  //   .superRefine((val, ctx) => {
-  //     if (!Object.values(val).some(Boolean)) {
-  //       ctx.addIssue({
-  //         code: z.ZodIssueCode.custom,
-  //         message: "At least one permission must be selected",
-  //       });
-  //     }
-  //   })
-  //   .optional(),
+  permissions: z
+    .any()
+    .optional()
+    .superRefine((val, ctx) => {
+      if (val === undefined) return;
+
+      if (
+        typeof val !== "object" ||
+        Array.isArray(val) ||
+        Object.values(val).some((v) => typeof v !== "boolean")
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Permissions must be an object with boolean values",
+        });
+      }
+    }),
 });
-
-
-const permissions = [
-  { label: "View Clients", value: "view_clients" },
-  { label: "Manage Cases", value: "manage_cases" },
-  { label: "Access Billing", value: "access_billing" },
-  { label: "Admin Rights", value: "admin_rights" },
-];
 
 export default function CreateStaffPage() {
   const router = useRouter();
-  const currentuser = useSelector(selectCurrentUser)
+  const currentuser = useSelector(selectCurrentUser);
   // Only pass firmId if currentuser exists and role is "firm"
   const firmProfileId = currentuser?.firmProfileId;
 
-  const [createStaff] = useCreateStaffMutation();
+  const { data: permissions, isLoading: isLoadingPermissions } =
+    useGetPagesListQuery();
+
+  const permissionOptions = permissions?.data?.map((perm) => ({
+    label: perm.title,
+    value: perm._id,
+  }));
+
+  // Construct default values only after permissionOptions is available
+  const defaultValues = useMemo(() => {
+    return {
+      firmProfileId: firmProfileId || "",
+      fullName: "",
+      designation: "",
+      email: "",
+      password: "",
+      phone: "",
+      status: "active",
+      image: undefined,
+      permissions: Object.fromEntries(
+        permissionOptions?.map((perm) => [perm.value, false]) || []
+      ),
+    };
+  }, [firmProfileId, permissionOptions]);
+
+  const [createStaff, { isLoading: isStaffCreationLoading }] =
+    useCreateStaffMutation();
 
   const onSubmit = async (values) => {
+    console.log("Form Values:", values);
     const {
       fullName,
       designation,
@@ -75,9 +101,15 @@ export default function CreateStaffPage() {
       phone,
       status,
       permissions,
-      image
+      image,
     } = values;
 
+    const transformedPermissions = Object.entries(permissions || {}).map(
+      ([pageId, permission]) => ({
+        pageId,
+        permission,
+      })
+    );
 
     const payload = {
       firmProfileId,
@@ -87,14 +119,12 @@ export default function CreateStaffPage() {
       password,
       phone,
       status,
-      permissions,
-
+      permissions: transformedPermissions,
     };
 
-
+    console.log("payload:", payload);
 
     try {
-
       const formData = new FormData();
 
       formData.append("data", JSON.stringify(payload));
@@ -103,7 +133,6 @@ export default function CreateStaffPage() {
       if (image instanceof File) {
         formData.append("image", image);
       }
-
 
       const res = await createStaff(formData).unwrap();
       console.log("Staff created successfully:", res);
@@ -117,22 +146,7 @@ export default function CreateStaffPage() {
         "Error creating staff: " + error?.data?.message || error.error
       );
     }
-  }
-
-
-
-  const defaultValues = {
-    firmProfileId: firmProfileId || "",
-    fullName: "",
-    designation: "",
-    email: "",
-    password: "",
-    phone: "",
-    status: "active",
-    permissions: {},
-    image: undefined,
   };
-
 
   return (
     <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
@@ -146,6 +160,7 @@ export default function CreateStaffPage() {
           full name. If you're part of a firm, enter your official business name
           to ensure consistency and credibility across your profile.
         </p>
+        {isLoadingPermissions && <div>Loading permissions...</div>}
         <FormWrapper
           onSubmit={onSubmit}
           schema={staffSchema}
@@ -216,13 +231,19 @@ export default function CreateStaffPage() {
             business name to ensure consistency and credibility across your
             profile.
           </p>
-          {permissions.map((perm) => (
-            <CheckboxInput
-              key={perm.value}
-              name={`permissions.${perm.value}`}
-              label={perm.label}
-            />
-          ))}
+
+          {permissionOptions?.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {permissionOptions.map((perm) => (
+                <div className="w-full md:w-[calc(50%-12px)]" key={perm.value}>
+                  <CheckboxInput
+                    name={`permissions.${perm.value}`}
+                    label={perm.label}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="flex justify-between items-center mt-10">
             <Link
@@ -232,13 +253,23 @@ export default function CreateStaffPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               <span>Back to Staffs List</span>
             </Link>
-            <Button type="submit" className="cursor-pointer">
-              Create Staff
+            <Button
+              type="submit"
+              className="cursor-pointer"
+              disabled={isStaffCreationLoading}
+            >
+              {isStaffCreationLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                  <span>Creating Staff...</span>
+                </div>
+              ) : (
+                "Create Staff"
+              )}
             </Button>
           </div>
         </FormWrapper>
       </div>
-
     </div>
   );
 }
