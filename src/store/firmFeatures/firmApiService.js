@@ -99,6 +99,15 @@ const firmApiService = firmBaseApi.injectEndpoints({
       }),
       providesTags: ["firm"],
     }),
+    //claim account
+    claimAccount: builder.mutation({
+      query: (body) => ({
+        url: `/claims`, // ✅ correct URL format
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["claims"],
+    }),
   }),
 });
 
@@ -116,4 +125,5 @@ export const {
   useDeleteOfficeLocationMutation,
   useGetCompanyProfileBySlugQuery,
   useGetFirmBySearchQuery,
+  useClaimAccountMutation,
 } = firmApiService;
