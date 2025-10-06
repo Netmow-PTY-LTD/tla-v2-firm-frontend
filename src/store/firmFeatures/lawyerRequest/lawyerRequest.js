@@ -32,10 +32,10 @@ export const lawyerRequestApiService = firmBaseApi.injectEndpoints({
 
     // Update a lawyer request
     updateLawyerRequest: builder.mutation({
-      query: ({ requestId, formData }) => ({
+      query: ({ requestId, data }) => ({
         url: `/lawyer-request/${requestId}/update`,
         method: "PUT",
-        body: formData,
+        body: data,
       }),
       invalidatesTags: ["LawyerRequest"],
     }),
