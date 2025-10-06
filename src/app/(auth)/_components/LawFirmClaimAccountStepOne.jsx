@@ -39,19 +39,6 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetFirmBySearchQuery } from "@/store/firmFeatures/firmApiService";
 
-const dummyCompanies = [
-  { id: "1", name: "Smith & Associates LLP" },
-  { id: "2", name: "Johnson Legal Group" },
-  { id: "3", name: "Anderson & Co." },
-  { id: "4", name: "Brown Law Firm" },
-  { id: "5", name: "Davis Legal Solutions" },
-  { id: "6", name: "Miller & Partners" },
-  { id: "7", name: "Wilson Legal Advisory" },
-  { id: "8", name: "Taylor Law Offices" },
-  { id: "9", name: "Clark Legal Consultants" },
-  { id: "10", name: "Lopez & Associates" },
-];
-
 const stepOneSchema = z.object({
   country: z.string().min(1, "Country is required"),
   lawFirmName: z.string().min(1, "Law Firm Name is required"),
@@ -60,9 +47,9 @@ const stepOneSchema = z.object({
     .string()
     .min(1, "Registration Number is required"),
   website: z.string().url("Invalid URL").optional().or(z.literal("")),
-  knownAdminEmails: z
-    .array(z.string().email("Invalid email address"))
-    .optional(),
+  // knownAdminEmails: z
+  //   .array(z.string().email("Invalid email address"))
+  //   .optional(),
 });
 
 export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
@@ -72,8 +59,6 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
   const dispatch = useDispatch();
 
   const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
-
-
 
   const defaultCountry = countries?.find(
     (country) => country?.slug === cookieCountry?.slug
@@ -98,7 +83,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
         search: debouncedQuery,
       },
       {
-        skip: !defaultCountry?.countryId || debouncedQuery.length < 2,
+        skip: !defaultCountry?.countryId || debouncedQuery.length < 1,
       }
     );
 
@@ -201,7 +186,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                           <Combobox
                             value={field.value ?? ""}
                             onChange={(val) => {
-                              field.onChange(val); // save selected company ID to form
+                              field.onChange(val?.firmName || ""); // save selected company ID to form
                             }}
                           >
                             <div className="relative">
@@ -210,12 +195,13 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                                 onChange={(event) =>
                                   setQuery(event.target.value)
                                 }
-                                displayValue={(val) =>
-                                  firmsBySearch?.data?.find(
-                                    (c) => c._id === val
-                                  )?.firmName || ""
-                                }
-                                placeholder="Select a firm name"
+                                // displayValue={(val) =>
+                                //   firmsBySearch?.data?.find(
+                                //     (c) => c._id === val
+                                //   )?.firmName || ""
+                                // }
+                                displayValue={(val) => val || ""}
+                                placeholder="Search a firm name..."
                                 autoComplete="off"
                                 disabled={!selectedCountry}
                               />
@@ -226,7 +212,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                                     .map((company) => (
                                       <ComboboxOption
                                         key={company._id}
-                                        value={company._id}
+                                        value={company}
                                         className={({ active }) =>
                                           cn(
                                             "cursor-pointer select-none relative py-2 pl-10 pr-4",
@@ -276,7 +262,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                               type="email"
                               placeholder="i.e. abc@example.com"
                               className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
+                              value={field.value ?? ""}
                               onChange={(e) => {
                                 field.onChange(e);
                               }}
@@ -301,7 +287,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                             <Input
                               placeholder="i.e. abc@example.com"
                               className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
+                              value={field.value ?? ""}
                               onChange={(e) => {
                                 field.onChange(e);
                               }}
@@ -324,7 +310,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                               type="url"
                               placeholder="i.e. https://example.com"
                               className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
-                              {...field}
+                              value={field.value ?? ""}
                               onChange={(e) => {
                                 field.onChange(e);
                               }}

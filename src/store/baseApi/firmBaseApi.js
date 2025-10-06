@@ -98,6 +98,7 @@ export const firmBaseApi = createApi({
     "companyProfile",
     "LawyerRequest",
     "LawyerRequest-list",
+    "claims",
   ],
   endpoints: () => ({}),
 });

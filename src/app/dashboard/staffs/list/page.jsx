@@ -30,7 +30,7 @@ export default function StaffsList() {
     isError,
   } = useGetFirmWiseStaffListQuery();
 
-  //console.log("Staff List Data:", staffList);
+  console.log("Staff List Data:", staffList);
   const columns = [
     // ✅ Name
     {
