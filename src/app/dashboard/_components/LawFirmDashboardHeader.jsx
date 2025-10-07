@@ -2,23 +2,34 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import {
+  useCurrentUserInfoQuery,
+  useGetFirmUserInfoQuery,
+} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { BellRing, PanelLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import LawFirmProfileDropDown from "./LawFirmProfileDropdown";
+import { Badge } from "@/components/ui/badge";
 
 export default function LawFirmDashboardHeader({ onToggleSidebar }) {
   const [user, setUser] = React.useState(null);
   const router = useRouter();
 
   const token = Cookies.get("token");
-  const { data: currentUser, isLoading: isCurrentUserLoading } =
+  const { data: companyInfo, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
     });
 
-  //console.log("currentUser from header", currentUser);
+  console.log("companyInfo from header", companyInfo);
+
+  const { data: currentUser, isLoading: isCurrentUserDataLoading } =
+    useCurrentUserInfoQuery(undefined, {
+      skip: !token,
+    });
+
+  console.log("c from header", currentUser);
 
   return (
     <header className="db-header">
@@ -40,6 +51,13 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
         </button>
       </div>
       <div className="flex items-center gap-4">
+        <Badge
+          asChild
+          variant="secondary"
+          className="px-3 py-1 bg-[#ff860231] text-[#ff8602]"
+        >
+          <span>{companyInfo?.data?.firmName}</span>
+        </Badge>
         <Link
           href="#"
           className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full flex-shrink-0"
