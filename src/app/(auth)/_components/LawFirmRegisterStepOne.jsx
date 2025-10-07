@@ -61,7 +61,7 @@ export default function LawFirmRegisterStepOne() {
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
           <h3 className="tla-auth-title mb-3 text-center">
-            List Your Law Firm
+             Your Law Firm Details
           </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
             Create your firm’s account to add lawyers and oversee their
@@ -104,18 +104,18 @@ export default function LawFirmRegisterStepOne() {
               />
               <TextInput
                 name="email"
-                label="Email"
+                label="Law Firm Email"
                 placeholder="i.e. abc@example.com"
               />
               <TextInput
                 name="phone"
-                label="Phone Number"
+                label="Law Firm Phone Number"
                 placeholder="i.e. +1 (123) 456-7890"
               />
 
               <TextInput
                 name="website"
-                label="Website"
+                label="Law Firm Website"
                 placeholder="i.e. https://example.com"
               />
 
