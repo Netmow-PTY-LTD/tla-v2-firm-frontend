@@ -23,7 +23,7 @@ export default function LawFirmRegisterStepThree() {
   const defaultValues = {
     certificationId: formData.licenseData.certificationId,
     licenseNumber: formData.licenseData.licenseNumber,
-    issuedBy: formData.licenseData.issuedBy,
+    // issuedBy: formData.licenseData.issuedBy,
     validUntil: formData.licenseData.validUntil,
   };
 
@@ -37,7 +37,7 @@ export default function LawFirmRegisterStepThree() {
           licenseData: {
             certificationId: data.certificationId,
             licenseNumber: data.licenseNumber,
-            issuedBy: data.issuedBy,
+            // issuedBy: data.issuedBy,
             validUntil: data.validUntil,
             type: "mandatory",
           },
@@ -99,7 +99,7 @@ export default function LawFirmRegisterStepThree() {
                 placeholder="i.e. ABC1234567"
               />
 
-              <SelectInput
+              {/* <SelectInput
                 name="issuedBy"
                 label="Issued By"
                 placeholder="Select a body"
@@ -110,7 +110,7 @@ export default function LawFirmRegisterStepThree() {
                 ]}
                 triggerClassName="w-full"
 
-              />
+              /> */}
 
               <TextInput
                 name="validUntil"
