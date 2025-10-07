@@ -62,7 +62,7 @@ const LawCertificationCombobox = ({
       control={control}
       name={name}
       render={({ field, fieldState }) => (
-        <div className="mb-4">
+        <div >
           <label className="block text-sm font-medium mb-1">{label}</label>
           <Combobox
             value={field.value}

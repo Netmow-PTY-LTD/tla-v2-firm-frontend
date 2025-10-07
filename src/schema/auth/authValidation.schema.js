@@ -112,7 +112,7 @@ export const lawFirmRegStepThereSchema = z.object({
     .string()
     .min(2, "License Number is required")
     .max(50, "License Number is too long"),
-  issuedBy: z.string().min(1, "Issuing body is required"),
+  // issuedBy: z.string().min(1, "Issuing body is required"),
   validUntil: z
     .string()
     .min(1, "Valid Until date is required")

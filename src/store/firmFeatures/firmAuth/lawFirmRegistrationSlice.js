@@ -29,7 +29,7 @@ const initialState = {
     licenseData: {
       certificationId: '',
       licenseNumber: '',
-      issuedBy: '',
+      // issuedBy: '',
       validUntil: '',
       type: '',
     },

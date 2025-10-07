@@ -37,7 +37,7 @@ export default function LawFirmRegisterStepTwo() {
     dispatch(nextStep());
   };
 
-  console.log('form data  ===>',formData)
+
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -48,10 +48,10 @@ export default function LawFirmRegisterStepTwo() {
           </div>
 
           <h3 className="tla-auth-title mb-3 text-center">
-            Create Your Account
+            Firm User Information
           </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
-            Enter your details to create your account and start using our services.
+            Enter your details to create your firm user account and start using our services.
           </p>
 
           <FormWrapper
