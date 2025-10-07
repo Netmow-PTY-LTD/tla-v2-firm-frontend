@@ -51,7 +51,7 @@ export default function LawyerRequestsAsMember() {
     },
   ];
 
-  const showRequests = requests?.length ? requests : demoRequests;
+  const showRequests = requests?.length > 0 ? requests : [];
 
   if (isLoading) {
     return (
@@ -80,7 +80,7 @@ export default function LawyerRequestsAsMember() {
         <h2 className="text-black font-semibold heading-lg">
           Lawyer Membership Requests
         </h2>
-        <div className="h-0.5 w-[16%] bg-[#e79d13] mt-2 rounded"></div>
+        <div className="h-0.5 w-[28%] bg-[#e79d13] mt-2 rounded"></div>
       </div>
 
       {showRequests.length === 0 ? (
@@ -105,7 +105,11 @@ export default function LawyerRequestsAsMember() {
           <p className="text-sm text-gray-500 mb-4">
             You currently have no lawyer membership requests.
           </p>
-          <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.location.reload()}
+          >
             Refresh
           </Button>
         </div>
@@ -121,7 +125,7 @@ export default function LawyerRequestsAsMember() {
                   <img
                     src={req.lawyerId?.avatar || userDummyImage}
                     alt={req.lawyerId?.name || ""}
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover border border-gray-200"
                   />
                 </div>
                 <div className="flex flex-col">
