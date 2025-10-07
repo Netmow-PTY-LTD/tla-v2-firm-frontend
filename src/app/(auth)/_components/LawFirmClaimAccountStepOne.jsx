@@ -47,6 +47,7 @@ const stepOneSchema = z.object({
     .string()
     .min(1, "Registration Number is required"),
   website: z.string().url("Invalid URL").optional().or(z.literal("")),
+  lawFirmPhone: z.string().min(1, "Phone number is required"),
   // knownAdminEmails: z
   //   .array(z.string().email("Invalid email address"))
   //   .optional(),
@@ -55,16 +56,18 @@ const stepOneSchema = z.object({
 export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   const dispatch = useDispatch();
 
-  const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
+  //const cookieCountry = safeJsonParse(Cookies.get("countryObj"));
 
-  const defaultCountry = countries?.find(
-    (country) => country?.slug === cookieCountry?.slug
-  );
+  // const defaultCountry = countries?.find(
+  //   (country) => country?.slug === selectedCountry?.slug
+  // );
 
-  //console.log("defaultCountry in step 2", defaultCountry);
+  // console.log("defaultCountry in step 2", defaultCountry);
+  // console.log("selectedCountry in step 2", selectedCountry);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -79,11 +82,11 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
   const { data: firmsBySearch, isLoading: isLoadingFirmBySearch } =
     useGetFirmBySearchQuery(
       {
-        countryId: defaultCountry?.countryId || "",
+        countryId: selectedCountry?.countryId,
         search: debouncedQuery,
       },
       {
-        skip: !defaultCountry?.countryId || debouncedQuery.length < 1,
+        skip: !selectedCountry?.countryId || debouncedQuery.length < 1,
       }
     );
 
@@ -101,12 +104,11 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
       lawFirmEmail: "",
       lawFirmRegistrationNumber: "",
       website: "",
-      knownAdminEmails: [],
+      lawFirmPhone: "",
     },
   });
 
   const { control, watch, handleSubmit } = form;
-  const selectedCountry = watch("country");
   const onSubmit = (data) => {
     console.log(data);
     onNext(data);
@@ -146,7 +148,13 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                           <FormControl>
                             <Select
                               value={field.value}
-                              onValueChange={field.onChange}
+                              onValueChange={(val) => {
+                                field.onChange(val);
+                                const countryObj = countries?.find(
+                                  (c) => c.countryId === val
+                                );
+                                setSelectedCountry(countryObj || null);
+                              }}
                             >
                               <SelectTrigger
                                 className="w-full bg-[#F2F2F2]"
@@ -256,7 +264,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                       name="lawFirmEmail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Law Firm Email</FormLabel>
                           <FormControl>
                             <Input
                               type="email"
@@ -285,7 +293,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                           <FormLabel>Law Firm Registration Number</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="i.e. abc@example.com"
+                              placeholder="i.e. abc12345678"
                               className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
                               value={field.value ?? ""}
                               onChange={(e) => {
@@ -304,7 +312,7 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                       name="website"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Website</FormLabel>
+                          <FormLabel>Law Firm Website</FormLabel>
                           <FormControl>
                             <Input
                               type="url"
@@ -323,12 +331,27 @@ export default function LawFirmClaimAccountStepOne({ initialValues, onNext }) {
                   </div>
                 </div>
                 <div className="w-full">
-                  <FormLabel className="mb-3 inline-block">
-                    Known Admin Emails
-                  </FormLabel>
-                  <MultipleTagSelector
-                    name="knownAdminEmails"
-                    placeholder="Type and press Enter"
+                  <FormField
+                    control={control}
+                    name="lawFirmPhone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Law Firm Phone</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="tel"
+                            placeholder="i.e. (123) 456-7890"
+                            className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
+                            value={field.value ?? ""}
+                            onChange={(e) => {
+                              field.onChange(e);
+                            }}
+                            autoComplete="new-phone"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
               </div>
