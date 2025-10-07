@@ -20,31 +20,18 @@ export default function LawyerDetailsPage() {
     isError,
     error,
   } = useGetUserProfileBySlugQuery(slug, {
-    skip: slug !== "maksud-haque", // prevents API call for others
+    skip: !slug,
   });
 
   // Decide lawyer data
-  const lawyer =
-    slug === "maksud-haque"
-      ? lawyerInfo?.data
-      : lawyers.find((l) => l.slug === slug);
-  console.log("Lawyer Data:", lawyer);
+  const lawyer = lawyerInfo?.data;
 
-  const lawyerVideos =
-    lawyer?.slug === "maksud-haque"
-      ? lawyer?.photosVideos?.videos
-      : lawyer?.videos;
+  console.log("Lawyer Info on Lawyer Details Page:", lawyer);
+  const lawyerVideos = lawyer?.photosVideos?.videos;
 
-  const lawyerExperience =
-    lawyer?.slug === "maksud-haque"
-      ? lawyerInfo?.data?.experience?.experience
-      : lawyer?.experienceHighlight;
+  const lawyerExperience = lawyer?.experience?.experience;
 
-  const lawyerCareer =
-    lawyer?.slug === "maksud-haque"
-      ? lawyerInfo?.data?.experience?.experienceHighlight
-      : lawyer?.careerHighlight;
-
+  const lawyerCareer = lawyerInfo?.data?.experience?.experienceHighlight;
   // if (!lawyer) {
   //   return (
   //     <div className="p-6 text-center">
@@ -157,7 +144,7 @@ export default function LawyerDetailsPage() {
         </h2>
         <div
           className="text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: lawyer?.bio }}
+          dangerouslySetInnerHTML={{ __html: lawyer?.bio || "" }}
         ></div>
       </div>
 
