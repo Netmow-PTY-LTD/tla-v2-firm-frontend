@@ -26,6 +26,7 @@ export default function LawFirmProfileDropDown({
   currentUser,
   isCurrentUserLoading,
 }) {
+  console.log("currentUser from dropdown", currentUser);
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -75,15 +76,13 @@ export default function LawFirmProfileDropDown({
             <div className="flex items-center group gap-[10px]">
               <Avatar className="w-8 h-8 border border-gray-300">
                 <AvatarImage
-                  src={
-                    currentUser?.firmProfile?.profilePicture ?? userDummyImage
-                  }
-                  alt={currentUser?.firmName || "Admin"}
+                  src={currentUser?.image ?? userDummyImage}
+                  alt={currentUser?.fullName || "Admin"}
                 />
                 <AvatarFallback>USER</AvatarFallback>
               </Avatar>
               <span className="font-medium text-[14px]">
-                {currentUser?.firmName?.split(" ")[0] || "Admin"}
+                {currentUser?.fullName?.split(" ")[0] || "Admin"}
               </span>
               <ChevronDown className="w-5 h-5" />
             </div>
