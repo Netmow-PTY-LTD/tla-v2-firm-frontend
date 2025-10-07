@@ -222,13 +222,15 @@ export default function CreateStaffPage() {
             />
           </div>
           <div className="border-t border-[#f2f2f2] h-1 mt-10" />
-          <h3 className="text-black font-semibold heading-lg mt-6">
-            Set Permissions
-          </h3>
-          <p className="text-[#6e6e6e] mt-2 text-sm">
-            Choose which pages this staff member can access. Select from the
-            list below to assign permissions.
-          </p>
+          <div>
+            <h3 className="text-black font-semibold heading-lg mt-6">
+              Set Permissions
+            </h3>
+            <p className="text-[#6e6e6e] mt-2 text-sm">
+              Choose which pages this staff member can access. Select from the
+              list below to assign permissions.
+            </p>
+          </div>
 
           {permissionOptions?.length > 0 && (
             <div className="flex flex-wrap gap-4">
