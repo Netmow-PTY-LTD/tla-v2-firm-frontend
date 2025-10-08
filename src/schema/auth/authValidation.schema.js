@@ -48,6 +48,7 @@ export const lawFirmRegStepOneSchema = z
     if (!phone || !country) return;
 
     const countryCode = countries?.find((c) => c.countryId === country)?.code;
+    const countryName = countries?.find((c) => c.countryId === country)?.name;
 
     // Step 1: Clean input (remove spaces and other non-digits except '+')
     const cleanedPhone = phone.replace(/[^\d+]/g, "");
@@ -71,7 +72,7 @@ export const lawFirmRegStepOneSchema = z
       ctx.addIssue({
         path: ["phone"],
         code: z.ZodIssueCode.custom,
-        message: "Invalid phone number for selected country",
+        message: "Invalid phone number for " + countryName,
       });
     }
   });
@@ -97,63 +98,90 @@ function getCountryCallingCode(country) {
 
 // -------------------- Step Two --------------------
 
-export const lawFirmRegStepTwoSchema = z
-  .object({
-    name: z
-      .string()
-      .min(2, { message: "Full Name must be at least 2 characters" })
-      .max(50, { message: "Full Name must be at most 50 characters" }),
+export const lawFirmRegStepTwoSchema = (countryCode) =>
+  z
+    .object({
+      name: z
+        .string()
+        .min(2, { message: "Full Name must be at least 2 characters" })
+        .max(50, { message: "Full Name must be at most 50 characters" }),
 
-    email: z.email({ message: "Invalid email address" }),
+      email: z.email({ message: "Invalid email address" }),
 
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    // .regex(
-    //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-    //   { message: "Password must contain letters, numbers, and special characters" }
-    // ),
+      password: z
+        .string()
+        .min(6, { message: "Password must be at least 6 characters" }),
+      // .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/, {
+      //   message: "Password must contain letters, numbers, and special characters"
+      // }),
 
-    phone: z
-      .string()
-      .min(8, { message: "Phone number must be at least 8 digits" })
-      .max(20, { message: "Phone number must be at most 20 digits" })
-      .regex(/^[\d +()-]+$/, { message: "Invalid phone number format" }),
-  })
-  .superRefine((data, ctx) => {
-    console.log("Step Two - Validating data:", ctx);
-    const { phone } = data;
-    const countryCode = ctx?.context?.countryCode;
-    console.log("Validating phone with country code:", countryCode);
+      phone: z
+        .string()
+        .min(8, { message: "Phone number must be at least 8 digits" })
+        .max(20, { message: "Phone number must be at most 20 digits" })
+        .regex(/^[\d +()-]+$/, { message: "Invalid phone number format" }),
+    })
+    .superRefine((data, ctx) => {
+      const { phone } = data;
 
-    if (!phone || !countryCode) return;
+      if (!phone || !countryCode) return;
 
-    // Step 1: Clean input (remove spaces and other non-digits except '+')
-    const cleanedPhone = phone.replace(/[^\d+]/g, "");
+      const cleanedPhone = phone.replace(/[^\d+]/g, "");
 
-    // Step 2: Check if phone number already has country code (e.g., +61 for Australia)
-    // If no country code, prepend it with the country code from the country field.
-    let parsedPhone;
-    if (cleanedPhone.startsWith("+")) {
-      parsedPhone = parsePhoneNumberFromString(cleanedPhone, countryCode);
-    } else {
-      const countryCallingCode = getCountryCallingCode(countryCode); // You may need to import a method to get the country calling code.
-      const phoneWithCountryCode = `+${countryCallingCode}${cleanedPhone}`;
-      parsedPhone = parsePhoneNumberFromString(
-        phoneWithCountryCode,
-        countryCode
-      );
-    }
+      let parsedPhone;
+      if (cleanedPhone.startsWith("+")) {
+        parsedPhone = parsePhoneNumberFromString(cleanedPhone, countryCode);
+      } else {
+        try {
+          const callingCode = getCountryCallingCode(countryCode);
+          const phoneWithCountryCode = `+${callingCode}${cleanedPhone}`;
+          parsedPhone = parsePhoneNumberFromString(
+            phoneWithCountryCode,
+            countryCode
+          );
+        } catch (e) {
+          ctx.addIssue({
+            path: ["phone"],
+            code: z.ZodIssueCode.custom,
+            message:
+              "Unable to validate phone number due to invalid country code",
+          });
+          return;
+        }
+      }
 
-    // Step 3: Validate
-    if (!parsedPhone || !parsedPhone.isValid()) {
-      ctx.addIssue({
-        path: ["phone"],
-        code: z.ZodIssueCode.custom,
-        message: "Invalid phone number for selected country",
-      });
-    }
-  });
+      if (!parsedPhone || !parsedPhone.isValid()) {
+        ctx.addIssue({
+          path: ["phone"],
+          code: z.ZodIssueCode.custom,
+          message: `Invalid phone number for selected country (${countryCode.toUpperCase()})`,
+        });
+      }
+    });
+
+// export const lawFirmRegStepTwoSchema = z
+//   .object({
+//     name: z
+//       .string()
+//       .min(2, { message: "Full Name must be at least 2 characters" })
+//       .max(50, { message: "Full Name must be at most 50 characters" }),
+
+//     email: z.email({ message: "Invalid email address" }),
+
+//     password: z
+//       .string()
+//       .min(6, { message: "Password must be at least 6 characters" }),
+//     // .regex(
+//     //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+//     //   { message: "Password must contain letters, numbers, and special characters" }
+//     // ),
+
+//     phone: z
+//       .string()
+//       .min(8, { message: "Phone number must be at least 8 digits" })
+//       .max(20, { message: "Phone number must be at most 20 digits" })
+//       .regex(/^[\d +()-]+$/, { message: "Invalid phone number format" }),
+//   });
 
 // -------------------- Step There --------------------
 export const lawFirmRegStepThereSchema = z.object({

@@ -102,7 +102,7 @@ export default function LawFirmRegisterStepThree() {
             schema={lawFirmRegStepThereSchema}
             defaultValues={defaultValues}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-5">
               <LawCertificationCombobox
                 name={"certificationId"}
                 label={"License"}

@@ -15,9 +15,9 @@ export default function LawFirmRegisterStepTwo() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
-  console.log("Step Two - Form Data from Redux:", formData);
   const countryId = formData?.firmData?.contactInfo?.country;
   const countryCode = countries?.find((c) => c.countryId === countryId)?.code;
+  const schema = lawFirmRegStepTwoSchema(countryCode);
   // Default values from userData slice
   const defaultValues = {
     name: formData.userData.name,
@@ -59,11 +59,11 @@ export default function LawFirmRegisterStepTwo() {
 
           <FormWrapper
             onSubmit={onSubmit}
-            schema={lawFirmRegStepTwoSchema} // Your zod schema for user info
+            schema={schema} // Your zod schema for user info
             defaultValues={defaultValues}
             context={{ countryCode }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-5">
               <TextInput
                 name="name"
                 label="Full Name"
