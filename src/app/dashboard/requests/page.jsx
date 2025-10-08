@@ -84,7 +84,7 @@ export default function LawyerRequestsAsMember() {
       </div>
 
       {showRequests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center bg-gray-50 rounded-lg p-8 border border-dashed border-gray-300">
+        <div className="flex flex-col items-center justify-center text-center p-8">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-12 h-12 text-gray-400 mb-3"

@@ -49,7 +49,13 @@ export default function TextInput({
                 type={type}
                 placeholder={placeholder}
                 disabled={disabled}
-                onChange={onChange}
+                onChange={(e) => {
+                  const value =
+                    type === "tel" || name === "phone"
+                      ? e.target.value.replace(/\s+/g, "") // remove spaces
+                      : e.target.value;
+                  field.onChange(value);
+                }}
                 onBlur={onBlur}
                 value={value ?? ""}
                 className={clsx(

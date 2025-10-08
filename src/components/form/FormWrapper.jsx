@@ -1,25 +1,31 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useEffect } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 
 export default function FormWrapper({
   schema,
   defaultValues,
   onSubmit,
   children,
+  context,
   ...props
 }) {
   const { formRef } = props;
   const formConfig = {};
 
   if (!!defaultValues) {
-    formConfig['defaultValues'] = defaultValues;
+    formConfig["defaultValues"] = defaultValues;
   }
 
+  // if (schema) {
+  //   formConfig["resolver"] = zodResolver(schema);
+  // }
+
   if (schema) {
-    formConfig['resolver'] = zodResolver(schema);
+    console.log("FormWrapper - Context provided:", context);
+    formConfig["resolver"] = zodResolver(schema, { context });
   }
 
   const methods = useForm({
