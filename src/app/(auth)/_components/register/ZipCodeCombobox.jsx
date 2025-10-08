@@ -48,8 +48,6 @@ const ZipCodeCombobox = ({
     }));
   }, [data]);
 
-
-
   const isDisabled = disabled || !selectedCountry;
 
   return (
@@ -131,9 +129,9 @@ const ZipCodeCombobox = ({
             </div>
           </Combobox>
           {fieldState.error && (
-            <p className="text-red-600 text-sm mt-1">
+            <div className="text-red-600 text-sm mt-1">
               {fieldState.error.message}
-            </p>
+            </div>
           )}
         </div>
       )}

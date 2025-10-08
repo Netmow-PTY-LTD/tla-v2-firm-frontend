@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import FormWrapper from "@/components/form/FormWrapper";
 import TextInput from "@/components/form/TextInput";
@@ -12,8 +12,10 @@ import ZipCodeCombobox from "@/app/(auth)/_components/register/ZipCodeCombobox";
 import CityCombobox from "@/app/(auth)/_components/register/CityCombobox";
 import CountrySelect from "@/app/(auth)/_components/register/CountrySelect";
 import FirmNameInput from "./register/FirmNameInput";
+import countries from "@/data/countries.json";
 
 export default function LawFirmRegisterStepOne() {
+  const [country, setCountry] = useState(null);
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
@@ -30,7 +32,6 @@ export default function LawFirmRegisterStepOne() {
   };
 
   const onSubmit = (data) => {
-
     dispatch(
       setFormData({
         firmData: {
@@ -52,7 +53,6 @@ export default function LawFirmRegisterStepOne() {
     dispatch(nextStep());
   };
 
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
@@ -61,7 +61,7 @@ export default function LawFirmRegisterStepOne() {
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
           <h3 className="tla-auth-title mb-3 text-center">
-             Your Law Firm Details
+            Your Law Firm Details
           </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
             Create your firm’s account to add lawyers and oversee their
@@ -73,14 +73,13 @@ export default function LawFirmRegisterStepOne() {
             schema={lawFirmRegStepOneSchema}
             defaultValues={defaultValues}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-5">
               <CountrySelect
                 name="country"
                 label="Country"
                 placeholder="Select a country"
                 triggerClassName={"w-full"}
               />
-
 
               <FirmNameInput
                 name="firmName"
@@ -93,14 +92,12 @@ export default function LawFirmRegisterStepOne() {
                 name="city"
                 label="City"
                 placeholder="Select a city"
-
               />
 
               <ZipCodeCombobox
                 name="zipCode"
                 label="Address"
                 placeholder="Select a Zipcode or Address"
-
               />
               <TextInput
                 name="email"
@@ -134,7 +131,7 @@ export default function LawFirmRegisterStepOne() {
 
             <button
               type="submit"
-              className="mt-8 w-full md:w-auto btn-auth-register bg-[#ff8f14]"
+              className="mt-8 w-full md:w-auto btn-auth-register cursor-pointer bg-[#ff8f14]"
             >
               Next
             </button>

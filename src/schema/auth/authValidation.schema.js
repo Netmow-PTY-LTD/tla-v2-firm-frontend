@@ -1,4 +1,6 @@
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { z } from "zod";
+import countries from "@/data/countries.json";
 
 export const loginValidationSchema = z.object({
   email: z.string().nonempty("is required").email("Invalid email address"),
@@ -9,98 +11,149 @@ export const loginValidationSchema = z.object({
   rememberMe: z.boolean().optional(), // checkbox is optional
 });
 
+export const lawFirmRegStepOneSchema = z
+  .object({
+    firmName: z
+      .string()
+      .min(2, "Law Firm Name must be at least 2 characters")
+      .max(100, "Law Firm Name must be less than 100 characters"),
 
+    country: z.string().min(1, "Country is required"),
+    city: z.string().min(1, "City is required"),
 
+    zipCode: z.string().min(1, "Address / Zipcode is required"),
 
-export const lawFirmRegStepOneSchema = z.object({
-  firmName: z
-    .string()
-    .min(2, "Law Firm Name must be at least 2 characters")
-    .max(100, "Law Firm Name must be less than 100 characters"),
+    phone: z
+      .string()
+      .regex(/^\+?[0-9\s-]{7,20}$/, "Invalid phone number format"),
 
-  country: z
-    .string()
-    .min(1, "Country is required"),
-  city: z
-    .string()
-    .min(1, "City is required"),
+    email: z.email("Invalid email address"),
 
-  zipCode: z
-    .string()
-    .min(1, "Address / Zipcode is required"),
+    website: z.url("Invalid website URL").optional(),
 
-  phone: z
-    .string()
-    .regex(
-      /^\+?[0-9\s-]{7,20}$/,
-      "Invalid phone number format"
-    ),
+    registrationNumber: z
+      .string()
+      .min(3, "Registration Number must be at least 3 characters")
+      .max(50, "Registration Number must be less than 50 characters"),
 
-  email: z.email("Invalid email address"),
+    yearEstablished: z
+      .string()
+      .regex(/^(19|20)\d{2}$/, "Enter a valid year (e.g. 2003)"),
+  })
+  .superRefine((data, ctx) => {
+    const { phone, country } = data;
+    console.log("Phone to validate:", phone);
+    console.log("Country for phone validation:", country);
 
+    if (!phone || !country) return;
 
-  website: z.url("Invalid website URL")
-    .optional(),
+    const countryCode = countries?.find((c) => c.countryId === country)?.code;
 
-  registrationNumber: z
-    .string()
-    .min(3, "Registration Number must be at least 3 characters")
-    .max(50, "Registration Number must be less than 50 characters"),
+    // Step 1: Clean input (remove spaces and other non-digits except '+')
+    const cleanedPhone = phone.replace(/[^\d+]/g, "");
 
-  yearEstablished: z
-    .string()
-    .regex(
-      /^(19|20)\d{2}$/,
-      "Enter a valid year (e.g. 2003)"
-    ),
-});
+    // Step 2: Check if phone number already has country code (e.g., +61 for Australia)
+    // If no country code, prepend it with the country code from the country field.
+    let parsedPhone;
+    if (cleanedPhone.startsWith("+")) {
+      parsedPhone = parsePhoneNumberFromString(cleanedPhone, countryCode);
+    } else {
+      const countryCallingCode = getCountryCallingCode(countryCode); // You may need to import a method to get the country calling code.
+      const phoneWithCountryCode = `+${countryCallingCode}${cleanedPhone}`;
+      parsedPhone = parsePhoneNumberFromString(
+        phoneWithCountryCode,
+        countryCode
+      );
+    }
 
+    // Step 3: Validate
+    if (!parsedPhone || !parsedPhone.isValid()) {
+      ctx.addIssue({
+        path: ["phone"],
+        code: z.ZodIssueCode.custom,
+        message: "Invalid phone number for selected country",
+      });
+    }
+  });
 
+// Helper function to get country calling code (example for a few countries)
+function getCountryCallingCode(country) {
+  const callingCodes = {
+    AU: "61", // Australia
+    US: "1", // United States
+    GB: "44", // United Kingdom
+    CA: "1", // Canada
+    IE: "353", // Ireland
+    ZA: "27", // South Africa
+    NZ: "64", // New Zealand
+    SG: "65", // Singapore
+    FR: "33", // France
+    DE: "49", // Germany
 
+    // Add more countries as needed
+  };
+  return callingCodes[country] || ""; // Default to an empty string if country not found
+}
 
 // -------------------- Step Two --------------------
 
-export const lawFirmRegStepTwoSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Full Name must be at least 2 characters" })
-    .max(50, { message: "Full Name must be at most 50 characters" }),
+export const lawFirmRegStepTwoSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, { message: "Full Name must be at least 2 characters" })
+      .max(50, { message: "Full Name must be at most 50 characters" }),
 
-  email: z.email({ message: "Invalid email address" }),
+    email: z.email({ message: "Invalid email address" }),
 
- password: z
-  .string()
-  .min(6, { message: "Password must be at least 6 characters" }),
-  // .regex(
-  //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-  //   { message: "Password must contain letters, numbers, and special characters" }
-  // ),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" }),
+    // .regex(
+    //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+    //   { message: "Password must contain letters, numbers, and special characters" }
+    // ),
 
+    phone: z
+      .string()
+      .min(8, { message: "Phone number must be at least 8 digits" })
+      .max(20, { message: "Phone number must be at most 20 digits" })
+      .regex(/^[\d +()-]+$/, { message: "Invalid phone number format" }),
+  })
+  .superRefine((data, ctx) => {
+    console.log("Step Two - Validating data:", ctx);
+    const { phone } = data;
+    const countryCode = ctx?.context?.countryCode;
+    console.log("Validating phone with country code:", countryCode);
 
-  phone: z
-    .string()
-    .min(8, { message: "Phone number must be at least 8 digits" })
-    .max(20, { message: "Phone number must be at most 20 digits" })
-    .regex(
-      /^[\d +()-]+$/,
-      { message: "Invalid phone number format" }
-    ),
-});
+    if (!phone || !countryCode) return;
 
+    // Step 1: Clean input (remove spaces and other non-digits except '+')
+    const cleanedPhone = phone.replace(/[^\d+]/g, "");
 
+    // Step 2: Check if phone number already has country code (e.g., +61 for Australia)
+    // If no country code, prepend it with the country code from the country field.
+    let parsedPhone;
+    if (cleanedPhone.startsWith("+")) {
+      parsedPhone = parsePhoneNumberFromString(cleanedPhone, countryCode);
+    } else {
+      const countryCallingCode = getCountryCallingCode(countryCode); // You may need to import a method to get the country calling code.
+      const phoneWithCountryCode = `+${countryCallingCode}${cleanedPhone}`;
+      parsedPhone = parsePhoneNumberFromString(
+        phoneWithCountryCode,
+        countryCode
+      );
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    // Step 3: Validate
+    if (!parsedPhone || !parsedPhone.isValid()) {
+      ctx.addIssue({
+        path: ["phone"],
+        code: z.ZodIssueCode.custom,
+        message: "Invalid phone number for selected country",
+      });
+    }
+  });
 
 // -------------------- Step There --------------------
 export const lawFirmRegStepThereSchema = z.object({
@@ -118,7 +171,3 @@ export const lawFirmRegStepThereSchema = z.object({
     .min(1, "Valid Until date is required")
     .refine((date) => !isNaN(Date.parse(date)), "Enter a valid date"),
 });
-
-
-
-

@@ -66,7 +66,7 @@ export default function LawyersList() {
 
   if (lawyers.length === 0) {
     return (
-      <div className="p-8 text-center rounded-md bg-gray-50 shadow-sm max-w-[900px] mx-auto">
+      <div className="p-8 text-center max-w-[900px] mx-auto">
         <div className="flex flex-col items-center justify-center space-y-4">
           <Users className="w-12 h-12 text-gray-400" />
           <h2 className="text-lg font-semibold text-gray-700">

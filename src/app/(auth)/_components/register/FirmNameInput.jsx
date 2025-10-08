@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -25,7 +24,13 @@ export default function FirmNameInput({
   labelClassName = "",
   textColor = "text-black",
 }) {
-  const { control, setError, clearErrors, getValues } = useFormContext();
+  const {
+    control,
+    setError,
+    clearErrors,
+    getValues,
+    formState: { errors },
+  } = useFormContext();
 
   const countryId = useWatch({ control, name: "country" });
   const firmName = useWatch({ control, name });
@@ -54,7 +59,6 @@ export default function FirmNameInput({
     checkFirmName({ firmName: debouncedFirmName, countryId })
       .unwrap()
       .then((res) => {
-    
         if (res.success) {
           setApiMessage(res?.message || "Firm name is available ✅");
           setApiError(false);
@@ -62,15 +66,26 @@ export default function FirmNameInput({
         } else {
           setApiMessage(res?.message || "Firm name is available ✅");
           setApiError(true);
-          setError(name, { message: res.message || "Firm name already taken ❌" });
+          setError(name, {
+            message: res.message || "Firm name already taken ❌",
+          });
         }
       })
       .catch((err) => {
         setApiMessage(err?.data?.message || "Something went wrong ❌");
         setApiError(true);
-        setError(name, { message: err?.data?.message || "Something went wrong ❌" });
+        setError(name, {
+          message: err?.data?.message || "Something went wrong ❌",
+        });
       });
-  }, [debouncedFirmName, countryId, checkFirmName, name, setError, clearErrors]);
+  }, [
+    debouncedFirmName,
+    countryId,
+    checkFirmName,
+    name,
+    setError,
+    clearErrors,
+  ]);
 
   return (
     <FormField
@@ -106,8 +121,14 @@ export default function FirmNameInput({
               />
             </FormControl>
 
-            <FormMessage className={apiError ? "text-red-500" : "text-green-500"}>
-              {isLoading ? "Checking firm name..." : apiMessage || ""}
+            <FormMessage
+              className={clsx(
+                apiError || errors?.[name] ? "text-red-500" : "text-green-500"
+              )}
+            >
+              {isLoading
+                ? "Checking firm name..."
+                : errors?.[name]?.message || apiMessage || ""}
             </FormMessage>
           </FormItem>
         );
@@ -115,6 +136,3 @@ export default function FirmNameInput({
     />
   );
 }
-
-
-
