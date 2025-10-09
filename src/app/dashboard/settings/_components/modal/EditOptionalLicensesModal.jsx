@@ -96,7 +96,6 @@ export default function EditOptionalLicenseModal({
     <Modal
       title="Add Core License"
       description="Add a new license to your firm"
-      buttonName="+ Add License"
       width="max-w-[600px]"
       onOpenChange={onClose}
       open={isOpen}

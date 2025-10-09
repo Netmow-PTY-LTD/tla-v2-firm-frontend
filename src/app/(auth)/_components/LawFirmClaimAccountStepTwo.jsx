@@ -11,12 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { previousStep } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
-import { CloudUpload, Download, X } from "lucide-react";
+import { CloudUpload, Download, Loader, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-export default function LawFirmClaimAccountStepTwo({ onSubmitFinal }) {
+export default function LawFirmClaimAccountStepTwo({
+  onSubmitFinal,
+  isLoading,
+}) {
   const [previews, setPreviews] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -271,17 +274,16 @@ export default function LawFirmClaimAccountStepTwo({ onSubmitFinal }) {
               <button
                 type="submit"
                 className="btn-default bg-[var(--primary-color)] flex items-center justify-center gap-2 cursor-pointer"
-                // disabled={isLoading} // optional: prevent double submit
+                disabled={isLoading} // optional: prevent double submit
               >
-                {/* {isLoading ? (
-                <>
-                  <Loader className="w-4 h-4 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                'Finish & See cases'
-              )} */}
-                Finish
+                {isLoading ? (
+                  <>
+                    <Loader className="w-4 h-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Finish"
+                )}
               </button>
             </div>
           </form>

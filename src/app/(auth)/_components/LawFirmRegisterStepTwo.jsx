@@ -9,11 +9,15 @@ import {
 } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
 import PasswordInput from "@/components/form/PasswordInput";
 import { lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
+import countries from "@/data/countries.json";
 
 export default function LawFirmRegisterStepTwo() {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData);
 
+  const countryId = formData?.firmData?.contactInfo?.country;
+  const countryCode = countries?.find((c) => c.countryId === countryId)?.code;
+  const schema = lawFirmRegStepTwoSchema(countryCode);
   // Default values from userData slice
   const defaultValues = {
     name: formData.userData.name,
@@ -37,8 +41,6 @@ export default function LawFirmRegisterStepTwo() {
     dispatch(nextStep());
   };
 
-
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
@@ -51,15 +53,17 @@ export default function LawFirmRegisterStepTwo() {
             Firm User Information
           </h3>
           <p className="tla-auth-subtitle mb-8 text-center">
-            Enter your details to create your firm user account and start using our services.
+            Enter your details to create your firm user account and start using
+            our services.
           </p>
 
           <FormWrapper
             onSubmit={onSubmit}
-            schema={lawFirmRegStepTwoSchema} // Your zod schema for user info
+            schema={schema} // Your zod schema for user info
             defaultValues={defaultValues}
+            context={{ countryCode }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-5">
               <TextInput
                 name="name"
                 label="Full Name"
@@ -86,26 +90,21 @@ export default function LawFirmRegisterStepTwo() {
             <div className="flex justify-between gap-3 mt-10">
               <button
                 type="button"
-                className="btn-default btn-outline-black"
+                className="btn-default btn-outline-black cursor-pointer"
                 onClick={() => dispatch(previousStep())}
-    
               >
                 Back
               </button>
               <button
                 type="submit"
-                className="btn-default bg-[var(--color-special)]"
-              
+                className="btn-default bg-[var(--color-special)] cursor-pointer"
               >
-              Next
+                Next
               </button>
             </div>
           </FormWrapper>
-
-
         </div>
       </div>
     </div>
-
   );
 }

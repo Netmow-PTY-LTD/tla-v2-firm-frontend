@@ -4,15 +4,23 @@ import TextInput from "@/components/form/TextInput";
 import SelectInput from "@/components/form/SelectInput";
 
 import { useDispatch, useSelector } from "react-redux";
-import { previousStep, resetRegistration, setFormData } from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
-import { lawFirmRegStepThereSchema, lawFirmRegStepTwoSchema } from "@/schema/auth/authValidation.schema";
+import {
+  previousStep,
+  resetRegistration,
+  setFormData,
+} from "@/store/firmFeatures/firmAuth/lawFirmRegistrationSlice";
+import {
+  lawFirmRegStepThereSchema,
+  lawFirmRegStepTwoSchema,
+} from "@/schema/auth/authValidation.schema";
 import { useRegisterFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { useRouter } from "next/navigation";
 import LawCertificationCombobox from "./register/LawCertificationCombobox";
+import { setUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
+import { verifyToken } from "@/helpers/verifyToken";
 
 export default function LawFirmRegisterStepThree() {
-
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.lawFirmRegistration.formData); // get previous steps
   const router = useRouter();
@@ -28,8 +36,6 @@ export default function LawFirmRegisterStepThree() {
   };
 
   const onSubmit = async (data) => {
-
-  
     try {
       // 1️ Save Step 3 data inside licenseData
       dispatch(
@@ -56,7 +62,13 @@ export default function LawFirmRegisterStepThree() {
 
       // 3️ API call to finish registration
       const res = await firmRegister(finalData).unwrap();
+      console.log("Registration Response:", res);
       if (res.success) {
+        const token = res?.token;
+        const userPayload = await verifyToken(token);
+        if (userPayload) {
+          dispatch(setUser({ user: res?.data?.user, token }));
+        }
         showSuccessToast(res?.message || "Firm registered successfully");
         dispatch(resetRegistration());
         router.push("/dashboard"); // ✅ redirect after success
@@ -64,12 +76,12 @@ export default function LawFirmRegisterStepThree() {
     } catch (error) {
       const errorMessage = error?.data?.message || "An error occurred";
       showErrorToast(errorMessage);
-      console.error("Registration failed:", error?.response?.data || error.message);
+      console.error(
+        "Registration failed:",
+        error?.response?.data || error.message
+      );
     }
   };
-
-
-
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -82,16 +94,21 @@ export default function LawFirmRegisterStepThree() {
             License Details
           </h3>
           <p className="tla-auth-subtitle mb-8 text-center text-muted">
-            Provide accurate licensing information to verify your firm’s legal credentials.
+            Provide accurate licensing information to verify your firm’s legal
+            credentials.
           </p>
           <FormWrapper
             onSubmit={onSubmit}
             schema={lawFirmRegStepThereSchema}
             defaultValues={defaultValues}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-           
-              <LawCertificationCombobox name={'certificationId'} label={'License'} placeholder="i.e. Law Firm License" countryId={countryId} />
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-5">
+              <LawCertificationCombobox
+                name={"certificationId"}
+                label={"License"}
+                placeholder="i.e. Law Firm License"
+                countryId={countryId}
+              />
 
               <TextInput
                 name="licenseNumber"
@@ -123,7 +140,7 @@ export default function LawFirmRegisterStepThree() {
             <div className="flex justify-between gap-3 mt-10">
               <button
                 type="button"
-                className="btn-default btn-outline-black"
+                className="btn-default btn-outline-black cursor-pointer"
                 onClick={() => dispatch(previousStep())}
                 disabled={isLoading} //  prevent step change while submitting
               >
@@ -131,7 +148,7 @@ export default function LawFirmRegisterStepThree() {
               </button>
               <button
                 type="submit"
-                className="btn-default bg-[var(--color-special)]"
+                className="btn-default bg-[var(--color-special)] cursor-pointer"
                 disabled={isLoading} //  disable while submitting
               >
                 {isLoading ? "Submitting..." : "Finish"}
@@ -143,4 +160,3 @@ export default function LawFirmRegisterStepThree() {
     </div>
   );
 }
-

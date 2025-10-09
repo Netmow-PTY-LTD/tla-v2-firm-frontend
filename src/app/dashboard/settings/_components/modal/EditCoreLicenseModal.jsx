@@ -54,7 +54,7 @@ export default function EditCoreLicenseModal({
       skip: !selectedLicense?._id,
     });
   // console.log("singleLicense in EditCoreLicenseModal", singleLicense);
-  const [updateLicenseAndCertification,{isLoading:updateLicenseIsLoading}] =
+  const [updateLicenseAndCertification, { isLoading: updateLicenseIsLoading }] =
     useUpdateLicenseAndCertificationMutation();
   const handleMandatoryLicenseSubmit = async (data) => {
     // console.log("Mandatory License form submitted:", data);
@@ -96,13 +96,12 @@ export default function EditCoreLicenseModal({
     <Modal
       title="Add Core License"
       description="Add a new license to your firm"
-      buttonName="+ Add License"
       width="max-w-[600px]"
       onOpenChange={onClose}
       open={isOpen}
     >
       <div className="modal-header">
-        <h4 className="text-lg font-semibold ">Edit Mandatory License</h4>
+        <h4 className="text-lg font-semibold">Edit Mandatory License</h4>
       </div>
       <FormWrapper
         onSubmit={handleMandatoryLicenseSubmit}
@@ -150,12 +149,12 @@ export default function EditCoreLicenseModal({
             className="cursor-pointer"
             onClick={onClose}
             disabled={updateLicenseIsLoading} // disable while loading
-
           >
             Cancel
           </Button>
           <Button
-            type="submit" variant={"default"}
+            type="submit"
+            variant={"default"}
             className="cursor-pointer bg-[#ff8602]"
             disabled={updateLicenseIsLoading} // disable while loading
           >
@@ -169,6 +168,3 @@ export default function EditCoreLicenseModal({
     </Modal>
   );
 }
-
-
-

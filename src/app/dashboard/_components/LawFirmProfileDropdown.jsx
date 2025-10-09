@@ -99,7 +99,7 @@ export default function LawFirmProfileDropDown({
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href={`/company-profile/${currentUser?.slug}`}
+                href={`/company-profile/${currentUser?.firmProfileId?.slug}`}
                 target="_blank"
                 className="w-full flex items-center justify-between gap-2 cursor-pointer"
               >

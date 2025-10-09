@@ -82,7 +82,10 @@ export default function LawFirmClaimAccount() {
               />
             )}
             {step === 2 && (
-              <LawFirmClaimAccountStepTwo onSubmitFinal={handleStepTwoSubmit} />
+              <LawFirmClaimAccountStepTwo
+                onSubmitFinal={handleStepTwoSubmit}
+                isLoading={isLoading}
+              />
             )}
           </div>
         </div>

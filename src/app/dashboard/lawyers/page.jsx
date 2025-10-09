@@ -66,7 +66,7 @@ export default function LawyersList() {
 
   if (lawyers.length === 0) {
     return (
-      <div className="p-8 text-center border border-dashed border-gray-300 rounded-md bg-gray-50 shadow-sm max-w-[900px] mx-auto">
+      <div className="p-8 text-center max-w-[900px] mx-auto">
         <div className="flex flex-col items-center justify-center space-y-4">
           <Users className="w-12 h-12 text-gray-400" />
           <h2 className="text-lg font-semibold text-gray-700">
@@ -83,6 +83,15 @@ export default function LawyersList() {
 
   return (
     <div className="max-w-[1200px] mx-auto">
+      <div className="mb-8 border-b border-gray-200 pb-3">
+        <h3 className="text-black font-semibold heading-lg mb-2">
+          List of Lawyers affiliated with the Firm
+        </h3>
+        <div>
+          {" "}
+          <b>Total: {lawyers?.length}</b>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {lawyers?.length > 0 &&
           lawyers?.map((lawyer) => (
