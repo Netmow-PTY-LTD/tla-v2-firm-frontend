@@ -15,11 +15,21 @@ import {
   LogIn,
   UserPlus,
   User,
+  Home,
 } from "lucide-react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { checkTokenValidity } from "@/helpers/checkTokenValidity";
 import Image from "next/image";
+import HeroHome from "@/components/home/HeroHome";
+import HomeFeatures from "@/components/home/HomeFeatures";
+import HomeListingBenefits from "@/components/home/HomeListingBenefits";
+import HomeLawFirmsList from "@/components/home/HomeLawFirmsList";
+import HomeCTA from "@/components/home/HomeCTA";
+import Footer from "@/components/home/Footer";
+import HomeFAQ from "@/components/home/HomeFAQ";
+import "@/styles/main.css";
+import HomeActionBanner from "@/components/home/HomeActionBanner";
 
 // Tailwind is available by default in this canvas preview environment.
 // This component renders a single-page landing with built-in Login/Register modals.
@@ -165,9 +175,18 @@ export default function LawListingHome() {
           </div>
         </div>
       </header>
+      <HeroHome />
+      <HomeFeatures />
+      <HomeListingBenefits />
+      <HomeActionBanner />
+      <HomeLawFirmsList />
 
+      {/* CTA */}
+      <HomeFAQ />
+      <HomeCTA />
+      <Footer />
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      {/* <section className="relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -246,10 +265,10 @@ export default function LawListingHome() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Why List */}
-      <section id="why" className="bg-gray-50 border-t">
+      {/* <section id="why" className="bg-gray-50 border-t">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">
             Why list your law firm or company here?
@@ -286,10 +305,10 @@ export default function LawListingHome() {
             </Feature>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* How It Works */}
-      <section id="how" className="bg-white">
+      {/* <section id="how" className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-10">How it works</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -339,10 +358,10 @@ export default function LawListingHome() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Feature Bullets */}
-      <section id="features" className="bg-gray-50 border-y">
+      {/* <section id="features" className="bg-gray-50 border-y">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">
             Everything you need to win more matters
@@ -368,36 +387,10 @@ export default function LawListingHome() {
             ))}
           </ul>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold">
-            Ready to list your firm?
-          </h2>
-          <p className="text-gray-600 mt-2">
-            Join top lawyers and companies growing with LawList.
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <Link
-              href="/register"
-              className="px-6 py-3 rounded-xl bg-black text-white hover:bg-black/90"
-            >
-              Create free listing
-            </Link>
-            <Link
-              href="/login"
-              className="px-6 py-3 rounded-xl border hover:bg-gray-50"
-            >
-              I already have an account
-            </Link>
-          </div>
-        </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
-      <footer className="border-t bg-gray-50">
+      {/* <footer className="border-t bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-gray-600 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-gray-700">
             <Link href="/">
@@ -428,7 +421,7 @@ export default function LawListingHome() {
           </div>
           <div>© {new Date().getFullYear()} LawList. All rights reserved.</div>
         </div>
-      </footer>
+      </footer> */}
 
       {/* Login Modal */}
       <Modal

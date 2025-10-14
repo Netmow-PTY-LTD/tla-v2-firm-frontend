@@ -307,3 +307,18 @@ h6 {
     @apply bg-background text-foreground;
   }
 }
+
+@theme {
+  --font-poppins: "Poppins", sans-serif;
+}
+
+.section-title {
+  @apply text-3xl md:text-[36px] font-bold text-[var(--color-black)] leading-[1.3] tracking-[-0.5px];
+}
+.section-subtitle {
+  @apply text-sm text-white font-bold leading-[1.7];
+}
+
+.section-paragraph {
+  @apply text-[16px] text-[var(--color-black)] leading-[1.7];
+}
