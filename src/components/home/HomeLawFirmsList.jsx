@@ -5,12 +5,12 @@ export default function HomeLawFirmsList() {
   return (
     <section className="w-full bg-white py-16 px-4 text-center">
       <div className="flex justify-center mb-4">
-        <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full">
+        <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full font-poppins">
           Law Firms List
         </span>
       </div>
 
-      <h2 className="section-title mb-12">Top Law Firms</h2>
+      <h2 className="section-title mb-12 font-poppins">Top Law Firms</h2>
 
       <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
         <div className="p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition">
@@ -22,7 +22,7 @@ export default function HomeLawFirmsList() {
                 className="w-8 h-8"
               />
             </div>
-            <h3 className="ml-4 text-[28px] font-semibold text-gray-800">
+            <h3 className="ml-4 text-[28px] font-semibold text-gray-800 font-poppins">
               Archer &amp; Co.
             </h3>
           </div>

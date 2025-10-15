@@ -6,13 +6,13 @@ export default function HeroHome() {
     <section className="bg-[url('/assets/img/hero-bg.png')] bg-cover bg-no-repeat bg-center">
       <div className="container">
         <div className="text-center px-6 h-[calc(60vh-80px)] flex flex-col items-center justify-center gap-2">
-          <h1 className="text-4xl md:text-[48px] font-semibold text-[var(--color-black)] mb-4">
+          <h1 className="text-4xl md:text-[48px] font-semibold text-[var(--color-black)] mb-4 font-poppins">
             List Your Law Firm or Business.
           </h1>
-          <h2 className="text-4xl md:text-[48px] font-semibold text-[var(--color-black)] mb-4">
+          <h2 className="text-4xl md:text-[48px] font-semibold text-[var(--color-black)] mb-4 font-poppins">
             Get More Clients, Faster.
           </h2>
-          <p className="text-[#444] text-[20px] mb-8">
+          <p className="text-[#444] text-[20px] mb-8 font-poppins">
             Reach clients actively searching for legal services
             <br className="hidden sm:block" />
             or businesses like yours.
