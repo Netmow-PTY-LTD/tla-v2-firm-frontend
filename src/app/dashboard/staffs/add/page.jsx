@@ -232,7 +232,11 @@ export default function CreateStaffPage() {
             </p>
           </div>
 
-          {permissionOptions?.length > 0 && (
+          {isLoadingPermissions ? (
+            <div className="flex justify-center">
+              <Loader2 className="h-6 w-6 text-gray-500 animate-spin mt-4" />
+            </div>
+          ) : permissionOptions?.length > 0 ? (
             <div className="flex flex-wrap gap-4">
               {permissionOptions.map((perm) => (
                 <div className="w-full md:w-[calc(50%-12px)]" key={perm.value}>
@@ -242,6 +246,10 @@ export default function CreateStaffPage() {
                   />
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <p className="text-gray-500 mt-4">No permissions available.</p>
             </div>
           )}
 

@@ -79,10 +79,10 @@ export default function HomeListingBenefits() {
                 </svg>
               </span>
             </div>
-            <h5 className="text-[18px] font-semibold text-[#444] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
+            <h5 className="text-[18px] font-semibold text-[var(--color-black)] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
               Gain visibility among potential clients
             </h5>
-            <p className="text-[#1D2B30] text-[16px] leading-[1.4]">
+            <p className="text-[#1D2B30] text-[14px] leading-[1.4]">
               Gain visibility among potential clients and showcase your law firm
               where people actively seek trusted legal help.
             </p>
@@ -161,10 +161,10 @@ export default function HomeListingBenefits() {
                 </svg>
               </span>
             </div>
-            <h5 className="text-[18px] font-semibold text-[#444] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
+            <h5 className="text-[18px] font-semibold text-[var(--color-black)] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
               Highlight your team and credentials
             </h5>
-            <p className="text-[#1D2B30] text-[16px] leading-[1.4]">
+            <p className="text-[#1D2B30] text-[14px] leading-[1.4]">
               Highlight your legal team and credentials to build client trust
               and showcase your firm’s expertise.
             </p>
@@ -222,10 +222,10 @@ export default function HomeListingBenefits() {
                 </svg>
               </span>
             </div>
-            <h5 className="text-[18px] font-semibold text-[#444] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
+            <h5 className="text-[18px] font-semibold text-[var(--color-black)] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
               Present your official company profile
             </h5>
-            <p className="text-[#1D2B30] text-[16px] leading-[1.4]">
+            <p className="text-[#1D2B30] text-[14px] leading-[1.4]">
               Present your official company profile to build credibility,
               attract clients, and showcase your firm’s strengths online.
             </p>
@@ -291,10 +291,10 @@ export default function HomeListingBenefits() {
                 </svg>
               </span>
             </div>
-            <h5 className="text-[18px] font-semibold text-[#444] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
+            <h5 className="text-[18px] font-semibold text-[var(--color-black)] mb-2 font-poppins leading-[1.4] tracking-[-1px]">
               Strengthen credibility with verified listings
             </h5>
-            <p className="text-[#1D2B30] text-[16px] leading-[1.4]">
+            <p className="text-[#1D2B30] text-[14px] leading-[1.4]">
               Strengthen your firm’s credibility with verified listings that
               build client trust and highlight authentic professional
               excellence.

@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
+/* @import "@/styles/_variables.scss";
+@import "@/styles/_animations.scss"; */
 
 :root {
   --font-poppins: "Poppins", sans-serif;
@@ -175,6 +178,16 @@ h6 {
   transition: all 0.3s ease;
 }
 
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  /* transform: rotateX(-30deg) rotateY(-45deg); */
+}
+
 .badge-name {
   color: #040e31;
   text-align: center;
@@ -311,6 +324,27 @@ h6 {
 
 @theme {
   --font-poppins: "Poppins", sans-serif;
+}
+
+.content-wrapper {
+  background: #fff;
+  border-radius: 5px;
+}
+
+.simple-editor-content {
+  max-width: 100% !important;
+  min-height: 200px;
+  border-top: 1px solid #eee;
+}
+
+.simple-editor-content .tiptap.ProseMirror {
+  padding: 20px 30px !important;
+  color: #6e6e6e;
+}
+
+.selected {
+  background-color: rgba(0, 150, 255, 0.3);
+  border-radius: 3px;
 }
 
 .section-title {

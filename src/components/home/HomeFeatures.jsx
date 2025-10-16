@@ -33,7 +33,7 @@ export default function HomeFeatures() {
               />
             </svg>
           </div>
-          <p className="text-[#444] font-medium leading-[1.4] text-[18px]">
+          <p className="text-[var(--color-black)] font-semibold leading-[1.2] text-[18px]">
             Create a professional
             <br />
             company profile
@@ -119,7 +119,7 @@ export default function HomeFeatures() {
               />
             </svg>
           </div>
-          <p className="text-[#444] font-medium leading-[1.4] text-[18px]">
+          <p className="text-[var(--color-black)] font-semibold leading-[1.2] text-[18px]">
             Add and manage staff
             <br />
             accounts
@@ -181,7 +181,7 @@ export default function HomeFeatures() {
               />
             </svg>
           </div>
-          <p className="text-[#444] font-medium leading-[1.4] text-[18px]">
+          <p className="text-[var(--color-black)] font-semibold leading-[1.2] text-[18px]">
             List practice areas and
             <br />
             contact details
@@ -235,7 +235,7 @@ export default function HomeFeatures() {
               />
             </svg>
           </div>
-          <p className="text-[#444] font-medium leading-[1.4] text-[18px]">
+          <p className="text-[var(--color-black)] font-semibold leading-[1.2] text-[18px]">
             Stay visible in the legal
             <br />
             community
