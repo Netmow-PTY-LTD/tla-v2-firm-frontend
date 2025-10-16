@@ -153,7 +153,7 @@ export default function HomeTestimonials() {
           ))}
 
           {/* Custom Navigation Buttons */}
-          <div className="flex justify-between mt-10">
+          <div className="flex justify-between mt-10 relative z-10 w-[200px]">
             <div className="flex justify-center items-center gap-3">
               <button className="swiper-button-prev-custom flex items-center justify-center w-10 h-10 bg-[var(--primary-color)] text-white rounded-full hover:bg-[var(--secondary-color)] transition-all duration-300 ease-in-out cursor-pointer">
                 <svg

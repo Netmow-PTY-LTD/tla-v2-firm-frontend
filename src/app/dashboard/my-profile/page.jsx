@@ -7,7 +7,11 @@ import AvatarUploader from "@/components/common/components/AvaterUploader";
 import TextInput from "@/components/form/TextInput";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import SelectInput from "@/components/form/SelectInput";
-import { useCurrentUserInfoQuery, useUpdateCurrentUserInfoMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import {
+  useCurrentUserInfoQuery,
+  useUpdateCurrentUserInfoMutation,
+} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { Loader } from "lucide-react";
 
 // ---------------- Schema ----------------
 const userSchema = z.object({
@@ -45,7 +49,6 @@ const userSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
   status: z.enum(["active", "inactive"], {
     errorMap: () => ({ message: "Status is required" }),
-
   }),
   // permissions: z
   //   .object({
@@ -65,8 +68,6 @@ const userSchema = z.object({
   //   .optional(),
 });
 
-
-
 const permissions = [
   { label: "View Clients", value: "view_clients" },
   { label: "Manage Cases", value: "manage_cases" },
@@ -75,8 +76,7 @@ const permissions = [
 ];
 
 export default function CreateStaffPage() {
-
-  const {data,refetch} = useCurrentUserInfoQuery();
+  const { data, refetch } = useCurrentUserInfoQuery();
 
   const defaultValues = {
     fullName: data?.data?.fullName || "",
@@ -95,11 +95,10 @@ export default function CreateStaffPage() {
     },
   };
 
-  const [updateCurrentUserInfo] = useUpdateCurrentUserInfoMutation();
-
+  const [updateCurrentUserInfo, { isLoading: isCurrentUserInfoUpdating }] =
+    useUpdateCurrentUserInfoMutation();
 
   async function onSubmit(values) {
-   
     const {
       fullName,
       designation,
@@ -108,7 +107,7 @@ export default function CreateStaffPage() {
       phone,
       status,
       permissions,
-      image
+      image,
     } = values;
     // TODO: send values to API (e.g. /api/staff)
 
@@ -122,30 +121,28 @@ export default function CreateStaffPage() {
       permissions,
     };
 
+    try {
+      const formData = new FormData();
 
-   try {
-   
-         const formData = new FormData();
-   
-         formData.append("data", JSON.stringify(payload));
+      formData.append("data", JSON.stringify(payload));
 
-         // Append image file if exists
-         if (image instanceof File) {
-           formData.append("image", image);
-         }
-  
-         const res = await updateCurrentUserInfo(formData).unwrap();
-        
-         if (res.success) {
-           showSuccessToast(res?.message || "update successfully!");
-           refetch();
-         }
-       } catch (error) {
-         console.error("Failed to update user info:", error);
-         showErrorToast(
-           "Error updating user info: " + error?.data?.message || error.error
-         );
-       }
+      // Append image file if exists
+      if (image instanceof File) {
+        formData.append("image", image);
+      }
+
+      const res = await updateCurrentUserInfo(formData).unwrap();
+
+      if (res.success) {
+        showSuccessToast(res?.message || "update successfully!");
+        refetch();
+      }
+    } catch (error) {
+      console.error("Failed to update user info:", error);
+      showErrorToast(
+        "Error updating user info: " + error?.data?.message || error.error
+      );
+    }
   }
 
   return (
@@ -181,16 +178,16 @@ export default function CreateStaffPage() {
                 placeholder="i.e. Manager, Lawyer etc"
                 textColor="text-[#4b4949]"
               />
+              <TextInput
+                name="email"
+                label="Email Address"
+                placeholder="example@example.com"
+                textColor="text-[#4b4949]"
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-            <TextInput
-              name="email"
-              label="Email Address"
-              placeholder="example@example.com"
-              textColor="text-[#4b4949]"
-            />
             <TextInput
               type="password"
               name="password"
@@ -198,29 +195,28 @@ export default function CreateStaffPage() {
               placeholder="********"
               textColor="text-[#4b4949]"
             />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
             <TextInput
               name="phone"
               label="Phone"
               placeholder="+1XXXXXXXXX"
               textColor="text-[#4b4949]"
             />
-            <SelectInput
-              name="status"
-              label="Status"
-              placeholder="Select Status"
-              textColor="text-[#4b4949]"
-              options={[
-                { label: "Active", value: "active" },
-                { label: "Inactive", value: "inactive" },
-              ]}
-            />
           </div>
           {/* <div className="border-t border-[#f2f2f2] h-1 mt-10" /> */}
           <div className="flex justify-center items-center mt-10">
-            <Button type="submit" className="cursor-pointer">
-              Save
+            <Button
+              type="submit"
+              className="cursor-pointer"
+              disabled={isCurrentUserInfoUpdating}
+            >
+              {isCurrentUserInfoUpdating ? (
+                <div className="flex items-center gap-2">
+                  <Loader className="h-4 w-4 animate-spin" />
+                  <span>Updating...</span>
+                </div>
+              ) : (
+                "Update Profile"
+              )}
             </Button>
           </div>
         </FormWrapper>
