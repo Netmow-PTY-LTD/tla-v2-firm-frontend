@@ -31,6 +31,7 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import { notifications } from "@/data/data";
 import PageLoadingSkeletons from "../_components/PageLoadingSkeletons";
+import { useGetAllNotificationsQuery } from "@/store/firmFeatures/notificationsApiService";
 
 // const {
 //   useGetNotificationsQuery,
@@ -53,6 +54,14 @@ export default function NotificationPreview() {
       setIsLoading(false);
     }, 1000);
   }, []);
+
+  const { data: notifications, isLoading: notificationsLoading } =
+    useGetAllNotificationsQuery({
+      pollingInterval: 3000,
+      skipPollingIfUnfocused: true,
+    });
+
+  console.log("notifications", notifications);
 
   const iconStyles = {
     login: { Icon: LogIn, fill: "#3B82F6" }, // Blue
@@ -85,11 +94,13 @@ export default function NotificationPreview() {
 
   // calculate paginated data
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = notifications?.slice(
+  const paginatedData = notifications?.data?.slice(
     startIndex,
     startIndex + itemsPerPage
   );
-  const totalPages = Math.ceil((notifications?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil(
+    (notifications?.data?.length || 0) / itemsPerPage
+  );
 
   const groupedData = [];
 
@@ -154,7 +165,7 @@ export default function NotificationPreview() {
 
   //console.log('data', data?.data);
 
-  if (isLoading) return <PageLoadingSkeletons />;
+  if (notificationsLoading) return <PageLoadingSkeletons />;
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
@@ -202,6 +213,26 @@ export default function NotificationPreview() {
 
                     <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
                       <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                              Sender
+                            </span>
+                            <span className="text-sm text-black font-medium">
+                              {n?.userId?.profile?.name || "Unknown"}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                              Receiver
+                            </span>
+                            <span className="text-sm text-black font-medium">
+                              {n?.toUser?.profile?.name || "Unknown"}
+                            </span>
+                          </div>
+                        </div>
+
                         <div className="text-gray-500 mb-1">
                           {n.title || ""}
                         </div>
