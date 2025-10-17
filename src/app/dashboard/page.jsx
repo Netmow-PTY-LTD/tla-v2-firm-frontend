@@ -5,7 +5,10 @@ import CompanyLocationSettings from "./_components/CompanyLocationSettings";
 import CompanyCreditStatsCard from "./_components/CompanyCreditStatsCard";
 import CompanyLawyerCountCard from "./_components/CompanyLawyerCountCard";
 import { InteractiveBarChart } from "./_components/InteractiveBarChart";
-import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
+import {
+  useGetFirmDashboardStatsQuery,
+  useGetFirmInfoQuery,
+} from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardHome() {
@@ -16,6 +19,9 @@ export default function DashboardHome() {
   } = useGetFirmInfoQuery();
 
   console.log("Company Info on Dashboard Home:", companyInfo);
+
+  const { data: dashboardStats } = useGetFirmDashboardStatsQuery();
+  console.log("Dashboard Stats:", dashboardStats);
 
   if (isCompanyInfoLoading) {
     return (
@@ -66,9 +72,9 @@ export default function DashboardHome() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 relative z-[1]">
         <CompanyLocationSettings companyInfo={companyInfo?.data} />
         <div className="space-y-4">
-          <CompanyCreditStatsCard companyInfo={companyInfo?.data} />
+          <CompanyCreditStatsCard data={dashboardStats?.data} />
 
-          <CompanyLawyerCountCard companyInfo={companyInfo?.data} />
+          <CompanyLawyerCountCard data={dashboardStats?.data} />
         </div>
       </div>
     </div>
