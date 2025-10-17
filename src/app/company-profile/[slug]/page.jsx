@@ -244,7 +244,10 @@ export default function CompanyProfile() {
             About
           </h2>
           {description && description !== "" && (
-            <p className="text-base text-[#444]">{description}</p>
+            <p
+              className="text-base text-[#444]"
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></p>
           )}
         </div>
       </section>
