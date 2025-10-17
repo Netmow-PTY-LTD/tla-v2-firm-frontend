@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function CompanyLawyerCountCard() {
+export default function CompanyLawyerCountCard({ data }) {
   return (
     <Card className="w-full shadow-sm rounded-2xl">
       {/* Header */}
@@ -23,7 +23,7 @@ export default function CompanyLawyerCountCard() {
           {/* Total */}
           <div className="flex flex-col items-center gap-1">
             <div className="flex items-center justify-center min-w-16 min-h-16 rounded-full bg-slate-900 text-white">
-              <p className="text-2xl font-bold">{0}</p>
+              <p className="text-2xl font-bold">{data?.totalLawyers || 0}</p>
             </div>
             <span className="text-sm font-medium mt-1">Total Lawyers</span>
           </div>

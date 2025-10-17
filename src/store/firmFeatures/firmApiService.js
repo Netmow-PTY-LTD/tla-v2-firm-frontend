@@ -99,6 +99,13 @@ const firmApiService = firmBaseApi.injectEndpoints({
       }),
       providesTags: ["firm"],
     }),
+    getFirmDashboardStats: builder.query({
+      query: () => ({
+        url: `/firms/dashboard/stats`,
+        method: "GET",
+      }),
+      providesTags: ["firm", "firmInfo", "stats"],
+    }),
     //claim account
     claimAccount: builder.mutation({
       query: (body) => ({
@@ -126,4 +133,5 @@ export const {
   useGetCompanyProfileBySlugQuery,
   useGetFirmBySearchQuery,
   useClaimAccountMutation,
+  useGetFirmDashboardStatsQuery,
 } = firmApiService;
