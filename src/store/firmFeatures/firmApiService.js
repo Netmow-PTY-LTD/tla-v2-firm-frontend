@@ -1,4 +1,5 @@
 import { firmBaseApi } from "@/store/baseApi/firmBaseApi";
+import { get } from "http";
 
 const firmApiService = firmBaseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -106,6 +107,15 @@ const firmApiService = firmBaseApi.injectEndpoints({
       }),
       providesTags: ["firm", "firmInfo", "stats"],
     }),
+
+    getFirmDashboardCasesStats: builder.query({
+      query: () => ({
+        url: `/firms/dashboard/firmlawyers-case/stats`,
+        method: "GET",
+      }),
+      providesTags: ["stats"],
+    }),
+
     //claim account
     claimAccount: builder.mutation({
       query: (body) => ({
@@ -134,4 +144,5 @@ export const {
   useGetFirmBySearchQuery,
   useClaimAccountMutation,
   useGetFirmDashboardStatsQuery,
+  useGetFirmDashboardCasesStatsQuery,
 } = firmApiService;
