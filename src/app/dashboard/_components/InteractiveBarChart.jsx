@@ -1,148 +1,222 @@
-"use client";
-
-import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
+import React, { useState, useMemo } from "react";
+import { BarChart, Bar, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { TrendingUp } from "lucide-react";
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useGetFirmDashboardCasesStatsQuery } from "@/store/firmFeatures/firmApiService";
 
-export const description = "An interactive bar chart";
-
+// ✅ Only using totalLeads and totalHired
 const chartConfig = {
-  views: {
-    label: "Cases",
-  },
-  totalCases: {
+  totalLeads: {
     label: "Total Cases",
     color: "var(--chart-2)",
   },
-  casesHired: {
+  totalHired: {
     label: "Cases Hired",
     color: "var(--chart-1)",
   },
 };
 
-// Dummy daily data for October 2025
-const chartData = [
-  { date: "2025-10-01", totalCases: 35, casesHired: 10 },
-  { date: "2025-10-02", totalCases: 30, casesHired: 24 },
-  { date: "2025-10-03", totalCases: 36, casesHired: 21 },
-  { date: "2025-10-04", totalCases: 30, casesHired: 21 },
-  { date: "2025-10-05", totalCases: 29, casesHired: 20 },
-  { date: "2025-10-06", totalCases: 22, casesHired: 8 },
-  { date: "2025-10-07", totalCases: 35, casesHired: 14 },
-  { date: "2025-10-08", totalCases: 31, casesHired: 23 },
-  { date: "2025-10-09", totalCases: 19, casesHired: 14 },
-  { date: "2025-10-10", totalCases: 24, casesHired: 18 },
-  { date: "2025-10-11", totalCases: 28, casesHired: 20 },
-  { date: "2025-10-12", totalCases: 33, casesHired: 17 },
-  { date: "2025-10-13", totalCases: 27, casesHired: 12 },
-  { date: "2025-10-14", totalCases: 34, casesHired: 19 },
-  { date: "2025-10-15", totalCases: 25, casesHired: 14 },
-  { date: "2025-10-16", totalCases: 37, casesHired: 28 },
-  { date: "2025-10-17", totalCases: 32, casesHired: 16 },
-  { date: "2025-10-18", totalCases: 26, casesHired: 15 },
-  { date: "2025-10-19", totalCases: 38, casesHired: 22 },
-  { date: "2025-10-20", totalCases: 21, casesHired: 12 },
-  { date: "2025-10-21", totalCases: 33, casesHired: 26 },
-  { date: "2025-10-22", totalCases: 29, casesHired: 17 },
-  { date: "2025-10-23", totalCases: 31, casesHired: 15 },
-  { date: "2025-10-24", totalCases: 36, casesHired: 19 },
-  { date: "2025-10-25", totalCases: 28, casesHired: 13 },
-  { date: "2025-10-26", totalCases: 34, casesHired: 25 },
-  { date: "2025-10-27", totalCases: 27, casesHired: 18 },
-  { date: "2025-10-28", totalCases: 39, casesHired: 21 },
-  { date: "2025-10-29", totalCases: 23, casesHired: 14 },
-  { date: "2025-10-30", totalCases: 30, casesHired: 20 },
-  { date: "2025-10-31", totalCases: 32, casesHired: 18 },
+const FILTERS = [
+  "Yearly",
+  "6 Months",
+  "3 Months",
+  "Monthly",
+  "15 Days",
+  "7 Days",
 ];
 
-export function InteractiveBarChart() {
-  const [activeChart, setActiveChart] = React.useState("totalCases");
+const FilterType = {
+  Yearly: "yearly",
+  "6 Months": "six-months",
+  "3 Months": "three-months",
+  Monthly: "monthly",
+  "15 Days": "fifteen-days",
+  "7 Days": "seven-days",
+};
 
-  const total = React.useMemo(
-    () => ({
-      totalCases: chartData.reduce((acc, curr) => acc + curr.totalCases, 0),
-      casesHired: chartData.reduce((acc, curr) => acc + curr.casesHired, 0),
-    }),
-    []
+export default function InteractiveBarChart() {
+  const [filter, setFilter] = useState("Yearly");
+  const { data: barChartData } = useGetFirmDashboardCasesStatsQuery(
+    FilterType[filter]
   );
 
+  const today = new Date();
+
+  const chartData = useMemo(() => {
+    if (!barChartData?.data) return [];
+
+    let data = [...barChartData.data];
+
+    // Clean and normalize values
+    data = data.map((item) => {
+      const cleaned = { ...item };
+      Object.keys(chartConfig).forEach((key) => {
+        cleaned[key] = Math.abs(item[key] || 0);
+      });
+      return cleaned;
+    });
+
+    const result = [];
+
+    // Handle daily filters
+    if (["Monthly", "15 Days", "7 Days"].includes(filter)) {
+      let start = new Date(today);
+      if (filter === "Monthly") start.setDate(today.getDate() - 29);
+      if (filter === "15 Days") start.setDate(today.getDate() - 14);
+      if (filter === "7 Days") start.setDate(today.getDate() - 6);
+
+      const filled = [];
+      const current = new Date(start);
+
+      while (current <= today) {
+        const dateStr = current.toISOString().split("T")[0];
+        const existing = data.find((d) => d.date === dateStr);
+
+        filled.push(
+          existing || {
+            date: dateStr,
+            totalLeads: 0,
+            totalHired: 0,
+          }
+        );
+
+        current.setDate(current.getDate() + 1);
+      }
+
+      return filled;
+    }
+
+    // Handle monthly filters (Yearly, 6 Months, 3 Months)
+    if (["Yearly", "6 Months", "3 Months"].includes(filter)) {
+      const monthCount = {
+        Yearly: 12,
+        "6 Months": 6,
+        "3 Months": 3,
+      }[filter];
+
+      const grouped = {};
+
+      // Step 1: Group data into months
+      data.forEach((item) => {
+        const d = new Date(item.date);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}`; // "YYYY-MM"
+        if (!grouped[key]) {
+          grouped[key] = { date: key, totalLeads: 0, totalHired: 0 };
+        }
+
+        grouped[key].totalLeads += item.totalLeads || 0;
+        grouped[key].totalHired += item.totalHired || 0;
+      });
+
+      // Step 2: Fill missing months
+      const filled = [];
+      const current = new Date(today);
+      current.setDate(1); // set to first day of the current month
+      current.setMonth(current.getMonth() - (monthCount - 1)); // go back (N - 1) months
+
+      for (let i = 0; i < monthCount; i++) {
+        const key = `${current.getFullYear()}-${String(
+          current.getMonth() + 1
+        ).padStart(2, "0")}`;
+
+        filled.push(
+          grouped[key] || {
+            date: key,
+            totalLeads: 0,
+            totalHired: 0,
+          }
+        );
+
+        current.setMonth(current.getMonth() + 1); // move forward by 1 month
+      }
+
+      return filled;
+    }
+
+    return data;
+  }, [barChartData, filter]);
+
   return (
-    <Card className="py-0">
-      <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
-          <CardTitle>Daily Case Statistics</CardTitle>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+        <div>
+          <CardTitle>Case Overview</CardTitle>
           <CardDescription>
-            Showing total cases and hired cases for October 2025
+            Showing <b>{filter.toLowerCase()}</b> statistics
           </CardDescription>
         </div>
-        <div className="flex">
-          {["totalCases", "casesHired"].map((key) => {
-            const chart = key;
-            return (
-              <button
-                key={chart}
-                data-active={activeChart === chart}
-                className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6 cursor-pointer flex-shrink-0"
-                onClick={() => setActiveChart(chart)}
-              >
-                <span className="text-muted-foreground text-xs">
-                  {chartConfig[chart].label}
-                </span>
-                <span className="text-lg leading-none font-bold sm:text-3xl">
-                  {total[key].toLocaleString()}
-                </span>
-              </button>
-            );
-          })}
+        <div className="w-[200px] pb-4 flex justify-end">
+          <Select value={filter} onValueChange={setFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Range" />
+            </SelectTrigger>
+            <SelectContent>
+              {FILTERS.map((f) => (
+                <SelectItem key={f} value={f}>
+                  {f}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
+
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
           <BarChart
             accessibilityLayer
             data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+            margin={{ left: 12, right: 12 }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                });
+                const [year, month] = value.split("-");
+                const date = new Date(`${year}-${month}-01`);
+                return date.toLocaleString("en-US", { month: "short" }); // e.g., "Oct"
               }}
             />
+
             <ChartTooltip
+              cursor={false}
               content={
                 <ChartTooltipContent
-                  className="w-[150px]"
-                  nameKey="cases"
+                  className="w-[250px]"
+                  indicator="dot"
                   labelFormatter={(value) => {
+                    if (["Yearly", "6 Months", "3 Months"].includes(filter)) {
+                      const [year, month] = value.split("-");
+                      const date = new Date(`${year}-${month}-01`);
+                      return date.toLocaleString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                      });
+                    }
+
+                    // Daily formats
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "long",
                       day: "numeric",
@@ -152,10 +226,33 @@ export function InteractiveBarChart() {
                 />
               }
             />
-            <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+            {Object.keys(chartConfig).map((key) => (
+              <Bar
+                key={key}
+                dataKey={key}
+                fill={chartConfig[key].color}
+                name={chartConfig[key].label}
+              />
+            ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
+
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 leading-none font-medium">
+          Trending up <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="text-muted-foreground leading-none">
+          Showing data for last{" "}
+          <b>
+            {filter === "Yearly"
+              ? "year"
+              : filter === "Monthly"
+              ? "month"
+              : filter}
+          </b>
+        </div>
+      </CardFooter>
     </Card>
   );
 }
