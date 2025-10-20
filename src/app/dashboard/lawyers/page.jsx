@@ -20,7 +20,7 @@ export default function LawyersList() {
     isError,
   } = useGetFirmInfoQuery();
 
-  console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
+  //console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
 
   const lawyers = companyInfo?.data?.lawyers || [];
 

@@ -4,12 +4,12 @@ import CompanyProfileCard from "./_components/CompanyProfileCard";
 import CompanyLocationSettings from "./_components/CompanyLocationSettings";
 import CompanyCreditStatsCard from "./_components/CompanyCreditStatsCard";
 import CompanyLawyerCountCard from "./_components/CompanyLawyerCountCard";
-import { InteractiveBarChart } from "./_components/InteractiveBarChart";
 import {
   useGetFirmDashboardStatsQuery,
   useGetFirmInfoQuery,
 } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
+import InteractiveBarChart from "./_components/InteractiveBarChart";
 
 export default function DashboardHome() {
   const {
@@ -18,10 +18,10 @@ export default function DashboardHome() {
     isError,
   } = useGetFirmInfoQuery();
 
-  console.log("Company Info on Dashboard Home:", companyInfo);
+  //console.log("Company Info on Dashboard Home:", companyInfo);
 
   const { data: dashboardStats } = useGetFirmDashboardStatsQuery();
-  console.log("Dashboard Stats:", dashboardStats);
+  //console.log("Dashboard Stats:", dashboardStats);
 
   if (isCompanyInfoLoading) {
     return (
