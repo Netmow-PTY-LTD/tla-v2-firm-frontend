@@ -1,0 +1,146 @@
+[
+  {
+    "_id": "68dd0d61345313fc1d0caa57",
+    "name": "Dashboard",
+    "slug": "dashboard",
+    "path": "/dashboard"
+  },
+  {
+    "_id": "68dcef38fd266a3ebef81f54",
+    "name": "List of Staff",
+    "slug": "list-of-staff",
+    "path": "/dashboard/staffs/list"
+  },
+  {
+    "_id": "68df9182dd2be6e832620be4",
+    "name": "Add New Staff",
+    "slug": "add-new-staff",
+    "path": "/dashboard/staffs/add"
+  },
+  {
+    "_id": "68df9190dd2be6e832620be9",
+    "name": "Edit Staff",
+    "slug": "edit-staff",
+    "path": "/dashboard/staffs/edit/:id"
+  },
+  {
+    "_id": "68df91addd2be6e832620bee",
+    "name": "View Lawyer List",
+    "slug": "view-lawyer-list",
+    "path": "/dashboard/lawyers"
+  },
+  {
+    "_id": "68df91bedd2be6e832620bf3",
+    "name": "View Single Lawyer Details",
+    "slug": "view-single-lawyer-details",
+    "path": "/dashboard/lawyers/:slug"
+  },
+  {
+    "_id": "68df91f0dd2be6e832620bfe",
+    "name": "View Lawyer Requests",
+    "slug": "view-lawyer-requests",
+    "path": "/dashboard/lawyers/requests"
+  },
+  {
+    "_id": "68df921fdd2be6e832620c03",
+    "name": "Manage Lawyer Requests",
+    "slug": "manage-lawyer-requests",
+    "path": "/dashboard/lawyers/requests/manage"
+  },
+  {
+    "_id": "68df9236dd2be6e832620c08",
+    "name": "View Notifications",
+    "slug": "view-notifications",
+    "path": "/dashboard/notifications"
+  },
+  {
+    "_id": "68df9263dd2be6e832620c2b",
+    "name": "View Company Details",
+    "slug": "view-company-details",
+    "path": "/dashboard/company"
+  },
+  {
+    "_id": "68df9271dd2be6e832620c30",
+    "name": "Update Company Details",
+    "slug": "update-company-details",
+    "path": "/dashboard/company/edit"
+  },
+  {
+    "_id": "68df928cdd2be6e832620c35",
+    "name": "View License & Certificates",
+    "slug": "view-license-certificates",
+    "path": "/dashboard/licenses"
+  },
+  {
+    "_id": "68df9297dd2be6e832620c3a",
+    "name": "Update License & Certificates",
+    "slug": "update-license-certificates",
+    "path": "/dashboard/licenses/edit/:id"
+  },
+  {
+    "_id": "68df92c7dd2be6e832620c44",
+    "name": "Add License & Certificate",
+    "slug": "add-license-certificate",
+    "path": "/dashboard/licenses/add"
+  },
+  {
+    "_id": "68df92b2dd2be6e832620c3f",
+    "name": "View Managing Partner",
+    "slug": "view-managing-partner",
+    "path": "/dashboard/managing-partner"
+  },
+  {
+    "_id": "68df92d7dd2be6e832620c49",
+    "name": "Update Managing Partner",
+    "slug": "update-managing-partner",
+    "path": "/dashboard/managing-partner/edit/:id"
+  },
+  {
+    "_id": "68df92e7dd2be6e832620c4e",
+    "name": "Add New Managing Partner",
+    "slug": "add-new-managing-partner",
+    "path": "/dashboard/managing-partner/add"
+  },
+  {
+    "_id": "68df9305dd2be6e832620c53",
+    "name": "View Billing & Tax",
+    "slug": "view-billing-tax",
+    "path": "/dashboard/billing-tax"
+  },
+  {
+    "_id": "68df9310dd2be6e832620c58",
+    "name": "Update Billing & Tax",
+    "slug": "update-billing-tax",
+    "path": "/dashboard/billing-tax/edit"
+  },
+  {
+    "_id": "68df933add2be6e832620c5d",
+    "name": "View Photos & Videos",
+    "slug": "view-photos-videos",
+    "path": "/dashboard/media"
+  },
+  {
+    "_id": "68df9350dd2be6e832620c62",
+    "name": "View Other Office Locations",
+    "slug": "view-other-office-locations",
+    "path": "/dashboard/locations"
+  },
+  {
+    "_id": "68df939fdd2be6e832620c79",
+    "name": "Add New Office Location",
+    "slug": "add-new-office-location",
+    "path": "/dashboard/locations/add"
+  },
+  {
+    "_id": "68df9424dd2be6e832620c7d",
+    "name": "Update Office Locations",
+    "slug": "update-office-locations",
+    "path": "/dashboard/locations/edit/:id"
+  },
+  {
+    "_id": "68e5e9c11db35236795f3993",
+    "name": "Lawyer Panel Access Permission",
+    "slug": "lawyer-panel-access-permission",
+    "path": "/dashboard/lawyer-permission"
+  }
+]
