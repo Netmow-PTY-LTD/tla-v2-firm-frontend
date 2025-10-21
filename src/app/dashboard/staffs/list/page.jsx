@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, ShieldOff, Trash2 } from "lucide-react";
 import { StaffDataTable } from "../../_components/StaffDataTable";
 
 import { Button } from "@/components/ui/button";
@@ -19,11 +19,19 @@ import {
 } from "@/store/firmFeatures/staff/staffApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSelector } from "react-redux";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
 
 const pageSizeOptions = [5, 10, 20];
 
 export default function StaffsList() {
   const [pageSize, setPageSize] = useState(pageSizeOptions[0]);
+
+  const pageId = permissions?.find((perm) => perm.slug === "list-of-staff")._id;
+
+  const currentUser = useSelector((state) => state.auth.user);
+  console.log("Current User from Redux:", currentUser);
 
   const {
     data: staffList,
@@ -225,6 +233,20 @@ export default function StaffsList() {
       </div>
     );
   }
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.role === "staff"
+      ? currentUser?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
+
   return (
     <div className="max-w-[1200px] mx-auto bg-white p-6 rounded-lg shadow-sm">
       <h2 className="text-black font-semibold heading-lg mb-6">

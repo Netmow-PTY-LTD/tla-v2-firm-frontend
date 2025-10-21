@@ -12,8 +12,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSelector } from "react-redux";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
 
 export default function LawyersList() {
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "view-lawyer-list"
+  )._id;
+
+  console.log("Page ID for Lawyers List:", pageId);
+  const currentUser = useSelector((state) => state.auth.user);
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
@@ -86,6 +95,19 @@ export default function LawyersList() {
       month: "short",
       day: "numeric",
     });
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.role === "staff"
+      ? currentUser?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
 
   return (
     <div className="max-w-[1200px] mx-auto">
