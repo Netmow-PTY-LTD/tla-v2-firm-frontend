@@ -12,17 +12,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSelector } from "react-redux";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawyersList() {
   const pageId = permissions?.find(
     (perm) => perm.slug === "view-lawyer-list"
   )._id;
 
-  console.log("Page ID for Lawyers List:", pageId);
-  const currentUser = useSelector((state) => state.auth.user);
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
@@ -98,8 +98,8 @@ export default function LawyersList() {
 
   // ✅ Apply page access control only for 'staff' role
   const hasPageAccess =
-    currentUser?.role === "staff"
-      ? currentUser?.permissions?.some((perm) => {
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
           const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
           return idMatch && perm?.permission === true;
         })
@@ -108,6 +108,19 @@ export default function LawyersList() {
   if (!hasPageAccess) {
     return <AccessDenied />;
   }
+
+  const loginAccessId = permissions?.find(
+    (perm) => perm.slug === "you-are-permitted-to-log-in-to-the-lawyer-panel"
+  )._id;
+
+  const hasLoginAsLawyerPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
+          return idMatch && perm?.permission === true;
+        })
+      : false;
 
   return (
     <div className="max-w-[1200px] mx-auto">
@@ -181,16 +194,21 @@ export default function LawyersList() {
                           <Trash2 className="w-4 h-4" />
                           Delete
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
-                          <Link
-                            href={`/dashboard/lawyers/edit/${lawyer.slug}`}
-                            className="flex gap-2"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            Login
-                          </Link>
-                        </DropdownMenuItem>
+
+                        {hasLoginAsLawyerPermissions && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
+                              <Link
+                                href={`/dashboard/lawyers/login/${lawyer.slug}`}
+                                className="flex gap-2"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Login
+                              </Link>
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

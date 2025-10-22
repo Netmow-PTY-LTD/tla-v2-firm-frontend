@@ -13,14 +13,26 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import SelectInput from "@/components/form/SelectInput";
 import countries from "@/data/countries.json";
+import permissions from "@/data/permissions";
 
-export default function BillingAndTax() {
+export default function BillingAndTax({ currentUser }) {
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "update-billing-tax"
+  )._id;
+
+  const hasPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
     refetch: refetchCompanyInfo,
   } = useGetFirmInfoQuery();
-
 
   const initialValues = useMemo(() => {
     return {
@@ -132,10 +144,16 @@ export default function BillingAndTax() {
           />
         </div>
 
-        <div className="border-t border-white mt-6" />
-
         {/* Footer Buttons */}
-        <BillingTaxFormAction isLoading={isUpdatingFirmInfoLoading} initialValues={initialValues} />
+        {hasPermissions && (
+          <>
+            <div className="border-t border-white mt-6" />
+            <BillingTaxFormAction
+              isLoading={isUpdatingFirmInfoLoading}
+              initialValues={initialValues}
+            />
+          </>
+        )}
       </FormWrapper>
     </div>
   );

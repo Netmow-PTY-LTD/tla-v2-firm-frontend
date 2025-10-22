@@ -12,11 +12,39 @@ import {
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import EditLocationModal from "./_components/EditLocationModal";
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
+import permissions from "@/data/permissions";
 
-export default function Locations() {
+export default function Locations({ currentUser }) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [openModalId, setOpenModalId] = useState(null);
+
+  const addLocationId = permissions?.find(
+    (perm) => perm.slug === "add-new-office-location"
+  )._id;
+
+  const hasAddPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            perm?.pageId?._id === addLocationId || perm?._id === addLocationId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
+  const editLocationId = permissions?.find(
+    (perm) => perm.slug === "update-office-locations"
+  )._id;
+
+  const hasEditPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            perm?.pageId?._id === editLocationId ||
+            perm?._id === editLocationId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
 
   const handleEditModalOpen = (location) => {
     setEditModalOpen(true);
@@ -56,7 +84,9 @@ export default function Locations() {
             Add and manage your office or branch locations with map details.
           </p>
         </div>
-        <AddLocationModal refetchLocations={refetchLocations} />
+        {hasAddPermissions && (
+          <AddLocationModal refetchLocations={refetchLocations} />
+        )}
       </div>
 
       {/* Locations List */}
@@ -71,32 +101,34 @@ export default function Locations() {
             <Card key={loc?._id} className="shadow-md">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{loc?.name}</CardTitle>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleEditModalOpen(loc)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <ConfirmationModal
-                    onConfirm={() => handleDelete(loc?._id)}
-                    open={openModalId === loc?._id}
-                    onOpenChange={(isOpen) =>
-                      setOpenModalId(isOpen ? loc?._id : null)
-                    }
-                    description="Do you want to delete this location?"
-                    trigger={
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => setOpenModalId(loc?._id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    }
-                  />
-                </div>
+                {hasEditPermissions && (
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleEditModalOpen(loc)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <ConfirmationModal
+                      onConfirm={() => handleDelete(loc?._id)}
+                      open={openModalId === loc?._id}
+                      onOpenChange={(isOpen) =>
+                        setOpenModalId(isOpen ? loc?._id : null)
+                      }
+                      description="Do you want to delete this location?"
+                      trigger={
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => setOpenModalId(loc?._id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      }
+                    />
+                  </div>
+                )}
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-2">

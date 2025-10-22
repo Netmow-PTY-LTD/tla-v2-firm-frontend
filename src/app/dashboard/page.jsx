@@ -10,8 +10,17 @@ import {
 } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
 import InteractiveBarChart from "./_components/InteractiveBarChart";
+import permissions from "@/data/permissions";
+import AccessDenied from "@/components/AccessDenied";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function DashboardHome() {
+  const pageId = permissions?.find((perm) => perm.slug === "dashboard")._id;
+
+  const { data: currentUser } = useCurrentUserInfoQuery();
+
+  //console.log("Current User on Dashboard Home:", currentUser);
+
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
@@ -60,6 +69,18 @@ export default function DashboardHome() {
         </div>
       </div>
     );
+  }
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
   }
   return (
     <div className=" max-w-[1200px] mx-auto relative z-0">

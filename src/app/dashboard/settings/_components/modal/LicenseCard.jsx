@@ -2,8 +2,10 @@ import { ConfirmationModal } from "@/components/common/components/ConfirmationMo
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { Button } from "@/components/ui/button";
 import { useDeleteLicenseAndCertificationMutation } from "@/store/firmFeatures/certificateLicensesApiService";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { Edit, Trash2 } from "lucide-react";
 import React, { useState } from "react";
+import permissions from "@/data/permissions";
 
 export default function LicenseCard({
   license,
@@ -11,6 +13,22 @@ export default function LicenseCard({
   refetchLicenses,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
+
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "update-license-certificates"
+  )._id;
+
+  const hasPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
   const [deleteLicense] = useDeleteLicenseAndCertificationMutation();
 
   const handleDeleteLicense = async (licenseId) => {
@@ -53,23 +71,27 @@ export default function LicenseCard({
           </div>
         </div>
         <div className="flex gap-2">
-          <button
-            className="text-blue-500 hover:text-blue-700 cursor-pointer"
-            onClick={() => handleOpenEditCoreLicenseModal(license)}
-          >
-            <Edit size={18} />
-          </button>
-          <ConfirmationModal
-            onConfirm={() => handleDeleteLicense(license?._id)}
-            open={isOpen}
-            onOpenChange={setIsOpen}
-            description="Do you want to delete your Legal Certifications?"
-            trigger={
-              <button className="text-red-500 hover:text-red-700 cursor-pointer">
-                <Trash2 size={18} />
-              </button>
-            }
-          />
+          {hasPermissions && (
+            <button
+              className="text-blue-500 hover:text-blue-700 cursor-pointer"
+              onClick={() => handleOpenEditCoreLicenseModal(license)}
+            >
+              <Edit size={18} />
+            </button>
+          )}
+          {hasPermissions && (
+            <ConfirmationModal
+              onConfirm={() => handleDeleteLicense(license?._id)}
+              open={isOpen}
+              onOpenChange={setIsOpen}
+              description="Do you want to delete your Legal Certifications?"
+              trigger={
+                <button className="text-red-500 hover:text-red-700 cursor-pointer">
+                  <Trash2 size={18} />
+                </button>
+              }
+            />
+          )}
         </div>
       </div>
     </div>
