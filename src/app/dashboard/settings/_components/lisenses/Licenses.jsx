@@ -15,6 +15,8 @@ import { is } from "zod/v4/locales";
 import EditCoreLicenseModal from "../modal/EditCoreLicenseModal";
 import EditOptionalLicenseModal from "../modal/EditOptionalLicensesModal";
 import LicenseCard from "../modal/LicenseCard";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import permissions from "@/data/permissions";
 
 const licenseSchema = z.object({
   certificationId: z.string().min(1, { message: "*Required" }),
@@ -25,6 +27,21 @@ const licenseSchema = z.object({
 });
 
 export default function License() {
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
+
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "add-license-certificate"
+  )._id;
+
+  const hasPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
   const [isEditCoreLicenseModalOpen, setIsEditCoreLicenseModalOpen] =
     useState(false);
   const [selectedLicense, setSelectedLicense] = useState(null);
@@ -42,10 +59,6 @@ export default function License() {
     setIsEditOptionalLicenseModalOpen(true);
   };
 
-  const handleDeleteMandatoryLicense = (licenseId) => {
-    console.log("Delete mandatory license with ID:", licenseId);
-  };
-
   const initialValues = {
     certificationId: "",
     licenseNumber: "",
@@ -59,7 +72,7 @@ export default function License() {
     refetch: refetchLicenses,
   } = useGetLicensesAndCertificationsListQuery();
 
-  console.log("licensesList", licensesList);
+  //console.log("licensesList", licensesList);
 
   const mandatoryLicenses = licensesList?.data?.filter(
     (item) => item.type === "mandatory"
@@ -81,11 +94,13 @@ export default function License() {
           </p>
         </div>
         <div className="flex justify-end">
-          <AddCoreLicenseModal
-            defaultValues={initialValues}
-            schema={licenseSchema}
-            refetchLicenses={refetchLicenses}
-          />
+          {hasPermissions && (
+            <AddCoreLicenseModal
+              defaultValues={initialValues}
+              schema={licenseSchema}
+              refetchLicenses={refetchLicenses}
+            />
+          )}
         </div>
       </div>
       {/* Mandatory Licenses */}
@@ -145,11 +160,13 @@ export default function License() {
           </p>
         </div>
         <div className="flex justify-end">
-          <AddOptionalLicenseModal
-            defaultValues={initialValues}
-            schema={licenseSchema}
-            refetchLicenses={refetchLicenses}
-          />
+          {hasPermissions && (
+            <AddOptionalLicenseModal
+              defaultValues={initialValues}
+              schema={licenseSchema}
+              refetchLicenses={refetchLicenses}
+            />
+          )}
         </div>
       </div>
 
@@ -197,8 +214,6 @@ export default function License() {
           selectedLicense={selectedOptionalLicense}
         />
       )}
-
-
     </div>
   );
 }

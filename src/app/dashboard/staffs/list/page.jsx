@@ -241,7 +241,7 @@ export default function StaffsList() {
           const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
           return idMatch && perm?.permission === true;
         })
-      : true; // other roles always have access
+      : true;
 
   if (!hasPageAccess) {
     return <AccessDenied />;

@@ -12,6 +12,7 @@ export default function PartnerList({
   handleEditClick,
   refetchPartners,
   firmId,
+  hasUpdatePermissions,
 }) {
   return (
     <div className="mt-6 space-y-4">
@@ -23,6 +24,7 @@ export default function PartnerList({
             handleEditClick={handleEditClick}
             refetchPartners={refetchPartners}
             firmId={firmId}
+            hasUpdatePermissions={hasUpdatePermissions}
           />
         ))
       ) : (
@@ -34,7 +36,13 @@ export default function PartnerList({
   );
 }
 
-const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
+const PartnerCard = ({
+  partner,
+  handleEditClick,
+  refetchPartners,
+  firmId,
+  hasUpdatePermissions,
+}) => {
   const { name, position, email, phone } = partner;
   const [isOpen, setIsOpen] = useState(false);
   const [deletePartner] = useDeletePartnerMutation();
@@ -71,24 +79,28 @@ const PartnerCard = ({ partner, handleEditClick, refetchPartners, firmId }) => {
           </div>
         </div>
         <div className="flex gap-2">
-          <button
-            className="text-blue-500 hover:text-blue-700 cursor-pointer"
-            onClick={() => handleEditClick(partner)}
-          >
-            <Edit size={18} />
-          </button>
-
-          <ConfirmationModal
-            onConfirm={() => handleDeletePartner(partner?._id)}
-            open={isOpen}
-            onOpenChange={setIsOpen}
-            description="Do you want to delete your Partner?"
-            trigger={
-              <button className="text-red-500 hover:text-red-700 cursor-pointer">
-                <Trash2 size={18} />
+          {hasUpdatePermissions && (
+            <>
+              <button
+                className="text-blue-500 hover:text-blue-700 cursor-pointer"
+                onClick={() => handleEditClick(partner)}
+              >
+                <Edit size={18} />
               </button>
-            }
-          />
+
+              <ConfirmationModal
+                onConfirm={() => handleDeletePartner(partner?._id)}
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                description="Do you want to delete your Partner?"
+                trigger={
+                  <button className="text-red-500 hover:text-red-700 cursor-pointer">
+                    <Trash2 size={18} />
+                  </button>
+                }
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

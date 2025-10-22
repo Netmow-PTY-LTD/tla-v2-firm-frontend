@@ -13,10 +13,20 @@ import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
 
 export default function Page() {
   const params = useParams();
-  const currentUserId = useSelector(selectCurrentUser)?._id;
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
+
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "can-accept-or-reject-lawyer-list"
+  )._id;
+
+  const currentUserId = currentUser?.data?._id;
   const { data, isLoading, isError } = useGetSingleLawyerRequestQuery(
     params.requestId,
     { skip: !params.requestId }
@@ -83,6 +93,15 @@ export default function Page() {
   const request = data.data;
   const { lawyerId, firmProfileId, message, status, createdAt, updatedAt } =
     request;
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md space-y-6">
@@ -180,7 +199,7 @@ export default function Page() {
       </div>
 
       {/* Action Buttons */}
-      {status === "pending" && (
+      {status === "pending" && hasPermissions && (
         <div className="border-t border-gray-200 pt-4 flex flex-col sm:flex-row gap-3">
           <Button
             className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"

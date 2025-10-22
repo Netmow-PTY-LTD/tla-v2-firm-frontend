@@ -4,25 +4,59 @@ import { useState } from "react";
 
 import AddPartnerModal from "./components/AddPartnerModal";
 import PartnerList from "./components/PartnerList";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import {
+  useCurrentUserInfoQuery,
+  useGetFirmUserInfoQuery,
+} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { useGetPartnersListQuery } from "@/store/firmFeatures/partner/partnerApiService";
 import EditPartnerModal from "./components/EditPartnerModal";
-
-
+import permissions from "@/data/permissions";
 
 export default function ManagingPartner() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState(null);
 
   const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
+
+  console.log("currentUser in Firm", currentUser);
+
+  const addPartnerId = permissions?.find(
+    (perm) => perm.slug === "add-new-managing-partner"
+  )._id;
+
+  const hasAddPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            perm?.pageId?._id === addPartnerId || perm?._id === addPartnerId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
+  const updatePartnerId = permissions?.find(
+    (perm) => perm.slug === "update-managing-partner"
+  )._id;
+
+  const hasUpdatePermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            perm?.pageId?._id === updatePartnerId ||
+            perm?._id === updatePartnerId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
+  const { data: companyInfo, isLoading: isCompanyInfoLoading } =
     useGetFirmUserInfoQuery();
 
   const {
     data: partners,
     isLoading: isPartnersLoading,
     refetch: refetchPartners,
-  } = useGetPartnersListQuery(currentUser?.data?._id, {
-    skip: isCurrentUserLoading,
+  } = useGetPartnersListQuery(companyInfo?.data?._id, {
+    skip: isCompanyInfoLoading,
   });
 
   //console.log("Partners data in managing partner page", partners);
@@ -44,20 +78,25 @@ export default function ManagingPartner() {
           </p>
         </div>
         {/*  Partners modal */}
-        <AddPartnerModal refetchPartners={refetchPartners} />
+        {hasAddPermissions && (
+          <AddPartnerModal refetchPartners={refetchPartners} />
+        )}
       </div>
       <PartnerList
         partners={partners?.data || []}
         handleEditClick={handleEditClick}
         refetchPartners={refetchPartners}
-        firmId={currentUser?.data?._id}
+        firmId={companyInfo?.data?._id}
+        hasUpdatePermissions={hasUpdatePermissions}
       />
-      <EditPartnerModal
-        open={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        selectedPartner={selectedPartner}
-        refetchPartners={refetchPartners}
-      />
+      {hasUpdatePermissions && (
+        <EditPartnerModal
+          open={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          selectedPartner={selectedPartner}
+          refetchPartners={refetchPartners}
+        />
+      )}
     </div>
   );
 }
