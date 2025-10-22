@@ -11,7 +11,9 @@ import {
   useCurrentUserInfoQuery,
   useUpdateCurrentUserInfoMutation,
 } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
-import { Loader } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
+import CheckboxInput from "@/components/form/CheckboxInput";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // ---------------- Schema ----------------
 const userSchema = z.object({
@@ -76,7 +78,13 @@ const permissions = [
 ];
 
 export default function CreateStaffPage() {
-  const { data, refetch } = useCurrentUserInfoQuery();
+  const {
+    data,
+    refetch,
+    isLoading: isLoadingUserInfo,
+  } = useCurrentUserInfoQuery();
+
+  console.log("Current User Data permissions:", data?.data?.permissions);
 
   const defaultValues = {
     fullName: data?.data?.fullName || "",
@@ -146,81 +154,123 @@ export default function CreateStaffPage() {
   }
 
   return (
-    <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
-      <div className="w-full">
-        <h3 className="text-black font-semibold heading-lg">My Profile</h3>
-        <p className="text-[#6e6e6e] mt-2 text-sm">
-          This is the first detail clients will see when searching for legal
-          services on TheLawApp. If you're a sole practitioner, simply use your
-          full name. If you're part of a firm, enter your official business name
-          to ensure consistency and credibility across your profile.
-        </p>
-        <FormWrapper
-          onSubmit={onSubmit}
-          schema={userSchema}
-          defaultValues={defaultValues}
-        >
-          <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
-            <div className="w-full md:w-1/2">
-              <AvatarUploader name="image" />
+    <>
+      <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
+        <div className="w-full">
+          <h3 className="text-black font-semibold heading-lg">My Profile</h3>
+          <p className="text-[#6e6e6e] mt-2 text-sm">
+            This is the first detail clients will see when searching for legal
+            services on TheLawApp. If you're a sole practitioner, simply use
+            your full name. If you're part of a firm, enter your official
+            business name to ensure consistency and credibility across your
+            profile.
+          </p>
+          <FormWrapper
+            onSubmit={onSubmit}
+            schema={userSchema}
+            defaultValues={defaultValues}
+          >
+            <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
+              <div className="w-full md:w-1/2">
+                <AvatarUploader name="image" />
+              </div>
+
+              <div className="w-full md:w-1/2 flex flex-col gap-4">
+                <TextInput
+                  name="fullName"
+                  label="Name"
+                  placeholder="Enter Staff Name"
+                  textColor="text-[#4b4949]"
+                />
+                <TextInput
+                  name="designation"
+                  label="Designation"
+                  placeholder="i.e. Manager, Lawyer etc"
+                  textColor="text-[#4b4949]"
+                />
+                <TextInput
+                  name="email"
+                  label="Email Address"
+                  placeholder="example@example.com"
+                  textColor="text-[#4b4949]"
+                />
+              </div>
             </div>
 
-            <div className="w-full md:w-1/2 flex flex-col gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
               <TextInput
-                name="fullName"
-                label="Name"
-                placeholder="Enter Staff Name"
+                type="password"
+                name="password"
+                label="Password"
+                placeholder="********"
                 textColor="text-[#4b4949]"
               />
               <TextInput
-                name="designation"
-                label="Designation"
-                placeholder="i.e. Manager, Lawyer etc"
-                textColor="text-[#4b4949]"
-              />
-              <TextInput
-                name="email"
-                label="Email Address"
-                placeholder="example@example.com"
+                name="phone"
+                label="Phone"
+                placeholder="+1XXXXXXXXX"
                 textColor="text-[#4b4949]"
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-            <TextInput
-              type="password"
-              name="password"
-              label="Password"
-              placeholder="********"
-              textColor="text-[#4b4949]"
-            />
-            <TextInput
-              name="phone"
-              label="Phone"
-              placeholder="+1XXXXXXXXX"
-              textColor="text-[#4b4949]"
-            />
-          </div>
-          {/* <div className="border-t border-[#f2f2f2] h-1 mt-10" /> */}
-          <div className="flex justify-center items-center mt-10">
-            <Button
-              type="submit"
-              className="cursor-pointer"
-              disabled={isCurrentUserInfoUpdating}
-            >
-              {isCurrentUserInfoUpdating ? (
-                <div className="flex items-center gap-2">
-                  <Loader className="h-4 w-4 animate-spin" />
-                  <span>Updating...</span>
-                </div>
-              ) : (
-                "Update Profile"
-              )}
-            </Button>
-          </div>
-        </FormWrapper>
+            {/* <div className="border-t border-[#f2f2f2] h-1 mt-10" /> */}
+            <div className="flex justify-center items-center mt-10">
+              <Button
+                type="submit"
+                className="cursor-pointer"
+                disabled={isCurrentUserInfoUpdating}
+              >
+                {isCurrentUserInfoUpdating ? (
+                  <div className="flex items-center gap-2">
+                    <Loader className="h-4 w-4 animate-spin" />
+                    <span>Updating...</span>
+                  </div>
+                ) : (
+                  "Update Profile"
+                )}
+              </Button>
+            </div>
+          </FormWrapper>
+        </div>
       </div>
-    </div>
+      <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm mt-5">
+        <div className="w-full">
+          <h3 className="text-black font-semibold heading-lg mb-8">
+            Assigned Page Permissions
+          </h3>
+          <FormWrapper>
+            {isLoadingUserInfo ? (
+              <div className="flex justify-center">
+                <Loader2 className="h-6 w-6 text-gray-500 animate-spin mt-4" />
+              </div>
+            ) : data?.data?.permissions?.length > 0 ? (
+              <div className="flex flex-wrap gap-4">
+                {data?.data?.permissions?.map((perm) => (
+                  <div className="w-full md:w-[calc(50%-12px)]" key={perm?._id}>
+                    <label
+                      htmlFor={`permissions.${perm._id}`}
+                      className="flex items-center text-sm cursor-not-allowed"
+                    >
+                      <Checkbox
+                        name={`permissions.${perm._id}`}
+                        label={perm?.pageId?.title}
+                        checked={perm?.permission === true}
+                        disabled
+                      />
+                      <span className="ml-2 text-gray-700">
+                        {perm?.pageId?.title}
+                      </span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <p className="text-gray-500 mt-4">No permissions available.</p>
+              </div>
+            )}
+          </FormWrapper>
+        </div>
+      </div>
+    </>
   );
 }

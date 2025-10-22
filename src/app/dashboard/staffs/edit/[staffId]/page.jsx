@@ -19,6 +19,10 @@ import { ArrowLeft, Loader, Loader2 } from "lucide-react";
 import PasswordInput from "@/components/form/PasswordInput";
 import { useGetPagesListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
+import permissionss from "@/data/permissions";
+import AccessDenied from "@/components/AccessDenied";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -61,6 +65,10 @@ const staffSchema = z.object({
 });
 
 export default function EditStaffPage() {
+  const currentUser = useSelector(selectCurrentUser);
+
+  const pageId = permissionss?.find((perm) => perm.slug === "edit-staff")._id;
+
   const params = useParams();
   const staffId = params?.staffId;
 
@@ -207,6 +215,19 @@ export default function EditStaffPage() {
         </div>
       </div>
     );
+  }
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.role === "staff"
+      ? currentUser?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
   }
 
   return (

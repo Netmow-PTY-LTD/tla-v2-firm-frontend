@@ -32,6 +32,10 @@ import { Fragment, useEffect, useState } from "react";
 import { notifications } from "@/data/data";
 import PageLoadingSkeletons from "../_components/PageLoadingSkeletons";
 import { useGetAllNotificationsQuery } from "@/store/firmFeatures/notificationsApiService";
+import AccessDenied from "@/components/AccessDenied";
+import { useSelector } from "react-redux";
+import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 // const {
 //   useGetNotificationsQuery,
@@ -47,6 +51,13 @@ export default function NotificationPreview() {
 
   // const { data, isLoading } = useGetNotificationsQuery();
   // const [markAsRead] = useMarkAsRedNotificationMutation();
+
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "view-list-of-notifications"
+  )._id;
+
+  const { data: currentUser } = useCurrentUserInfoQuery();
+  console.log("Current User on Notifications Page:", currentUser);
 
   useEffect(() => {
     setIsLoading(true);
@@ -166,6 +177,19 @@ export default function NotificationPreview() {
   //console.log('data', data?.data);
 
   if (notificationsLoading) return <PageLoadingSkeletons />;
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
