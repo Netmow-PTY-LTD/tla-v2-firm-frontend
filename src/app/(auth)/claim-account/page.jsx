@@ -6,8 +6,10 @@ import LawFirmClaimAccountStepTwo from "../_components/LawFirmClaimAccountStepTw
 import { useSelector } from "react-redux";
 import { useClaimAccountMutation } from "@/store/firmFeatures/firmApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { useRouter } from "next/navigation";
 
 export default function LawFirmClaimAccount() {
+  const router = useRouter();
   // const [step, setStep] = useState(1);
   const [stepOneData, setStepOneData] = useState({});
 
@@ -57,7 +59,8 @@ export default function LawFirmClaimAccount() {
         showSuccessToast(
           res?.message || "Account claim request submitted successfully"
         );
-        // Optional: reset form or redirect
+
+        router.push("/welcome");
       }
     } catch (error) {
       console.error("Error claiming account:", error);

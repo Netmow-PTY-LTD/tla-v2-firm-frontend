@@ -283,7 +283,7 @@ export default function LawyerDetailsPage() {
       <div className="mt-8 text-center">
         <Link
           href="/dashboard/lawyers"
-          className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="inline-block px-5 py-2 bg-[var(--secondary-color)] text-white rounded-lg hover:bg-[var(--primary-color)] transition"
         >
           ← Back to all lawyers
         </Link>
