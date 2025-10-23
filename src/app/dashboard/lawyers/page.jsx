@@ -72,23 +72,6 @@ export default function LawyersList() {
     );
   }
 
-  if (lawyers.length === 0) {
-    return (
-      <div className="p-8 text-center max-w-[900px] mx-auto">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <Users className="w-12 h-12 text-gray-400" />
-          <h2 className="text-lg font-semibold text-gray-700">
-            No Lawyers Found
-          </h2>
-          <p className="text-sm text-gray-500 max-w-md">
-            This firm currently has no lawyers affiliated with it. Please check
-            back later or contact the firm directly for more information.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -120,7 +103,24 @@ export default function LawyersList() {
             perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
           return idMatch && perm?.permission === true;
         })
-      : false;
+      : true;
+
+  if (lawyers.length === 0) {
+    return (
+      <div className="p-8 text-center max-w-[900px] mx-auto">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <Users className="w-12 h-12 text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-700">
+            No Lawyers Found
+          </h2>
+          <p className="text-sm text-gray-500 max-w-md">
+            This firm currently has no lawyers affiliated with it. Please check
+            back later or contact the firm directly for more information.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[1200px] mx-auto">

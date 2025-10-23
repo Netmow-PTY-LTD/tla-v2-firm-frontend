@@ -8,9 +8,7 @@ import { formatRelativeTime } from "@/helpers/formatTime";
 import Link from "next/link";
 import { useGetLawyerRequestsListQuery } from "@/store/firmFeatures/lawyerRequest/lawyerRequest";
 import AccessDenied from "@/components/AccessDenied";
-import { useSelector } from "react-redux";
 import permissions from "@/data/permissions";
-import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawyerRequestsAsMember() {
