@@ -124,7 +124,7 @@ export default function LawFirmClaimAccountStepTwo({
                         <FormLabel>Your Full Name</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="i.e. 1234567890"
+                            placeholder="i.e. John Smith"
                             className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
                             {...field}
                             onChange={(e) => {
