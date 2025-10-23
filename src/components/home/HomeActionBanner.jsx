@@ -15,10 +15,16 @@ export default function HomeActionBanner() {
                   </div>
                   <div className="home-cta-button flex gap-2">
                     <Link
-                      href="/"
+                      href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}`}
                       className="btn-default btn-secondary uppercase"
                     >
-                      Talk to lawyer now
+                      Post a case
+                    </Link>
+                    <Link
+                      href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`}
+                      className="btn-default btn-primary uppercase"
+                    >
+                      Register as lawyer
                     </Link>
                   </div>
                 </div>

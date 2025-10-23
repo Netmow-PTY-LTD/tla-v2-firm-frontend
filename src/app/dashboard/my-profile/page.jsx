@@ -232,45 +232,52 @@ export default function CreateStaffPage() {
           </FormWrapper>
         </div>
       </div>
-      <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm mt-5">
-        <div className="w-full">
-          <h3 className="text-black font-semibold heading-lg mb-8">
-            Assigned Page Permissions
-          </h3>
-          <FormWrapper>
-            {isLoadingUserInfo ? (
-              <div className="flex justify-center">
-                <Loader2 className="h-6 w-6 text-gray-500 animate-spin mt-4" />
-              </div>
-            ) : data?.data?.permissions?.length > 0 ? (
-              <div className="flex flex-wrap gap-4">
-                {data?.data?.permissions?.map((perm) => (
-                  <div className="w-full md:w-[calc(50%-12px)]" key={perm?._id}>
-                    <label
-                      htmlFor={`permissions.${perm._id}`}
-                      className="flex items-center text-sm cursor-not-allowed"
+      {data?.data?.role === "staff" && (
+        <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm mt-5">
+          <div className="w-full">
+            <h3 className="text-black font-semibold heading-lg mb-8">
+              Assigned Page Permissions
+            </h3>
+            <FormWrapper>
+              {isLoadingUserInfo ? (
+                <div className="flex justify-center">
+                  <Loader2 className="h-6 w-6 text-gray-500 animate-spin mt-4" />
+                </div>
+              ) : data?.data?.permissions?.length > 0 ? (
+                <div className="flex flex-wrap gap-4">
+                  {data?.data?.permissions?.map((perm) => (
+                    <div
+                      className="w-full md:w-[calc(50%-12px)]"
+                      key={perm?._id}
                     >
-                      <Checkbox
-                        name={`permissions.${perm._id}`}
-                        label={perm?.pageId?.title}
-                        checked={perm?.permission === true}
-                        disabled
-                      />
-                      <span className="ml-2 text-gray-700">
-                        {perm?.pageId?.title}
-                      </span>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex justify-center">
-                <p className="text-gray-500 mt-4">No permissions available.</p>
-              </div>
-            )}
-          </FormWrapper>
+                      <label
+                        htmlFor={`permissions.${perm._id}`}
+                        className="flex items-center text-sm cursor-not-allowed"
+                      >
+                        <Checkbox
+                          name={`permissions.${perm._id}`}
+                          label={perm?.pageId?.title}
+                          checked={perm?.permission === true}
+                          disabled
+                        />
+                        <span className="ml-2 text-gray-700">
+                          {perm?.pageId?.title}
+                        </span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex justify-center">
+                  <p className="text-gray-500 mt-4">
+                    No permissions available.
+                  </p>
+                </div>
+              )}
+            </FormWrapper>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
