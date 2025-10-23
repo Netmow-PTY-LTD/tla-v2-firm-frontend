@@ -8,6 +8,7 @@ import {
   BadgeCheck,
   BadgeX,
   Bell,
+  BellOff,
   CalendarCheck,
   ChevronLeft,
   ChevronRight,
@@ -291,7 +292,24 @@ export default function NotificationPreview() {
           </div>
         )}
 
-        {paginatedData?.length === 0 && <p>No notifications found.</p>}
+        {paginatedData?.length === 0 && (
+          <div className="flex flex-col items-center justify-center text-center p-8">
+            <BellOff className="w-8 h-8" />
+            <h3 className="text-lg font-semibold text-gray-700 mb-1">
+              No Notifications found
+            </h3>
+            <p className="text-sm text-gray-500 mb-4">
+              You currently have no notifications.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.reload()}
+            >
+              Refresh
+            </Button>
+          </div>
+        )}
         {paginatedData?.length > 0 && (
           <div className="flex justify-center gap-1 mt-10 flex-wrap">
             <button
