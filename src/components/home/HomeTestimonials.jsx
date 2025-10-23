@@ -11,34 +11,68 @@ import { userDummyImage } from "@/data/data";
 const testimonials = [
   {
     id: 1,
-    name: "Allen Lee",
-    title: "Director of Abc",
-    img: "/assets/img/latam.png",
-    companyLogo: "/assets/img/latam.png", // replace with your actual image path
-    text: "Lorem ipsum dolor sit amet consectetur. Arcu hendrerit aliquet dictum eget suscipit semper tincidunt ultricies quis. Praesent vulputate duis amet non varius facilisi. Lorem donec mi risus auctor interdum pharetra aliquam facilisis.",
+    title: "Excellent Service and Support",
+    comment:
+      "Working with this team was a fantastic experience. They understood our needs perfectly and delivered beyond expectations.",
+    client: {
+      name: "Sophia Turner",
+      designation: "Marketing Manager, BrightWave Solutions",
+      image: "https://randomuser.me/api/portraits/women/44.jpg",
+      companyLogo:
+        "https://www.google.com/s2/favicons?domain=brightwave-solutions.com&sz=128",
+    },
   },
   {
     id: 2,
-    name: "Ronald Richards",
-    title: "Director of Abc",
-    img: "/assets/img/sitecore.png",
-    companyLogo: "/assets/img/sitecore.png",
-    text: "Lorem ipsum dolor sit amet consectetur. Elementum mattis lacus aliquam non fames enim nibh eu. Urna pharetra nulla non congue quam tincidunt accumsan enim habitasse. Vivamus commodo id id nulla egestas.",
+    title: "Highly Recommend!",
+    comment:
+      "Their professionalism and attention to detail made all the difference. We saw immediate improvements in our workflow.",
+    client: {
+      name: "Liam Anderson",
+      designation: "Operations Director, NovaTech",
+      image: "https://randomuser.me/api/portraits/men/32.jpg",
+      companyLogo:
+        "https://www.google.com/s2/favicons?domain=novatech.com&sz=128",
+    },
   },
   {
     id: 3,
-    name: "Allen Lee",
-    title: "Director of Abc",
-    img: "/assets/img/latam.png",
-    companyLogo: "/assets/img/latam.png",
-    text: "Lorem ipsum dolor sit amet consectetur. Arcu hendrerit aliquet dictum eget suscipit semper tincidunt ultricies quis. Praesent vulputate duis amet non varius facilisi. Lorem donec mi risus auctor interdum pharetra aliquam facilisis.",
+    title: "Amazing Experience",
+    comment:
+      "They brought our vision to life beautifully. The process was smooth and communication was excellent throughout.",
+    client: {
+      name: "Olivia Martinez",
+      designation: "Creative Head, PixelPoint Agency",
+      image: "https://randomuser.me/api/portraits/women/21.jpg",
+      companyLogo:
+        "https://www.google.com/s2/favicons?domain=pixelpointagency.com&sz=128",
+    },
   },
   {
     id: 4,
-    name: "Allen Lee",
-    title: "Director of Abc",
-    companyLogo: "/assets/img/sitecore.png",
-    text: "Lorem ipsum dolor sit amet consectetur. Arcu hendrerit aliquet dictum eget suscipit semper tincidunt ultricies quis. Praesent vulputate duis amet non varius facilisi. Lorem donec mi risus auctor interdum pharetra aliquam facilisis.",
+    title: "Professional and Efficient",
+    comment:
+      "The team’s expertise and quick turnaround helped us launch our product on time without any hassle.",
+    client: {
+      name: "Ethan Smith",
+      designation: "Product Manager, CloudSync",
+      image: "https://randomuser.me/api/portraits/men/65.jpg",
+      companyLogo:
+        "https://www.google.com/s2/favicons?domain=cloudsync.com&sz=128",
+    },
+  },
+  {
+    id: 5,
+    title: "Outstanding Quality",
+    comment:
+      "Their dedication to quality and customer satisfaction is unmatched. We’ll definitely work with them again.",
+    client: {
+      name: "Ava Johnson",
+      designation: "CEO, Horizon Media",
+      image: "https://randomuser.me/api/portraits/women/36.jpg",
+      companyLogo:
+        "https://www.google.com/s2/favicons?domain=horizonmedia.com&sz=128",
+    },
   },
 ];
 
@@ -76,8 +110,8 @@ export default function HomeTestimonials() {
           className="relative"
         >
           {testimonials.map((item) => (
-            <SwiperSlide key={item.id}>
-              <div className="bg-white shadow-md rounded-2xl px-4 pt-6 pb-5 md:pt-8 md:pb-5 relative flex flex-col justify-between h-full border border-gray-100">
+            <SwiperSlide key={item.id} className="flex h-auto">
+              <div className="bg-white shadow-md rounded-2xl px-4 pt-6 pb-5 md:pt-8 md:pb-5 relative flex flex-col justify-between h-full border border-gray-100 min-h-[280px]">
                 {/* Quote icon */}
                 <div className="absolute -top-6 left-4 bg-[#F5F2F8] rounded-full p-3">
                   <svg
@@ -117,10 +151,10 @@ export default function HomeTestimonials() {
                 {/* Content */}
                 <div className="mt-6">
                   <h5 className="text-lg font-semibold text-[#0A0C10] mb-3">
-                    Lorem ipsum dolor sit amet
+                    {item.title}
                   </h5>
                   <p className="text-[#0A0C10] text-sm leading-relaxed">
-                    {item.text}
+                    {item.comment}
                   </p>
                 </div>
 
@@ -131,19 +165,21 @@ export default function HomeTestimonials() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img
-                      src={userDummyImage}
+                      src={item.client.image || userDummyImage}
                       alt=""
                       className="w-8 h-8 object-cover border border-[#d9d9d9] rounded-full"
                     />
                     <div>
                       <h5 className="font-medium text-[#0A0C10]">
-                        {item.name}
+                        {item.client.name}
                       </h5>
-                      <p className="text-[12px] text-[#545454]">{item.title}</p>
+                      <p className="text-[12px] text-[#545454]">
+                        {item.client.designation}
+                      </p>
                     </div>
                   </div>
                   <img
-                    src={item.companyLogo}
+                    src={item.client.companyLogo || ""}
                     alt="Company Logo"
                     className="h-6 object-contain"
                   />
