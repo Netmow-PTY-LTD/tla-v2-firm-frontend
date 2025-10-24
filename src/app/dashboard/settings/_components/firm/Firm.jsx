@@ -14,19 +14,26 @@ import {
   useUpdateFirmInfoMutation,
 } from "@/store/firmFeatures/firmApiService";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
-import { useGetFirmUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
-
+import {
+  useCurrentUserInfoQuery,
+  useGetFirmUserInfoQuery,
+} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import permissions from "@/data/permissions";
 export default function Firm() {
   const { data: currentUser, isLoading: isCurrentUserLoading } =
-    useGetFirmUserInfoQuery();
+    useCurrentUserInfoQuery();
 
-  // console.log("currentUser in Firm", currentUser);
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "update-company-details"
+  )._id;
 
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
     refetch: refetchCompanyInfo,
   } = useGetFirmInfoQuery();
+
+  console.log("companyInfo in Firm", companyInfo);
 
   const defaultValues = useMemo(
     () => ({
@@ -81,11 +88,11 @@ export default function Firm() {
       vatTaxId,
       contactInfo: {
         country:
-          currentUser?.data?.contactInfo?.country ||
-          currentUser?.data?.contactInfo?.country?._id, // Use country from current user profile
+          companyInfo?.data?.contactInfo?.country ||
+          companyInfo?.data?.contactInfo?.country?._id, // Use country from current user profile
         city:
-          currentUser?.data?.contactInfo?.city ||
-          currentUser?.data?.contactInfo?.city?._id,
+          companyInfo?.data?.contactInfo?.city ||
+          companyInfo?.data?.contactInfo?.city?._id,
         zipCode: zipCode?.value,
         phone,
         email,
@@ -104,6 +111,9 @@ export default function Firm() {
     // Conditionally append files
     if (companyLogo instanceof File) {
       formData.append("companyLogo", companyLogo);
+    } else {
+      // Force backend to clear logo
+      formData.append("companyLogo", "");
     }
 
     console.log("companyLogo after append", formData.get("companyLogo"));
@@ -135,6 +145,14 @@ export default function Firm() {
     }
   };
 
+  const hasPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
@@ -145,9 +163,16 @@ export default function Firm() {
         <div className="border-t border-white" />
         <CompanyAbout companyInfo={companyInfo?.data} />
 
-        <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <FirmFormAction isLoading={isUpdatingFirmInfoLoading} defaultValues={defaultValues} />
+        {hasPermissions && (
+          <>
+            <div className="border-t border-white" />
+            <FirmFormAction
+              isLoading={isUpdatingFirmInfoLoading}
+              defaultValues={defaultValues}
+            />
+          </>
+        )}
       </FormWrapper>
     </div>
   );

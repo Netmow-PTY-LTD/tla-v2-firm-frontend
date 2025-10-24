@@ -2,6 +2,7 @@
 import SelectInput from "@/components/form/SelectInput";
 import TextareaInput from "@/components/form/TextArea";
 import TextInput from "@/components/form/TextInput";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
 import React from "react";
 
@@ -57,13 +58,15 @@ export default function CompanyAbout({ companyInfo }) {
             textColor="text-[#4b4949]"
           />
         </div>
-        <TextareaInput
+        {/* <TextareaInput
           label="Describe your company "
           name="description"
           placeholder="What sets you apart from businesses?"
           textColor="text-[#4b4949]"
           rows={6}
-        />
+        /> */}
+
+        <SimpleEditor name="description" />
       </div>
     </div>
   );

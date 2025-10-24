@@ -5,7 +5,7 @@ import { CheckCircle, CreditCard, Flame, Wallet } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-export default function CompanyCreditStatsCard() {
+export default function CompanyCreditStatsCard({ data }) {
   return (
     <Card className="w-full bg-white shadow-sm rounded-2xl">
       <div className="flex justify-between items-center gap-4">
@@ -21,7 +21,9 @@ export default function CompanyCreditStatsCard() {
           <div className="flex items-center gap-1">
             {/* Icon for purchased credits */}
             <CreditCard className="w-5 h-5 text-blue-600" />
-            <h4 className="text-xl font-bold text-black">{0}</h4>
+            <h4 className="text-xl font-bold text-black">
+              {data?.lawyerCreditStats?.totalPurchasedCredits || 0}
+            </h4>
           </div>
           <p className="text-xs text-gray-600 mt-1">Total Credits Purchase</p>
         </div>
@@ -31,7 +33,9 @@ export default function CompanyCreditStatsCard() {
           <div className="flex items-center gap-1">
             {/* Icon for used credits */}
             <Flame className="w-5 h-5 text-orange-500" />
-            <h4 className="text-xl font-bold text-black">{0}</h4>
+            <h4 className="text-xl font-bold text-black">
+              {data?.lawyerCreditStats?.totalUsedCredits || 0}
+            </h4>
           </div>
           <p className="text-xs text-gray-600 mt-1">Total Used Credits</p>
         </div>
@@ -53,7 +57,9 @@ export default function CompanyCreditStatsCard() {
           <div className="flex items-center gap-1">
             {/* Icon for current credits */}
             <Wallet className="w-5 h-5 text-purple-500" />
-            <h4 className="text-xl font-bold text-black">{0}</h4>
+            <h4 className="text-xl font-bold text-black">
+              {data?.lawyerCreditStats?.currentCredits || 0}
+            </h4>
           </div>
           <p className="text-xs text-gray-600 mt-1">Available Credits</p>
         </div>

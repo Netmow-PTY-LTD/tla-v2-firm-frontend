@@ -311,6 +311,22 @@ input:focus {
   font-weight: 400;
   line-height: 170%;
 }
+
+.btn_register {
+  background-color: var(--color-black);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 12px;
+}
 /* Reusable Form */
 
 .tla-form-control {
@@ -571,9 +587,10 @@ input:focus {
   font-style: normal;
   font-weight: 500;
   line-height: 21px;
+  font-family: var(--font-poppins), sans-serif;
 }
 
-.btn_register {
+.btn-register {
   background-color: var(--secondary-color);
   padding: 16px 20px;
   border: none;
@@ -877,29 +894,28 @@ Home Testimonials
 
 .home-cta-images {
   position: relative;
-  padding-top: 40px;
   height: 100%;
   display: flex;
   justify-content: center;
+  z-index: 1;
 }
 
 .cta-shape {
   max-width: 340px;
   width: 100%;
-  max-height: 319px;
-  height: 100%;
+  height: 319px;
   border-radius: 340px;
   background: linear-gradient(270deg, #ff8602 0%, #01c3c0 100%);
   filter: blur(119px);
 }
 
 .home-cta-images .cta-img-2 {
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
-  right: 0;
+  right: 0; */
   border-radius: 24px 0 24px 0;
-  max-width: 32rem;
-  height: 310px;
+  max-width: 33rem;
+  height: 355px;
   width: 100%;
   object-fit: cover;
 }
@@ -908,9 +924,9 @@ Home Testimonials
   position: absolute;
   bottom: 0;
   right: 420px;
-  z-index: 9;
-  max-width: 20.5rem;
+  max-width: 193px;
   width: 100%;
+  z-index: -1;
 }
 
 @media (max-width: 1400px) {
@@ -1208,6 +1224,65 @@ Home Testimonials
   height: 5px;
   background-color: var(--primary-color);
   border-radius: 10px;
+}
+
+/* Faq section */
+
+.tla-faq-accordion {
+  max-width: 1004px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.tla-faq-accordion-item:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.tla-faq-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 30px;
+  border-radius: 12px;
+  border: 1px solid var(--squad-deck-color-surface-light-normal-active, #ebeef2);
+  background: var(--SquadDeck-Color-Surface_Light-Light, #fcfdfd);
+  cursor: pointer;
+}
+
+.tla-faq-accordion-header h5 {
+  color: var(--color-black);
+  font-weight: 500;
+}
+
+.tla-faq-accordion-body {
+  /* background: #fcfdfd; */
+  padding: 16px 20px 8px;
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.tla-faq-accordion-body.active {
+  max-height: 1000px !important;
+  display: block;
+}
+
+.tla-faq-accordion-header svg {
+  transition: transform 0.3s ease;
+}
+
+.tla-faq-accordion-header svg.rotate {
+  transform: rotate(45deg);
+}
+.tla-faq-accordion-header svg.rotate path {
+  fill: red;
+}
+
+@media (max-width: 1024px) {
+  .tla-faq {
+    padding: 50px 0;
+  }
 }
 
 /* ===================

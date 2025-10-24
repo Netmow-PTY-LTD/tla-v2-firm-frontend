@@ -7,49 +7,20 @@ import { userDummyImage } from "@/data/data";
 import { formatRelativeTime } from "@/helpers/formatTime";
 import Link from "next/link";
 import { useGetLawyerRequestsListQuery } from "@/store/firmFeatures/lawyerRequest/lawyerRequest";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawyerRequestsAsMember() {
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
+
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "view-list-of-lawyer-requests"
+  )._id;
   // Fetch from your RTK Query hook
   const { data, isLoading } = useGetLawyerRequestsListQuery();
   const requests = data?.data || [];
-
-  // Demo fallback data (in case API isn’t ready)
-  const demoRequests = [
-    {
-      _id: "req1",
-      message: "I would like to join your firm as a corporate lawyer.",
-      status: "pending",
-      createdAt: "2025-10-01T12:00:00Z",
-      lawyerId: {
-        _id: "law1",
-        name: "Rabby Hasan",
-        avatar: "https://randomuser.me/api/portraits/men/31.jpg",
-      },
-      reviewedBy: null,
-      reviewedAt: null,
-      firmProfileId: {
-        name: "LegalX Law Associates",
-        logo: "https://placehold.co/60x60?text=LX",
-      },
-    },
-    {
-      _id: "req2",
-      message: "Interested in joining your criminal law department.",
-      status: "approved",
-      createdAt: "2025-09-28T10:15:00Z",
-      lawyerId: {
-        _id: "law2",
-        name: "Nusrat Tania",
-        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-      },
-      reviewedBy: { name: "Admin (Mizan)" },
-      reviewedAt: "2025-09-30T09:45:00Z",
-      firmProfileId: {
-        name: "Justice League Firm",
-        logo: "https://placehold.co/60x60?text=JL",
-      },
-    },
-  ];
 
   const showRequests = requests?.length > 0 ? requests : [];
 
@@ -72,6 +43,19 @@ export default function LawyerRequestsAsMember() {
         ))}
       </div>
     );
+  }
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
   }
 
   return (

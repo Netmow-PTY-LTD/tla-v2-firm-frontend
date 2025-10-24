@@ -1,5 +1,5 @@
 "use client";
-import { MoreHorizontal, Pencil, Star, Trash2, Users } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Star, Trash2, Users } from "lucide-react";
 import React from "react";
 import {
   DropdownMenu,
@@ -10,18 +10,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { lawyers } from "@/data/data";
 import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawyersList() {
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "view-lawyer-list"
+  )._id;
+
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
   const {
     data: companyInfo,
     isLoading: isCompanyInfoLoading,
     isError,
   } = useGetFirmInfoQuery();
 
-  console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
+  //console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
 
   const lawyers = companyInfo?.data?.lawyers || [];
 
@@ -63,6 +71,39 @@ export default function LawyersList() {
       </div>
     );
   }
+
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
+
+  const loginAccessId = permissions?.find(
+    (perm) => perm.slug === "you-are-permitted-to-log-in-to-the-lawyer-panel"
+  )._id;
+
+  const hasLoginAsLawyerPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
 
   if (lawyers.length === 0) {
     return (
@@ -108,12 +149,27 @@ export default function LawyersList() {
                   {/* Settings + Dropdown */}
                   <div className="w-full flex justify-between items-center mb-4">
                     {/* Favorite button */}
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-gray-200 cursor-pointer"
-                    >
-                      <Star className="h-4 w-4 text-yellow-500" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-gray-200 cursor-pointer"
+                      >
+                        <Star className="h-4 w-4 text-yellow-500" />
+                      </button>
+                      {lawyer?.isElitePro === true &&
+                        lawyer?.eliteProSubscriptionId !== null && (
+                          <div className="w-8 h-8 bg-[var(--primary-color)] text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center justify-center">
+                            E
+                          </div>
+                        )}
+
+                      {lawyer?.subscriptionId &&
+                        lawyer?.subscriptionId !== null && (
+                          <div className="bg-[var(--secondary-color)] text-white px-2 py-1 rounded-full text-xs font-semibold w-8 h-8 flex items-center justify-center">
+                            S
+                          </div>
+                        )}
+                    </div>
 
                     {/* Dropdown */}
                     <DropdownMenu>
@@ -129,8 +185,8 @@ export default function LawyersList() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
                           <Link href="#" className="flex gap-2">
-                            <Pencil className="w-4 h-4" />
-                            Edit
+                            <Eye className="w-4 h-4" />
+                            View
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -138,12 +194,27 @@ export default function LawyersList() {
                           <Trash2 className="w-4 h-4" />
                           Delete
                         </DropdownMenuItem>
+
+                        {hasLoginAsLawyerPermissions && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
+                              <Link
+                                href={`/dashboard/lawyers/login/${lawyer.slug}`}
+                                className="flex gap-2"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Login
+                              </Link>
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
 
                   {/* Profile Info */}
-                  <div className="flex flex-col gap-8 mt-6">
+                  <div className="flex flex-col gap-6 mt-6">
                     <div className="w-full flex flex-col items-center gap-4 text-center">
                       <div className="w-20 h-20 rounded-full overflow-hidden border flex-shrink-0">
                         <img
@@ -180,6 +251,46 @@ export default function LawyersList() {
                         </span>
                       ))}
                     </div>
+                    <div className="bg-gray-50 rounded-md p-3 text-sm text-gray-700 space-y-2">
+                      {/* Total Credits */}
+                      <div className="flex justify-between">
+                        <span className="font-medium text-xs">
+                          Total Credits:
+                        </span>
+                        <span className="text-gray-800 font-medium text-xs">
+                          {lawyer?.credits || 0}
+                        </span>
+                      </div>
+
+                      {/* Elite Pro Dates */}
+                      {lawyer?.eliteProPeriodStart &&
+                        lawyer?.eliteProPeriodEnd && (
+                          <div className="flex justify-between">
+                            <span className="font-medium text-xs">
+                              Elite Pro:
+                            </span>
+                            <span className="text-gray-800 font-medium text-xs">
+                              {formatDate(lawyer.eliteProPeriodStart)} →{" "}
+                              {formatDate(lawyer.eliteProPeriodEnd)}
+                            </span>
+                          </div>
+                        )}
+
+                      {/* Subscription Dates */}
+                      {lawyer?.subscriptionPeriodStart &&
+                        lawyer?.subscriptionPeriodEnd && (
+                          <div className="flex justify-between">
+                            <span className="font-medium text-xs">
+                              Subscription:
+                            </span>
+                            <span className="text-gray-800 font-medium text-xs">
+                              {formatDate(lawyer.subscriptionPeriodStart)} →{" "}
+                              {formatDate(lawyer.subscriptionPeriodEnd)}
+                            </span>
+                          </div>
+                        )}
+                    </div>
+
                     {/* Stats */}
                     <div className="w-full flex text-center text-gray-500">
                       <div className="flex-1 border-r">

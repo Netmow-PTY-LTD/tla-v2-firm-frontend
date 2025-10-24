@@ -19,13 +19,8 @@ export default function FormWrapper({
     formConfig["defaultValues"] = defaultValues;
   }
 
-  // if (schema) {
-  //   formConfig["resolver"] = zodResolver(schema);
-  // }
-
   if (schema) {
-    console.log("FormWrapper - Context provided:", context);
-    formConfig["resolver"] = zodResolver(schema, { context });
+    formConfig["resolver"] = zodResolver(schema);
   }
 
   const methods = useForm({

@@ -17,6 +17,8 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { useGetPagesListQuery } from "@/store/tlaFeatures/public/publicApiService";
 import { useMemo } from "react";
+import AccessDenied from "@/components/AccessDenied";
+import permissionss from "@/data/permissions";
 
 // ---------------- Schema ----------------
 
@@ -59,9 +61,13 @@ const staffSchema = z.object({
 
 export default function CreateStaffPage() {
   const router = useRouter();
-  const currentuser = useSelector(selectCurrentUser);
-  // Only pass firmId if currentuser exists and role is "firm"
-  const firmProfileId = currentuser?.firmProfileId;
+  const currentUser = useSelector(selectCurrentUser);
+  // Only pass firmId if currentUser exists and role is "firm"
+  const firmProfileId = currentUser?.firmProfileId;
+
+  const pageId = permissionss?.find(
+    (perm) => perm.slug === "add-new-staff"
+  )._id;
 
   const { data: permissions, isLoading: isLoadingPermissions } =
     useGetPagesListQuery();
@@ -148,6 +154,19 @@ export default function CreateStaffPage() {
     }
   };
 
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.role === "staff"
+      ? currentUser?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
+
   return (
     <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
       <div className="w-full">
@@ -232,7 +251,11 @@ export default function CreateStaffPage() {
             </p>
           </div>
 
-          {permissionOptions?.length > 0 && (
+          {isLoadingPermissions ? (
+            <div className="flex justify-center">
+              <Loader2 className="h-6 w-6 text-gray-500 animate-spin mt-4" />
+            </div>
+          ) : permissionOptions?.length > 0 ? (
             <div className="flex flex-wrap gap-4">
               {permissionOptions.map((perm) => (
                 <div className="w-full md:w-[calc(50%-12px)]" key={perm.value}>
@@ -242,6 +265,10 @@ export default function CreateStaffPage() {
                   />
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <p className="text-gray-500 mt-4">No permissions available.</p>
             </div>
           )}
 

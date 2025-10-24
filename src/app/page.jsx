@@ -15,93 +15,26 @@ import {
   LogIn,
   UserPlus,
   User,
+  Home,
+  Gavel,
+  Building,
 } from "lucide-react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { checkTokenValidity } from "@/helpers/checkTokenValidity";
 import Image from "next/image";
-
-// Tailwind is available by default in this canvas preview environment.
-// This component renders a single-page landing with built-in Login/Register modals.
-
-const Feature = ({ icon: Icon, title, children }) => (
-  <div className="p-6 bg-white rounded-2xl shadow-sm border">
-    <div className="flex items-center gap-3 mb-3">
-      <div className="p-2 rounded-xl bg-gray-100">
-        <Icon className="w-5 h-5" />
-      </div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-    </div>
-    <p className="text-gray-600 text-sm leading-relaxed">{children}</p>
-  </div>
-);
-
-const Modal = ({ open, onClose, title, children }) => (
-  <AnimatePresence>
-    {open && (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ y: 24, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 24, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 22 }}
-          className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-start justify-between mb-4">
-            <h3 className="text-xl font-semibold">{title}</h3>
-            <button
-              className="p-2 rounded-lg hover:bg-gray-100"
-              onClick={onClose}
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          {children}
-        </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
-
-const Input = ({ label, type = "text", ...props }) => (
-  <label className="block mb-3">
-    <span className="block text-sm font-medium text-gray-700 mb-1">
-      {label}
-    </span>
-    <input
-      type={type}
-      className="w-full rounded-xl border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black/20"
-      {...props}
-    />
-  </label>
-);
-
-const Select = ({ label, children, ...props }) => (
-  <label className="block mb-3">
-    <span className="block text-sm font-medium text-gray-700 mb-1">
-      {label}
-    </span>
-    <select
-      className="w-full rounded-xl border px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black/20"
-      {...props}
-    >
-      {children}
-    </select>
-  </label>
-);
+import HeroHome from "@/components/home/HeroHome";
+import HomeFeatures from "@/components/home/HomeFeatures";
+import HomeListingBenefits from "@/components/home/HomeListingBenefits";
+import HomeLawFirmsList from "@/components/home/HomeLawFirmsList";
+import HomeCTA from "@/components/home/HomeCTA";
+import Footer from "@/components/home/Footer";
+import HomeFAQ from "@/components/home/HomeFAQ";
+import "@/styles/main.css";
+import HomeActionBanner from "@/components/home/HomeActionBanner";
+import HomeTestimonials from "@/components/home/HomeTestimonials";
 
 export default function LawListingHome() {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
-
   const token = Cookies.get("token");
   const validToken = checkTokenValidity(token);
   // const { data: currentUser, isLoading: isCurrentUserLoading } =
@@ -110,10 +43,10 @@ export default function LawListingHome() {
   //   });
 
   return (
-    <div className="font-sans antialiased">
+    <div className="">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b">
-        <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+        <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/">
               <Image
@@ -125,18 +58,18 @@ export default function LawListingHome() {
             </Link>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm text-gray-700">
-            <a href="#why" className="hover:text-black">
+            <Link href="#" className="nav_link hover:text-black">
               Why List
-            </a>
-            <a href="#how" className="hover:text-black">
+            </Link>
+            <Link href="#" className="nav_link hover:text-black">
               How It Works
-            </a>
-            <a href="#features" className="hover:text-black">
+            </Link>
+            <Link href="#" className="nav_link hover:text-black">
               Features
-            </a>
-            <a href="#faq" className="hover:text-black">
+            </Link>
+            <Link href="#" className="nav_link hover:text-black">
               FAQ
-            </a>
+            </Link>
           </nav>
           <div className="flex items-center gap-2">
             {token ? (
@@ -148,26 +81,33 @@ export default function LawListingHome() {
               </Link>
             ) : (
               <>
-                <Link
-                  href={"/login"}
-                  className="px-3 py-2 text-sm rounded-xl border hover:bg-gray-50 flex items-center gap-2"
-                >
-                  <LogIn className="w-4 h-4" /> Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="px-3 py-2 text-sm rounded-xl bg-black text-white hover:bg-black/90 flex items-center gap-2"
-                >
-                  <UserPlus className="w-4 h-4" /> Register
-                </Link>
+                <div className="flex items-center gap-4 flex-shrink-0">
+                  <Link href="/login" className="nav_link">
+                    <span>Log In</span>
+                  </Link>
+                  <Link href="/register" className="btn_register">
+                    <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
+                      <Building2 className="w-4 h-4 text-black" />
+                    </div>
+                    <span>List Your Firm</span>
+                  </Link>
+                </div>
               </>
             )}
           </div>
         </div>
       </header>
-
+      <HeroHome />
+      <HomeFeatures />
+      <HomeListingBenefits />
+      <HomeActionBanner />
+      <HomeLawFirmsList />
+      <HomeTestimonials />
+      <HomeFAQ />
+      <HomeCTA />
+      <Footer />
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      {/* <section className="relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -246,10 +186,10 @@ export default function LawListingHome() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Why List */}
-      <section id="why" className="bg-gray-50 border-t">
+      {/* <section id="why" className="bg-gray-50 border-t">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">
             Why list your law firm or company here?
@@ -286,10 +226,10 @@ export default function LawListingHome() {
             </Feature>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* How It Works */}
-      <section id="how" className="bg-white">
+      {/* <section id="how" className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-10">How it works</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -339,10 +279,10 @@ export default function LawListingHome() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Feature Bullets */}
-      <section id="features" className="bg-gray-50 border-y">
+      {/* <section id="features" className="bg-gray-50 border-y">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-6">
             Everything you need to win more matters
@@ -368,36 +308,10 @@ export default function LawListingHome() {
             ))}
           </ul>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold">
-            Ready to list your firm?
-          </h2>
-          <p className="text-gray-600 mt-2">
-            Join top lawyers and companies growing with LawList.
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <Link
-              href="/register"
-              className="px-6 py-3 rounded-xl bg-black text-white hover:bg-black/90"
-            >
-              Create free listing
-            </Link>
-            <Link
-              href="/login"
-              className="px-6 py-3 rounded-xl border hover:bg-gray-50"
-            >
-              I already have an account
-            </Link>
-          </div>
-        </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
-      <footer className="border-t bg-gray-50">
+      {/* <footer className="border-t bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-gray-600 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-gray-700">
             <Link href="/">
@@ -428,115 +342,7 @@ export default function LawListingHome() {
           </div>
           <div>© {new Date().getFullYear()} LawList. All rights reserved.</div>
         </div>
-      </footer>
-
-      {/* Login Modal */}
-      <Modal
-        open={loginOpen}
-        onClose={() => setLoginOpen(false)}
-        title="Welcome back"
-      >
-        <form className="space-y-3">
-          <Input label="Email" type="email" placeholder="you@firm.com" />
-          <Input label="Password" type="password" placeholder="••••••••" />
-          <div className="flex items-center justify-between text-sm">
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" className="rounded" /> Remember me
-            </label>
-            <a href="#" className="text-gray-700 hover:underline">
-              Forgot password?
-            </a>
-          </div>
-          <button
-            type="button"
-            className="w-full py-2.5 rounded-xl bg-black text-white hover:bg-black/90"
-          >
-            Login
-          </button>
-          <p className="text-xs text-center text-gray-500">
-            New here?{" "}
-            <button
-              type="button"
-              onClick={() => {
-                setLoginOpen(false);
-                setRegisterOpen(true);
-              }}
-              className="underline"
-            >
-              Create an account
-            </button>
-          </p>
-        </form>
-      </Modal>
-
-      {/* Register Modal */}
-      <Modal
-        open={registerOpen}
-        onClose={() => setRegisterOpen(false)}
-        title="Create your free listing"
-      >
-        <form className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Input label="First name" placeholder="Jane" />
-            <Input label="Last name" placeholder="Doe" />
-          </div>
-          <Input label="Firm / Company name" placeholder="Acme Legal" />
-          <Select label="Account type">
-            <option value="lawfirm">Law Firm</option>
-            <option value="company">Company</option>
-          </Select>
-          <Input label="Email" type="email" placeholder="you@firm.com" />
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Create a strong password"
-          />
-          <div className="text-xs text-gray-500">
-            By creating an account you agree to our{" "}
-            <a href="#" className="underline">
-              Terms
-            </a>{" "}
-            and{" "}
-            <a href="#" className="underline">
-              Privacy Policy
-            </a>
-            .
-          </div>
-          <button
-            type="button"
-            className="w-full py-2.5 rounded-xl bg-black text-white hover:bg-black/90"
-          >
-            Create account
-          </button>
-        </form>
-      </Modal>
+      </footer> */}
     </div>
   );
 }
-
-// import MainLayout from "@/components/layouts/MainLayout";
-// import Link from "next/link";
-
-// export default function Home() {
-//   return (
-//     <MainLayout>
-//       <div className="flex min-h-[calc(100vh-69px)] flex-col items-center justify-center p-24">
-//         <h1 className="text-5xl font-bold">Welcome to Company Profile</h1>
-//         <div className="flex gap-3 mt-5">
-//           <Link
-//             href="/register"
-//             className="btn-default bg-[var(--color-black)] no-underline"
-//           >
-//             Register
-//           </Link>
-//           <Link
-//             href="/login"
-//             className="btn-default bg-[var(--color-black)] no-underline"
-//           >
-//             Login
-//           </Link>
-//         </div>
-//       </div>
-//     </MainLayout>
-//   );
-// }

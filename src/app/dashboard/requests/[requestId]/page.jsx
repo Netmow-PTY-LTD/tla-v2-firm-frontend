@@ -13,10 +13,20 @@ import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
 
 export default function Page() {
   const params = useParams();
-  const currentUserId = useSelector(selectCurrentUser)?._id;
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
+
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "can-accept-or-reject-lawyer-list"
+  )._id;
+
+  const currentUserId = currentUser?.data?._id;
   const { data, isLoading, isError } = useGetSingleLawyerRequestQuery(
     params.requestId,
     { skip: !params.requestId }
@@ -80,124 +90,159 @@ export default function Page() {
     }
   };
 
-  const request = data.data;
+  const request = data.data || {};
+  console.log("Request Details:", request);
   const { lawyerId, firmProfileId, message, status, createdAt, updatedAt } =
     request;
 
+  // ✅ Apply page access control only for 'staff' role
+  const hasPermissions =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-        <h1 className="text-xl sm:text-2xl font-semibold">Request Details</h1>
+    <div className="max-w-4xl mx-auto bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Header Section */}
+      <div className="px-6 sm:px-8 py-5 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white/60 backdrop-blur-sm">
+        <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+          Request Details
+        </h3>
         <span
-          className={`px-3 py-1 text-sm rounded-full font-medium ${
+          className={`px-4 py-1 text-sm font-medium rounded-full shadow-sm capitalize ${
             status === "pending"
-              ? "bg-yellow-100 text-yellow-800"
+              ? "bg-amber-50 text-amber-800 ring-1 ring-amber-200"
               : status === "approved"
-              ? "bg-green-100 text-green-800"
+              ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200"
               : status === "rejected"
-              ? "bg-red-100 text-red-800"
-              : "bg-gray-100 text-gray-800"
+              ? "bg-rose-50 text-rose-800 ring-1 ring-rose-200"
+              : "bg-gray-50 text-gray-700 ring-1 ring-gray-200"
           }`}
         >
-          {status.toUpperCase()}
+          {status}
         </span>
       </div>
 
-      {/* Lawyer Info */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <img
-          src={lawyerId.profilePicture || userDummyImage}
-          alt={lawyerId.name}
-          className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0"
-        />
-        <div className="flex-1 space-y-1">
-          <h2 className="text-lg sm:text-xl font-semibold">{lawyerId.name}</h2>
-          <p className="text-sm sm:text-base text-gray-500">
-            {lawyerId.lawyerContactEmail}
-          </p>
-          {lawyerId.designation && (
-            <p className="text-sm text-gray-500">{lawyerId.designation}</p>
-          )}
-          {lawyerId.law_society_member_number && (
-            <p className="text-sm text-gray-500">
-              Society #: {lawyerId.law_society_member_number}
-            </p>
-          )}
-          {lawyerId.practising_certificate_number && (
-            <p className="text-sm text-gray-500">
-              Certificate #: {lawyerId.practising_certificate_number}
-            </p>
-          )}
-        </div>
-      </div>
+      {/* Content Section */}
+      <div className="p-6 sm:p-8 space-y-6">
+        {/* Lawyer & Firm Info - Split layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {/* Lawyer Info */}
+          <div className="space-y-4 col-span-2">
+            <div className="flex items-center gap-4">
+              <img
+                src={lawyerId.profilePicture || userDummyImage}
+                alt={lawyerId.name}
+                className="w-16 h-16 rounded-full object-cover ring-2 ring-gray-100"
+              />
+              <div>
+                <h4 className="text-md font-semibold text-gray-900">
+                  {lawyerId.name}
+                </h4>
+                <p className="text-sm text-gray-500">
+                  {lawyerId.lawyerContactEmail}
+                </p>
+                {lawyerId.designation && (
+                  <p className="text-sm text-gray-400 italic">
+                    {lawyerId.designation}
+                  </p>
+                )}
+              </div>
+            </div>
 
-      {/* Firm Info */}
-      <div className="border-t border-gray-200 pt-4 space-y-2">
-        <h3 className="text-lg sm:text-xl font-semibold">Firm Info</h3>
-        <p>
-          <span className="font-medium">Name: </span>
-          {firmProfileId.firmName}
-        </p>
-        {firmProfileId.registrationNumber && (
-          <p>
-            <span className="font-medium">Registration #: </span>
-            {firmProfileId.registrationNumber}
-          </p>
-        )}
-        {firmProfileId.contactInfo?.email && (
-          <p>
-            <span className="font-medium">Email: </span>
-            {firmProfileId.contactInfo.email}
-          </p>
-        )}
-        {firmProfileId.contactInfo?.phone && (
-          <p>
-            <span className="font-medium">Phone: </span>
-            {firmProfileId.contactInfo.phone}
-          </p>
-        )}
-        {firmProfileId.contactInfo?.address && (
-          <p>
-            <span className="font-medium">Address: </span>
-            {firmProfileId.contactInfo.address}
-          </p>
-        )}
-      </div>
+            <div className="text-sm text-gray-600 space-y-1 border-l-2 border-gray-200 pl-3">
+              {lawyerId.law_society_member_number && (
+                <p>
+                  <span className="font-medium text-gray-800">Society #:</span>{" "}
+                  {lawyerId.law_society_member_number}
+                </p>
+              )}
+              {lawyerId.practising_certificate_number && (
+                <p>
+                  <span className="font-medium text-gray-800">
+                    Certificate #:
+                  </span>{" "}
+                  {lawyerId.practising_certificate_number}
+                </p>
+              )}
+            </div>
+          </div>
 
-      {/* Request Message */}
-      <div className="border-t border-gray-200 pt-4">
-        <h3 className="text-lg sm:text-xl font-semibold mb-2">
-          Request Message
-        </h3>
-        <p className="text-gray-700 break-words">{message}</p>
-      </div>
-
-      {/* Dates */}
-      <div className="border-t border-gray-200 pt-4 flex flex-col sm:flex-row sm:justify-between text-sm text-gray-500 gap-1 sm:gap-0">
-        <p>Created: {formatRelativeTime(createdAt)}</p>
-        <p>Last Updated: {formatRelativeTime(updatedAt)}</p>
-      </div>
-
-      {/* Action Buttons */}
-      {status === "pending" && (
-        <div className="border-t border-gray-200 pt-4 flex flex-col sm:flex-row gap-3">
-          <Button
-            className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
-            onClick={() => handleStatusUpdate("approved")}
-          >
-            Approve
-          </Button>
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
-            <Button
-              className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto"
-              onClick={() => handleStatusUpdate("rejected")}
-            >
-              Reject
-            </Button>
+          {/* Firm Info */}
+          <div className="bg-white/70 col-span-1">
+            <h4 className="text-lg font-semibold text-gray-900 mb-3">
+              Firm Details
+            </h4>
+            <div className="text-sm text-gray-700 space-y-1.5">
+              <p>
+                <span className="font-medium text-gray-800">Name:</span>{" "}
+                {firmProfileId.firmName}
+              </p>
+              {firmProfileId.registrationNumber && (
+                <p>
+                  <span className="font-medium text-gray-800">Reg. #:</span>{" "}
+                  {firmProfileId.registrationNumber}
+                </p>
+              )}
+              {firmProfileId.contactInfo?.email && (
+                <p>
+                  <span className="font-medium text-gray-800">Email:</span>{" "}
+                  {firmProfileId.contactInfo.email}
+                </p>
+              )}
+              {firmProfileId.contactInfo?.phone && (
+                <p>
+                  <span className="font-medium text-gray-800">Phone:</span>{" "}
+                  {firmProfileId.contactInfo.phone}
+                </p>
+              )}
+              {firmProfileId.contactInfo?.address && (
+                <p>
+                  <span className="font-medium text-gray-800">Address:</span>{" "}
+                  {firmProfileId.contactInfo.address}
+                </p>
+              )}
+            </div>
           </div>
         </div>
-      )}
+
+        {/* Request Message */}
+        <div className="border-t border-gray-200 pt-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-2">
+            Request Message
+          </h4>
+          <div className="bg-gray-50 rounded-lg p-4 text-gray-700 text-sm leading-relaxed whitespace-pre-line break-words">
+            {message}
+          </div>
+        </div>
+
+        {/* Dates */}
+        <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row sm:justify-between text-xs text-gray-500 gap-1 sm:gap-0">
+          <p>Created: {formatRelativeTime(createdAt)}</p>
+          <p>Last Updated: {formatRelativeTime(updatedAt)}</p>
+        </div>
+
+        {/* Actions */}
+        {status === "pending" && hasPermissions && (
+          <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
+            <Button
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg w-full sm:w-auto px-6 py-2.5 transition-all shadow-sm"
+              onClick={() => handleStatusUpdate("approved")}
+            >
+              Approve Request
+            </Button>
+            <Button
+              className="bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-lg w-full sm:w-auto px-6 py-2.5 transition-all shadow-sm"
+              onClick={() => handleStatusUpdate("rejected")}
+            >
+              Reject Request
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

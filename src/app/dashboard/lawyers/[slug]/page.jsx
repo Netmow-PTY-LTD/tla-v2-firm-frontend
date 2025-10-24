@@ -8,8 +8,17 @@ import LawyerPhotoGallery from "../_components/LawyerPhotoGallery";
 import { Skeleton } from "@/components/ui/skeleton";
 import CompanyProfileServices from "../_components/CompanyProfileServices";
 import { useGetUserProfileBySlugQuery } from "@/store/tlaFeatures/public/publicApiService";
+import AccessDenied from "@/components/AccessDenied";
+import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawyerDetailsPage() {
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "view-single-lawyer-list"
+  )._id;
+
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUserInfoQuery();
   const params = useParams();
   const slug = params?.slug;
 
@@ -90,6 +99,19 @@ export default function LawyerDetailsPage() {
         </div>
       </div>
     );
+  }
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
   }
 
   return (
@@ -261,7 +283,7 @@ export default function LawyerDetailsPage() {
       <div className="mt-8 text-center">
         <Link
           href="/dashboard/lawyers"
-          className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="inline-block px-5 py-2 bg-[var(--secondary-color)] text-white rounded-lg hover:bg-[var(--primary-color)] transition"
         >
           ← Back to all lawyers
         </Link>

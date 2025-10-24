@@ -17,6 +17,8 @@ import LocationsList from "../_components/LocationsList";
 import CompanyPhotoGallery from "../_components/CompanyPhotoGallery";
 import CompanyVideos from "../_components/CompanyVideos";
 import { useGetCompanyProfileBySlugQuery } from "@/store/firmFeatures/firmApiService";
+import { Loader, Loader2 } from "lucide-react";
+import Preloader from "@/components/Preloader";
 
 const slides = [
   { id: 1, image: "/assets/img/org-logo1.webp" },
@@ -49,7 +51,8 @@ export default function CompanyProfile() {
 
   const {
     data: companyProfileInfo,
-    isLoading,
+    isLoading: isCompanyProfileInfoLoading,
+    isFetching: isCompanyProfileInfoFetching,
     isError,
   } = useGetCompanyProfileBySlugQuery(slug, {
     skip: !slug, // Skip the query if slug is not available
@@ -72,6 +75,10 @@ export default function CompanyProfile() {
   const contactInfo = companyProfileInfo?.data?.contactInfo || null;
   const photos = companyProfileInfo?.data?.media?.photos || [];
   const videos = companyProfileInfo?.data?.media?.videos || [];
+
+  if (isCompanyProfileInfoLoading || isCompanyProfileInfoFetching) {
+    return <Preloader />;
+  }
 
   return (
     <MainLayout>
@@ -103,7 +110,7 @@ export default function CompanyProfile() {
             </Link>
             <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[180px]">
               <Image
-                src={firmLogo}
+                src={firmLogo || "/assets/img/dummylogo.jpg"}
                 alt="company logo"
                 width={268}
                 height={268}
@@ -237,7 +244,10 @@ export default function CompanyProfile() {
             About
           </h2>
           {description && description !== "" && (
-            <p className="text-base text-[#444]">{description}</p>
+            <p
+              className="text-base text-[#444]"
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></p>
           )}
         </div>
       </section>

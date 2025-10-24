@@ -1,19 +1,10 @@
 export const userDummyImage = "/user-dummy-img.jpg";
 
 export const DEFAULT_IMAGES = {
-  BANNER: '/assets/img/default-banner.png',
-  AVATAR: '/user-dummy-img.jpg',
-  LOGO: '/assets/img/dummylogo.jpg',
+  BANNER: "/assets/img/default-banner.png",
+  AVATAR: "/user-dummy-img.jpg",
+  LOGO: "/assets/img/dummylogo.jpg",
 };
-
-
-
-
-
-
-
-
-
 
 export const lawyers = [
   {
@@ -450,5 +441,37 @@ export const notifications = [
     createdAt: "2025-09-04T06:34:01.619Z",
     updatedAt: "2025-09-07T07:17:18.027Z",
     __v: 0,
+  },
+];
+
+export const faqData = [
+  {
+    id: 1,
+    question: "What is LawList?",
+    answer:
+      "LawList is a platform that connects clients with top lawyers and law firms.",
+  },
+  {
+    id: 2,
+    question: "How do I create a listing?",
+    answer:
+      "You can create a listing by signing up and providing your firm details.",
+  },
+  {
+    id: 3,
+    question: "Is there a fee to join?",
+    answer: "No, joining LawList is free for both clients and lawyers.",
+  },
+  {
+    id: 4,
+    question: "How can I contact support?",
+    answer:
+      "You can contact support through our help center or by emailing support@lawlist.com.",
+  },
+  {
+    id: 5,
+    question: "What types of law firms are listed?",
+    answer:
+      "We list all types of law firms, including solo practitioners and large firms.",
   },
 ];

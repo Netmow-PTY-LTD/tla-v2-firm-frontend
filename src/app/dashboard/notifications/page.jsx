@@ -8,6 +8,7 @@ import {
   BadgeCheck,
   BadgeX,
   Bell,
+  BellOff,
   CalendarCheck,
   ChevronLeft,
   ChevronRight,
@@ -31,6 +32,12 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import { notifications } from "@/data/data";
 import PageLoadingSkeletons from "../_components/PageLoadingSkeletons";
+import { useGetAllNotificationsQuery } from "@/store/firmFeatures/notificationsApiService";
+import AccessDenied from "@/components/AccessDenied";
+import { useSelector } from "react-redux";
+import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { Button } from "@/components/ui/button";
 
 // const {
 //   useGetNotificationsQuery,
@@ -47,12 +54,27 @@ export default function NotificationPreview() {
   // const { data, isLoading } = useGetNotificationsQuery();
   // const [markAsRead] = useMarkAsRedNotificationMutation();
 
+  const pageId = permissions?.find(
+    (perm) => perm.slug === "view-list-of-notifications"
+  )._id;
+
+  const { data: currentUser } = useCurrentUserInfoQuery();
+  console.log("Current User on Notifications Page:", currentUser);
+
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
   }, []);
+
+  const { data: notifications, isLoading: notificationsLoading } =
+    useGetAllNotificationsQuery({
+      pollingInterval: 3000,
+      skipPollingIfUnfocused: true,
+    });
+
+  console.log("notifications", notifications);
 
   const iconStyles = {
     login: { Icon: LogIn, fill: "#3B82F6" }, // Blue
@@ -85,11 +107,13 @@ export default function NotificationPreview() {
 
   // calculate paginated data
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = notifications?.slice(
+  const paginatedData = notifications?.data?.slice(
     startIndex,
     startIndex + itemsPerPage
   );
-  const totalPages = Math.ceil((notifications?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil(
+    (notifications?.data?.length || 0) / itemsPerPage
+  );
 
   const groupedData = [];
 
@@ -154,13 +178,29 @@ export default function NotificationPreview() {
 
   //console.log('data', data?.data);
 
-  if (isLoading) return <PageLoadingSkeletons />;
+  if (notificationsLoading) return <PageLoadingSkeletons />;
+
+  // ✅ Apply page access control only for 'staff' role
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true; // other roles always have access
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
-      <h2 className="text-black font-semibold heading-lg mb-4">
-        All Notifications
-      </h2>
+      {paginatedData?.length > 0 && (
+        <h2 className="text-black font-semibold heading-lg mb-4">
+          All Notifications
+        </h2>
+      )}
+
       <div className="">
         {groupedData.length > 0 && (
           <div className="bg-white rounded-lg relative p-4">
@@ -202,6 +242,26 @@ export default function NotificationPreview() {
 
                     <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
                       <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                              Sender
+                            </span>
+                            <span className="text-sm text-black font-medium">
+                              {n?.userId?.profile?.name || "Unknown"}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                              Receiver
+                            </span>
+                            <span className="text-sm text-black font-medium">
+                              {n?.toUser?.profile?.name || "Unknown"}
+                            </span>
+                          </div>
+                        </div>
+
                         <div className="text-gray-500 mb-1">
                           {n.title || ""}
                         </div>
@@ -236,7 +296,24 @@ export default function NotificationPreview() {
           </div>
         )}
 
-        {paginatedData?.length === 0 && <p>No notifications found.</p>}
+        {paginatedData?.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-2 text-center p-8">
+            <BellOff className="w-8 h-8 text-gray-700" />
+            <h3 className="text-lg font-semibold text-gray-700 mb-1">
+              No Notifications found
+            </h3>
+            <p className="text-sm text-gray-500 mb-4">
+              You currently have no notifications.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.reload()}
+            >
+              Refresh
+            </Button>
+          </div>
+        )}
         {paginatedData?.length > 0 && (
           <div className="flex justify-center gap-1 mt-10 flex-wrap">
             <button
