@@ -110,7 +110,7 @@ export default function CompanyProfile() {
             </Link>
             <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[180px]">
               <Image
-                src={firmLogo}
+                src={firmLogo || "/assets/img/dummylogo.jpg"}
                 alt="company logo"
                 width={268}
                 height={268}

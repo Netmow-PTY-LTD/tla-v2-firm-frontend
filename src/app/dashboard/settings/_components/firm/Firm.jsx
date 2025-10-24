@@ -111,6 +111,9 @@ export default function Firm() {
     // Conditionally append files
     if (companyLogo instanceof File) {
       formData.append("companyLogo", companyLogo);
+    } else {
+      // Force backend to clear logo
+      formData.append("companyLogo", "");
     }
 
     console.log("companyLogo after append", formData.get("companyLogo"));

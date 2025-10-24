@@ -22,14 +22,14 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
       skip: !token,
     });
 
-  console.log("companyInfo from header", companyInfo);
+  //console.log("companyInfo from header", companyInfo);
 
   const { data: currentUser, isLoading: isCurrentUserDataLoading } =
     useCurrentUserInfoQuery(undefined, {
       skip: !token,
     });
 
-  console.log("c from header", currentUser);
+  //console.log("c from header", currentUser);
 
   return (
     <header className="db-header">
