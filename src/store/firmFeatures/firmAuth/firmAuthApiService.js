@@ -149,6 +149,14 @@ const firmAuthApi = firmBaseApi.injectEndpoints({
       providesTags: ["userInfo"],
     }),
 
+     lawyerLoginRequest: builder.mutation({
+      query: (data) => ({
+        url: "/auth/request-lawyer-access",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
 
   }),
 });
@@ -170,5 +178,6 @@ export const {
   useVerifyFirmOtpMutation,
   useChangeFirmEmailMutation,
   useUpdateCurrentUserInfoMutation,
-  useCurrentUserInfoQuery
+  useCurrentUserInfoQuery,
+  useLawyerLoginRequestMutation,
 } = firmAuthApi;

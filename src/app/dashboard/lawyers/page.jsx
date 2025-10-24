@@ -14,7 +14,7 @@ import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
-import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { useCurrentUserInfoQuery, useLawyerLoginRequestMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 export default function LawyersList() {
   const pageId = permissions?.find(
@@ -28,6 +28,10 @@ export default function LawyersList() {
     isLoading: isCompanyInfoLoading,
     isError,
   } = useGetFirmInfoQuery();
+
+
+  console.log("Current User on Lawyers List Page:", currentUser);
+  const [lawyerLoginRequest] = useLawyerLoginRequestMutation();
 
   //console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
 
@@ -122,6 +126,32 @@ export default function LawyersList() {
     );
   }
 
+  
+
+
+  const handleLawyerLogin = async(lawyerId) => {
+   
+
+    try {
+      const requestLawyer= await lawyerLoginRequest({ lawyerId }).unwrap();
+      console.log("Lawyer Login Request Response:", requestLawyer);
+      if(requestLawyer?.data?.redirectUrl){
+        window.open(requestLawyer?.data?.redirectUrl, "_blank");
+      }
+    } catch (error) {
+      console.error("Error logging in as lawyer:", error);
+    }
+
+
+ 
+  }
+
+
+
+
+
+
+
   return (
     <div className="max-w-[1200px] mx-auto">
       <div className="mb-8 border-b border-gray-200 pb-3">
@@ -199,13 +229,13 @@ export default function LawyersList() {
                           <>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="flex gap-2 cursor-pointer py-1 px-2">
-                              <Link
-                                href={`/dashboard/lawyers/login/${lawyer.slug}`}
+                              <button
+                                onClick={() => handleLawyerLogin(lawyer._id)}
                                 className="flex gap-2"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <Trash2 className="w-4 h-4 cursor-pointer" />
                                 Login
-                              </Link>
+                              </button>
                             </DropdownMenuItem>
                           </>
                         )}
