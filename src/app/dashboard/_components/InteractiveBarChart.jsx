@@ -161,10 +161,10 @@ export default function InteractiveBarChart() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
-        <div>
-          <CardTitle>Case Overview</CardTitle>
+        <div className="space-y-1">
+          <CardTitle>Cases Overview</CardTitle>
           <CardDescription>
-            Showing <b>{filter.toLowerCase()}</b> statistics
+            Overview of <b>{filter.toLowerCase()}</b> data
           </CardDescription>
         </div>
         <div className="w-[200px] pb-4 flex justify-end">
