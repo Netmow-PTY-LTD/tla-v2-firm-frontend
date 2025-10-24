@@ -7,25 +7,18 @@ export default function LocationsList({ contactInfo, locations }) {
         <h2 className="profile-heading text-[36px] font-semibold mb-8 text-[var(--color-black)]">
           Locations
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {/* Contact Info Block (Single Card) */}
           {contactInfo && (
-            <div className="bg-[#F8F8F8] rounded-[8px] overflow-hidden relative w-full">
-              <div className="p-3 flex flex-col gap-3">
-                <div className="pl-9">
-                  {contactInfo?.city?.name && (
-                    <h5 className="text-black text-lg font-bold">
-                      {contactInfo.city.name} Office
-                    </h5>
-                  )}
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0">
-                    {/* Location Icon */}
+            <div className="w-full bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="p-5 flex items-start gap-4">
+                {/* Icon */}
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-50 border border-teal-100">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="25"
-                      height="25"
+                      width="26"
+                      height="26"
                       viewBox="0 0 25 25"
                       fill="none"
                     >
@@ -35,11 +28,21 @@ export default function LocationsList({ contactInfo, locations }) {
                       />
                     </svg>
                   </div>
-                  <div>
-                    <div className="text-black text-base font-normal leading-[1.3]">
-                      {contactInfo?.zipCode?.zipcode}
-                    </div>
-                  </div>
+                </div>
+
+                {/* Contact Info Details */}
+                <div className="flex flex-col gap-1">
+                  {contactInfo?.city?.name && (
+                    <h5 className="text-gray-900 text-lg font-semibold tracking-tight">
+                      {contactInfo.city.name} Office
+                    </h5>
+                  )}
+                  <p className="text-gray-600 text-sm leading-snug">
+                    {contactInfo?.address?.street &&
+                      `${contactInfo.address.street}, `}
+                    {contactInfo?.city?.name && `${contactInfo.city.name}, `}
+                    {contactInfo?.zipCode?.zipcode}
+                  </p>
                 </div>
               </div>
             </div>
@@ -51,21 +54,16 @@ export default function LocationsList({ contactInfo, locations }) {
             locations.map((office, index) => (
               <div
                 key={index}
-                className="bg-[#F8F8F8] rounded-[8px] overflow-hidden relative w-full"
+                className="w-full bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
               >
-                <div className="p-3 flex flex-col gap-3">
-                  <div className="pl-9">
-                    <h5 className="text-black text-lg font-bold">
-                      {office.name}
-                    </h5>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      {/* Same icon */}
+                <div className="p-5 flex items-start gap-4">
+                  {/* Icon */}
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-50 border border-teal-100">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="25"
-                        height="25"
+                        width="26"
+                        height="26"
                         viewBox="0 0 25 25"
                         fill="none"
                       >
@@ -75,11 +73,23 @@ export default function LocationsList({ contactInfo, locations }) {
                         />
                       </svg>
                     </div>
-                    <div>
-                      <div className="text-black text-base font-normal leading-[1.3]">
-                        {office?.address?.zipcode}
-                      </div>
-                    </div>
+                  </div>
+
+                  {/* Office Details */}
+                  <div className="flex flex-col gap-1">
+                    <h5 className="text-gray-900 text-lg font-semibold tracking-tight">
+                      {office.name}
+                    </h5>
+                    <p className="text-gray-600 text-sm leading-snug">
+                      {office?.address?.street && `${office.address.street}, `}
+                      {office?.address?.city && `${office.address.city}, `}
+                      {office?.address?.zipcode}
+                    </p>
+                    {office?.address?.country && (
+                      <p className="text-gray-500 text-sm">
+                        {office.address.country}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
