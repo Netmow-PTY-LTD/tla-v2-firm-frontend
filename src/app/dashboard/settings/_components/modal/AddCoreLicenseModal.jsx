@@ -22,16 +22,13 @@ export default function AddCoreLicenseModal({
   const onCancel = () => setIsOpen(!isOpen);
 
   const token = Cookies.get("token");
-  const { data: currentUser, isLoading: isCurrentUserLoading } =
+  const { data: firmInfo, isLoading: isFirmInfoLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
     });
-  //console.log("currentUser in AddCoreLicenseModal", currentUser);
+  //console.log("firmInfo in AddCoreLicenseModal", firmInfo);
 
-  const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id ||
-    ""; // Default to Australia if not available
+  const countryId = firmInfo?.data?.contactInfo?.country?._id || ""; // Default to Australia if not available
 
   const {
     data: certificationsList,
@@ -138,12 +135,12 @@ export default function AddCoreLicenseModal({
             className="cursor-pointer"
             onClick={onCancel}
             disabled={addCoreLicenseIsLoading} // disable while loading
-
           >
             Cancel
           </Button>
           <Button
-            type="submit" variant={"default"}
+            type="submit"
+            variant={"default"}
             className="cursor-pointer bg-[#ff8602]"
             disabled={addCoreLicenseIsLoading} // disable while loading
           >

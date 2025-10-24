@@ -81,9 +81,12 @@ export default function LawFirmProfileDropDown({
                 />
                 <AvatarFallback>USER</AvatarFallback>
               </Avatar>
-              <span className="font-medium text-[14px]">
-                {currentUser?.fullName?.split(" ")[0] || "Admin"}
-              </span>
+              <div className="font-medium text-[14px] flex flex-col leading-tight">
+                {currentUser?.fullName?.split(" ")[0] || ""}
+                <div className="text-gray-500 text-xs">
+                  {currentUser?.role || ""}
+                </div>
+              </div>
               <ChevronDown className="w-5 h-5" />
             </div>
           )}
@@ -94,7 +97,9 @@ export default function LawFirmProfileDropDown({
           sideOffset={8}
           align="start"
         >
-          <DropdownMenuLabel>User Account</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            User Account ({currentUser?.role || ""})
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>

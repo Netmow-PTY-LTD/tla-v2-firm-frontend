@@ -37,6 +37,7 @@ import AccessDenied from "@/components/AccessDenied";
 import { useSelector } from "react-redux";
 import permissions from "@/data/permissions";
 import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { Button } from "@/components/ui/button";
 
 // const {
 //   useGetNotificationsQuery,
@@ -194,9 +195,12 @@ export default function NotificationPreview() {
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
-      <h2 className="text-black font-semibold heading-lg mb-4">
-        All Notifications
-      </h2>
+      {paginatedData?.length > 0 && (
+        <h2 className="text-black font-semibold heading-lg mb-4">
+          All Notifications
+        </h2>
+      )}
+
       <div className="">
         {groupedData.length > 0 && (
           <div className="bg-white rounded-lg relative p-4">
@@ -293,8 +297,8 @@ export default function NotificationPreview() {
         )}
 
         {paginatedData?.length === 0 && (
-          <div className="flex flex-col items-center justify-center text-center p-8">
-            <BellOff className="w-8 h-8" />
+          <div className="flex flex-col items-center justify-center gap-2 text-center p-8">
+            <BellOff className="w-8 h-8 text-gray-700" />
             <h3 className="text-lg font-semibold text-gray-700 mb-1">
               No Notifications found
             </h3>
