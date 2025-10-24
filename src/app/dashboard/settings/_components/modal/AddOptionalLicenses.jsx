@@ -21,15 +21,18 @@ export default function AddOptionalLicenseModal({
   const onCancel = () => setIsOpen(!isOpen);
 
   const token = Cookies.get("token");
-  const { data: currentUser, isLoading: isCurrentUserLoading } =
+  const { data: firmInfo, isLoading: isFirmInfoLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
     });
 
-  const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id ||
-    ""; // Default to Australia if not available
+  //console.log("firmInfo in AddOptionalLicenseModal", firmInfo);
+
+  const countryId = firmInfo?.data?.contactInfo?.country?._id || "";
+
+  // Default to Australia if not available
+  //console.log("Country ID:", countryId);
+
   const {
     data: certificationsList,
     isLoading: isCertificationsListLoading,
@@ -40,10 +43,13 @@ export default function AddOptionalLicenseModal({
     page: 1,
     limit: 10,
   });
+
   //console.log("Certifications List:", certificationsList);
 
-  const [addLicenseAndCertification, { isLoading: addOptionalLicenseIsLoading }] =
-    useAddFirmWiseLicenseAndCertificationMutation();
+  const [
+    addLicenseAndCertification,
+    { isLoading: addOptionalLicenseIsLoading },
+  ] = useAddFirmWiseLicenseAndCertificationMutation();
   const handleOptionalLicenseSubmit = async (data) => {
     //console.log("Optional License form submitted:", data);
     const { certificationId, licenseNumber, validUntil, additionalNote } = data;
@@ -132,12 +138,12 @@ export default function AddOptionalLicenseModal({
             className="cursor-pointer"
             onClick={onCancel}
             disabled={addOptionalLicenseIsLoading} // disable while loading
-
           >
             Cancel
           </Button>
           <Button
-            type="submit" variant={"default"}
+            type="submit"
+            variant={"default"}
             className="cursor-pointer bg-[#ff8602]"
             disabled={addOptionalLicenseIsLoading} // disable while loading
           >
