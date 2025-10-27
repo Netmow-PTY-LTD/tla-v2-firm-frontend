@@ -4,26 +4,28 @@ import React from "react";
 export default function Footer() {
   return (
     <footer className="w-full bg-white py-10 flex flex-col items-center space-y-6 text-sm text-[#1c2c3b]">
-      <div className="flex flex-wrap justify-center gap-8">
+      <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
         <Link
-          href="#"
+          href="#how-it-works"
           className="hover:text-orange-500 transition text-sm text-[#34495E]"
         >
           How IT Works
         </Link>
         <Link
-          href="#"
+          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`}
           className="hover:text-orange-500 transition text-sm text-[#34495E]"
+          target="_blank"
         >
           Join as a Lawyer
         </Link>
         <Link
-          href="#"
+          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/pricing`}
           className="hover:text-orange-500 transition text-sm text-[#34495E]"
+          target="_blank"
         >
           Pricing
         </Link>
-        <Link
+        {/* <Link
           href="#"
           className="hover:text-orange-500 transition text-sm text-[#34495E]"
         >
@@ -34,10 +36,11 @@ export default function Footer() {
           className="hover:text-orange-500 transition text-sm text-[#34495E]"
         >
           Mobile App
-        </Link>
+        </Link> */}
         <Link
-          href="#"
+          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/contact`}
           className="hover:text-orange-500 transition text-sm text-[#34495E]"
+          target="_blank"
         >
           Contact
         </Link>

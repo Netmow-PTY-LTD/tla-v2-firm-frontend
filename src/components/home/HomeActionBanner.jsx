@@ -13,16 +13,18 @@ export default function HomeActionBanner() {
                   <div className="cta-text">
                     Connect with a lawyer instantly though chat, call, or video
                   </div>
-                  <div className="home-cta-button flex gap-2">
+                  <div className="home-cta-button flex flex-wrap gap-2">
                     <Link
                       href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}`}
                       className="btn-default btn-secondary uppercase"
+                      target="_blank"
                     >
                       Post a case
                     </Link>
                     <Link
                       href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`}
                       className="btn-default btn-primary uppercase"
+                      target="_blank"
                     >
                       Register as lawyer
                     </Link>

@@ -56,6 +56,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/about`}
+                          target="_blank"
                         >
                           About TheLawApp
                         </Link>
@@ -63,6 +64,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/contact`}
+                          target="_blank"
                         >
                           Contact
                         </Link>
@@ -88,6 +90,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`}
+                          target="_blank"
                         >
                           Find Lawyers
                         </Link>
@@ -95,6 +98,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/how-it-works/clients`}
+                          target="_blank"
                         >
                           How IT Works
                         </Link>
@@ -102,6 +106,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`}
+                          target="_blank"
                         >
                           Login Client
                         </Link>
@@ -114,6 +119,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/how-it-works/lawyers`}
+                          target="_blank"
                         >
                           How It Works
                         </Link>
@@ -140,6 +146,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/faq`}
+                          target="_blank"
                         >
                           FAQs
                         </Link>
@@ -147,6 +154,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/disclaimer`}
+                          target="_blank"
                         >
                           Disclaimer
                         </Link>
@@ -154,6 +162,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/privacy-policy`}
+                          target="_blank"
                         >
                           Privacy Policy
                         </Link>
@@ -161,6 +170,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/terms`}
+                          target="_blank"
                         >
                           Terms of Use
                         </Link>
@@ -168,6 +178,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/trust-and-quality`}
+                          target="_blank"
                         >
                           Trust and Quality
                         </Link>
@@ -179,6 +190,7 @@ export default function Footer() {
                     <Link
                       href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/contact`}
                       className="btn-default btn-primary"
+                      target="_blank"
                     >
                       Contact Us
                     </Link>

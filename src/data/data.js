@@ -447,31 +447,29 @@ export const notifications = [
 export const faqData = [
   {
     id: 1,
-    question: "What is LawList?",
+    question: "What is a Law Firm / Company Listing?",
     answer:
-      "LawList is a platform that connects clients with top lawyers and law firms.",
+      "A Law Firm / Company Listing on TheLawApp is a verified public profile that represents a law firm, legal company, or independent lawyer on our platform.",
   },
   {
     id: 2,
     question: "How do I create a listing?",
     answer:
-      "You can create a listing by signing up and providing your firm details.",
+      "Creating a listing on TheLawApp is simple and during our freelaunch phase. You can create a Law Firm, Company, or Individual Lawyer listing in just a few steps.",
   },
   {
     id: 3,
     question: "Is there a fee to join?",
-    answer: "No, joining LawList is free for both clients and lawyers.",
+    answer: `Joining TheLawApp is completely free during our freelaunch phase. <br /> Both clients and lawyers / law firms can: <br /> <b>Create an account</b>, <br /> <b>Post cases or listings</b>, and <br /> <b>Browse cases and contact clients without any charges.</b> `,
   },
   {
     id: 4,
     question: "How can I contact support?",
-    answer:
-      "You can contact support through our help center or by emailing support@lawlist.com.",
+    answer: `If you need help with TheLawApp, our support team is ready to assist you. <br /> <b>Email: support@thelawapp.com</b>, <br /> <b>Response time: Typically within 24 hours</b>`,
   },
   {
     id: 5,
     question: "What types of law firms are listed?",
-    answer:
-      "We list all types of law firms, including solo practitioners and large firms.",
+    answer: `TheLawApp hosts a wide variety of law firms and legal professionals to meet diverse client needs. <br /><b>Small & Boutique Firms</b> – Focused expertise in specific legal areas. <br /><b>Regional & National Firms</b> – Larger firms with multiple offices and a broad range of practice areas.`,
   },
 ];

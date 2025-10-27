@@ -18,6 +18,8 @@ import {
   Home,
   Gavel,
   Building,
+  Square,
+  SquareMenu,
 } from "lucide-react";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -33,6 +35,8 @@ import HomeFAQ from "@/components/home/HomeFAQ";
 import "@/styles/main.css";
 import HomeActionBanner from "@/components/home/HomeActionBanner";
 import HomeTestimonials from "@/components/home/HomeTestimonials";
+import MainLayout from "@/components/layouts/MainLayout";
+import HomeHowItWorks from "@/components/home/HomeHowItWorks";
 
 export default function LawListingHome() {
   const token = Cookies.get("token");
@@ -43,63 +47,11 @@ export default function LawListingHome() {
   //   });
 
   return (
-    <div className="">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link href="/">
-              <Image
-                src="/assets/img/company-logo.png"
-                alt="TLA Logo"
-                width={166}
-                height={40}
-              />
-            </Link>
-          </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-gray-700">
-            <Link href="#" className="nav_link hover:text-black">
-              Why List
-            </Link>
-            <Link href="#" className="nav_link hover:text-black">
-              How It Works
-            </Link>
-            <Link href="#" className="nav_link hover:text-black">
-              Features
-            </Link>
-            <Link href="#" className="nav_link hover:text-black">
-              FAQ
-            </Link>
-          </nav>
-          <div className="flex items-center gap-2">
-            {token ? (
-              <Link
-                href="/dashboard"
-                className="px-3 py-2 text-sm rounded-xl bg-black text-white hover:bg-black/90 flex items-center gap-2"
-              >
-                <User className="w-4 h-4" /> Dashboard
-              </Link>
-            ) : (
-              <>
-                <div className="flex items-center gap-4 flex-shrink-0">
-                  <Link href="/login" className="nav_link">
-                    <span>Log In</span>
-                  </Link>
-                  <Link href="/register" className="btn_register">
-                    <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
-                      <Building2 className="w-4 h-4 text-black" />
-                    </div>
-                    <span>List Your Firm</span>
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+    <MainLayout>
       <HeroHome />
       <HomeFeatures />
       <HomeListingBenefits />
+      <HomeHowItWorks />
       <HomeActionBanner />
       <HomeLawFirmsList />
       <HomeTestimonials />
@@ -228,59 +180,6 @@ export default function LawListingHome() {
         </div>
       </section> */}
 
-      {/* How It Works */}
-      {/* <section id="how" className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold mb-10">How it works</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl border">
-              <div className="text-sm text-gray-500">Step 1</div>
-              <h3 className="text-lg font-semibold mb-2">
-                Create your profile
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Add practice areas, locations, languages, fees and
-                certifications. Import from LinkedIn in seconds.
-              </p>
-            </div>
-            <div className="p-6 rounded-2xl border">
-              <div className="text-sm text-gray-500">Step 2</div>
-              <h3 className="text-lg font-semibold mb-2">
-                Publish & get discovered
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Our directory and search engine optimization drive relevant
-                traffic to your page.
-              </p>
-            </div>
-            <div className="p-6 rounded-2xl border">
-              <div className="text-sm text-gray-500">Step 3</div>
-              <h3 className="text-lg font-semibold mb-2">
-                Convert with smart intake
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Leads arrive via secure messaging. Auto‑responses and scheduling
-                reduce back‑and‑forth.
-              </p>
-            </div>
-          </div>
-          <div className="mt-8 flex gap-3">
-            <Link
-              href="/register"
-              className="px-5 py-3 rounded-xl bg-black text-white hover:bg-black/90"
-            >
-              Start free
-            </Link>
-            <Link
-              href="/login"
-              className="px-5 py-3 rounded-xl border hover:bg-gray-50"
-            >
-              Sign in
-            </Link>
-          </div>
-        </div>
-      </section> */}
-
       {/* Feature Bullets */}
       {/* <section id="features" className="bg-gray-50 border-y">
         <div className="mx-auto max-w-7xl px-4 py-16">
@@ -343,6 +242,6 @@ export default function LawListingHome() {
           <div>© {new Date().getFullYear()} LawList. All rights reserved.</div>
         </div>
       </footer> */}
-    </div>
+    </MainLayout>
   );
 }
