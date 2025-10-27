@@ -59,7 +59,7 @@ export default function LawyerRequestsAsMember() {
   }
 
   return (
-    <div className="p-4 max-w-[1100px] mx-auto">
+    <div className="md:p-4 max-w-[1100px] mx-auto">
       <div className="mb-6">
         <h2 className="text-black font-semibold heading-lg">
           Lawyer Membership Requests
@@ -102,7 +102,7 @@ export default function LawyerRequestsAsMember() {
           {showRequests.map((req, index) => (
             <div
               key={req._id}
-              className="flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 mb-3"
+              className="flex flex-wrap items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 mb-3"
             >
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0">
