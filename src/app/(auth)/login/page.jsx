@@ -4,7 +4,7 @@ import LawFirmLoginForm from "../_components/LawFirmLoginForm";
 export default function LawFirmLogin() {
   return (
     <section
-      className="tla-auth-section flex justify-center items-center py-8"
+      className="tla-auth-section flex justify-center items-center py-8 px-4"
       // style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
     >
       <div className="tla-auth-box max-w-[900px] w-full mx-auto">

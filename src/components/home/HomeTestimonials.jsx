@@ -78,7 +78,7 @@ const testimonials = [
 
 export default function HomeTestimonials() {
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-20 bg-white">
+    <section className="py-8 md:py-16 bg-white">
       <div className="container">
         {/* Heading */}
         <div className="text-center mb-10">

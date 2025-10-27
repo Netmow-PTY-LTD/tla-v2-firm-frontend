@@ -1,109 +1,100 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styles from "@/components/common/header/Header.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { Building2, Gavel } from "lucide-react";
+import { Building2, Gavel, SquareMenu, User } from "lucide-react";
 import { selectCurrentToken } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { checkTokenValidity } from "@/helpers/checkTokenValidity";
+import MobileNav from "./MobileNav";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const pathname = usePathname();
+
+  const toggleMobileMenu = () => {
+    console.log("Toggling mobile menu");
+    setShowMobileMenu(!showMobileMenu);
+  };
   // ✅ Get token from Redux store with typing
   const token = useSelector(selectCurrentToken);
   const validToken = checkTokenValidity(token);
 
-  //console.log("Header token:", token);
-
-  // ✅ Call API conditionally
-  //   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
-  //     skip: !validToken,
-  //   })
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleScroll = () => {
-        setIsHeaderFixed(window.scrollY > 50);
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
-  }, []);
-
   return (
-    <header
-      className={`${styles.main_header} ${isHeaderFixed ? styles.sticky : ""}`}
-    >
-      <div className="container-lg">
-        <div className="flex items-center gap-4 md:gap-6">
-          <Link href="/" className={styles.logo}>
-            <Image
-              src="/assets/img/company-logo.png"
-              alt="TLA Logo"
-              width={166}
-              height={40}
-            />
-          </Link>
+    <>
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b">
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <Image
+                src="/assets/img/company-logo.png"
+                alt="TLA Logo"
+                width={166}
+                height={40}
+                className="w-[100px] md:w-[166px]"
+              />
+            </Link>
+          </div>
+          {pathname === "/" && (
+            <nav className="hidden md:flex items-center gap-8 text-sm text-gray-700">
+              <Link href="#features" className="nav_link hover:text-black">
+                Features
+              </Link>
+              <Link href="#why-list" className="nav_link hover:text-black">
+                Why List
+              </Link>
+              <Link href="#how-it-works" className="nav_link hover:text-black">
+                How It Works
+              </Link>
 
-          <nav className="relative">
-            <ul className="flex items-center gap-6">
-              {/* Navigation items (commented out) */}
-            </ul>
-          </nav>
-
-          <div className="flex items-center gap-6 ml-auto">
-            {/* {validToken ? (
-              <div className="flex items-center gap-4 flex-shrink-0">
-                <Link href={dashboardUrl} className={styles.btn_register}>
-                  <span>Dashboard</span>
-                </Link>
-              </div>
+              <Link href="#faq" className="nav_link hover:text-black">
+                FAQ
+              </Link>
+            </nav>
+          )}
+          <div className="flex items-center gap-2">
+            {token ? (
+              <Link
+                href="/dashboard"
+                className="px-3 py-2 text-sm rounded-xl bg-black text-white hover:bg-black/90 flex items-center gap-2"
+              >
+                <User className="w-4 h-4" /> Dashboard
+              </Link>
             ) : (
-              <div className="flex items-center gap-4 flex-shrink-0">
-                <Link href="/law-firm/login" className={styles.nav_link}>
-                  <span>Log In</span>
-                </Link>
-                <Link
-                  href="/law-firm/register"
-                  className={`${styles.btn_register} ${styles.btn_register_mobile}`}
-                >
-                  <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
-                    <Gavel className="w-4 h-4 text-black" />
-                  </div>
-                  <span>List Your Law Firm</span>
-                </Link>
-              </div>
-            )} */}
-
-            {validToken ? (
-              <div className="flex items-center gap-4 flex-shrink-0">
-                <Link href={"/dashboard"} className={styles.btn_register}>
-                  <span>Dashboard</span>
-                </Link>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4 flex-shrink-0">
-                <Link href="/login" className={styles.nav_link}>
-                  <span>Log In</span>
-                </Link>
-                <Link
-                  href="/register"
-                  className={`${styles.btn_register} ${styles.btn_register_mobile}`}
-                >
-                  <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
-                    <Building2 className="w-4 h-4 text-black" />
-                  </div>
-                  <span>List Your Law Firm</span>
-                </Link>
-              </div>
+              <>
+                <div className="flex items-center gap-4 flex-shrink-0">
+                  <Link href="/login" className="nav_link hidden md:flex">
+                    <span>Log In</span>
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="btn_register hidden md:flex"
+                  >
+                    <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
+                      <Building2 className="w-4 h-4 text-black" />
+                    </div>
+                    <span>List Your Firm</span>
+                  </Link>
+                </div>
+              </>
             )}
+
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden cursor-pointer"
+            >
+              <SquareMenu className="text-[#34495e]" />
+            </button>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <MobileNav
+        showMobileMenu={showMobileMenu}
+        toggleMobileMenu={toggleMobileMenu}
+      />
+    </>
   );
 }

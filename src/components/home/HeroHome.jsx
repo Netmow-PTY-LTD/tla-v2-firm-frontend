@@ -3,16 +3,16 @@ import React from "react";
 
 export default function HeroHome() {
   return (
-    <section className="bg-[url('/assets/img/hero-bg.png')] bg-cover bg-no-repeat bg-center">
+    <section className="bg-[url('/assets/img/hero-bg.png')] bg-cover bg-no-repeat bg-center pt-8 pb-5 md:py-12">
       <div className="container">
-        <div className="text-center px-6 h-[calc(60vh-80px)] flex flex-col items-center justify-center gap-2">
-          <h1 className="text-4xl md:text-[48px] font-semibold text-[var(--color-black)] mb-4 font-poppins">
+        <div className="text-center px-6 h-[calc(60vh-80px)] flex flex-col items-center justify-center gap-4">
+          <h1 className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins">
             List Your Law Firm or Business.
           </h1>
-          <h2 className="text-4xl md:text-[48px] font-semibold text-[var(--color-black)] mb-4 font-poppins">
+          <h2 className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins">
             Get More Clients, Faster.
           </h2>
-          <p className="text-[#444] text-[20px] mb-8 font-poppins">
+          <p className="text-[#444] text-base md:text-[20px] mb-4 md:mb-8 font-poppins">
             Reach clients actively searching for legal services
             <br className="hidden sm:block" />
             or businesses like yours.
