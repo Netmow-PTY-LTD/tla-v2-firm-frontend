@@ -194,7 +194,7 @@ export default function NotificationPreview() {
   }
 
   return (
-    <div className="p-4 max-w-[1100px] mx-auto">
+    <div className="md:p-4 max-w-[1100px] mx-auto">
       {paginatedData?.length > 0 && (
         <h2 className="text-black font-semibold heading-lg mb-4">
           All Notifications
@@ -242,7 +242,7 @@ export default function NotificationPreview() {
 
                     <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
                       <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
                               Sender
