@@ -83,7 +83,7 @@ export default function License() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mb-6">
         <div>
           <h3 className="text-black font-semibold heading-lg mb-2">
             Core Legal Certifications

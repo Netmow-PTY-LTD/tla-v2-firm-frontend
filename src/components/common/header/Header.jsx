@@ -16,7 +16,6 @@ export default function Header() {
   const pathname = usePathname();
 
   const toggleMobileMenu = () => {
-    console.log("Toggling mobile menu");
     setShowMobileMenu(!showMobileMenu);
   };
   // ✅ Get token from Redux store with typing

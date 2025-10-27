@@ -54,7 +54,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
         <Badge
           asChild
           variant="secondary"
-          className="px-3 py-1 bg-[#ff860231] text-[#ff8602]"
+          className="px-3 py-1 bg-[#ff860231] text-[#ff8602] hidden sm:inline-flex"
         >
           <span>{companyInfo?.data?.firmName}</span>
         </Badge>
