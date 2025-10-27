@@ -12,7 +12,7 @@ export default function HomeFAQ() {
     }
   };
   return (
-    <section className="tla-faq section">
+    <section className="tla-faq section" id="faq">
       <div className="container">
         <div className="flex justify-center mb-4">
           <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full">
@@ -51,9 +51,8 @@ export default function HomeFAQ() {
                   className={`tla-faq-accordion-body ${
                     index === activeIndex ? "active" : ""
                   }`}
-                >
-                  {faq?.answer}
-                </div>
+                  dangerouslySetInnerHTML={{ __html: faq?.answer }}
+                ></div>
               </div>
             ))}
         </div>

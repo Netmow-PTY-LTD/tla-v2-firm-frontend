@@ -61,7 +61,7 @@ const lawFirms = [
 
 export default function HomeLawFirmsList() {
   return (
-    <section className="w-full bg-white py-16 px-4 text-center">
+    <section className="w-full bg-white py-16 text-center">
       <div className="container">
         <div className="flex justify-center mb-4">
           <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full font-poppins">
@@ -80,14 +80,14 @@ export default function HomeLawFirmsList() {
               {/* Header */}
               <div>
                 <div className="flex items-center mb-3">
-                  <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 shadow-inner">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 shadow-inner shrink-0">
                     <img
                       src={firm.logo}
                       alt={`${firm.name} Logo`}
                       className="w-8 h-8 object-cover rounded-full"
                     />
                   </div>
-                  <h4 className="ml-4 text-[20px] font-semibold text-gray-800 font-poppins text-left">
+                  <h4 className="ml-4 md:text-[20px] font-semibold text-gray-800 font-poppins text-left">
                     {firm.name}
                   </h4>
                 </div>
