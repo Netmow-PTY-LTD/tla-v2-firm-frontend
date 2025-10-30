@@ -40,8 +40,8 @@ export default function HomeFAQ() {
       id="faq"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
-      transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
     >
       <div className="container">
         <div className="flex justify-center mb-4">
@@ -58,7 +58,7 @@ export default function HomeFAQ() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           {faqData.length > 0 &&
             faqData?.map((faq, index) => (
@@ -66,7 +66,7 @@ export default function HomeFAQ() {
                 className="tla-faq-accordion-item"
                 key={faq?.id}
                 variants={cardVariants}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
                 <div
                   className="tla-faq-accordion-header"

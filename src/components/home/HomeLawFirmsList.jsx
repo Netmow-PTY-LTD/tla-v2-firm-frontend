@@ -78,7 +78,7 @@ export default function HomeLawFirmsList() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   };
 
@@ -87,8 +87,8 @@ export default function HomeLawFirmsList() {
       className="w-full bg-white py-16 text-center"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
-      transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
     >
       <div className="container">
         <div className="flex justify-center mb-4">
@@ -104,7 +104,7 @@ export default function HomeLawFirmsList() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           {lawFirms.map((firm) => (
             <motion.div
