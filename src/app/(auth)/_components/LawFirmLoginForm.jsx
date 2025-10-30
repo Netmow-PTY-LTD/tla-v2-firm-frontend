@@ -39,11 +39,11 @@ const LawFirmLoginForm = () => {
           dispatch(
             setUser({
               user: res?.data,
-              token: res?.token,
+              firm_token: res?.token,
             })
           );
 
-          // 🔹 Handle remember me from form data
+          //  Handle remember me from form data
           if (data.rememberMe) {
             localStorage.setItem("rememberMe", "true");
             localStorage.setItem("userEmail", data.email);
@@ -52,9 +52,11 @@ const LawFirmLoginForm = () => {
             localStorage.removeItem("userEmail");
           }
 
-          // 🔹 Redirect if login worked
+          //  Redirect if login worked
 
           router.push(`/dashboard`);
+
+          
         }
       }
     } catch (error) {

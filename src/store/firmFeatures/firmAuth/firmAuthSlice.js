@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const initialState = {
   user: null,
-  token: null,
+  firm_token: null,
 };
 
 const firmAuthSlice = createSlice({
@@ -11,15 +11,15 @@ const firmAuthSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { user, token } = action.payload;
+      const { user, firm_token } = action.payload;
       state.user = user;
-      state.token = token;
-      Cookies.set("token", token);
+      state.firm_token = firm_token;
+      Cookies.set("firm_token", firm_token);
     },
     logOut: (state) => {
       state.user = null;
-      state.token = null;
-      Cookies.remove("token");
+      state.firm_token = null;
+      Cookies.remove("firm_token");
     },
   },
 });
