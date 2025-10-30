@@ -1,9 +1,16 @@
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-white py-10 flex flex-col items-center space-y-6 text-sm text-[#1c2c3b]">
+    <motion.footer
+      className="w-full bg-white py-10 flex flex-col items-center space-y-6 text-sm text-[#1c2c3b]"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
         <Link
           href="#how-it-works"
@@ -111,6 +118,6 @@ export default function Footer() {
           TheLawApp
         </Link>
       </p>
-    </footer>
+    </motion.footer>
   );
 }

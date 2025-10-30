@@ -1,9 +1,16 @@
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 export default function HomeActionBanner() {
   return (
     <>
-      <section className="home-cta section">
+      <motion.section
+        className="home-cta section"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+      >
         <div className="container">
           <div className="home-cta-content">
             <div className="flex flex-wrap items-center">
@@ -49,7 +56,7 @@ export default function HomeActionBanner() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </>
   );
 }
