@@ -1,8 +1,30 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { fa } from "zod/v4/locales";
 
 export default function HomeFeatures() {
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <section className="py-5 md:py-16 text-center" id="features">
+    <motion.section
+      className="py-5 md:py-16 text-center"
+      id="features"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+    >
       <div className="container">
         <div className="inline-block bg-orange-500 px-4 py-1 rounded-full section-subtitle mb-4">
           Key Features
@@ -12,8 +34,19 @@ export default function HomeFeatures() {
           Smart tools for law firm growth.
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false }}
+          transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+        >
+          <motion.div
+            className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
+            variants={item}
+            transition={{ duration: 0.6, delay: 1.4, ease: "easeOut" }}
+          >
             <div className="mb-4 flex justify-center items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -41,9 +74,13 @@ export default function HomeFeatures() {
               <br />
               company profile
             </p>
-          </div>
+          </motion.div>
 
-          <div className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition">
+          <motion.div
+            className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
+            variants={item}
+            transition={{ duration: 0.6, delay: 1.6, ease: "easeOut" }}
+          >
             <div className="mb-4 flex justify-center items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -127,9 +164,13 @@ export default function HomeFeatures() {
               <br />
               accounts
             </p>
-          </div>
+          </motion.div>
 
-          <div className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition">
+          <motion.div
+            className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
+            variants={item}
+            transition={{ duration: 0.6, delay: 1.8, ease: "easeOut" }}
+          >
             <div className="mb-4 flex justify-center items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -189,9 +230,13 @@ export default function HomeFeatures() {
               <br />
               contact details
             </p>
-          </div>
+          </motion.div>
 
-          <div className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition">
+          <motion.div
+            className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
+            variants={item}
+            transition={{ duration: 0.6, delay: 2, ease: "easeOut" }}
+          >
             <div className="mb-4 flex justify-center items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -243,9 +288,9 @@ export default function HomeFeatures() {
               <br />
               community
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

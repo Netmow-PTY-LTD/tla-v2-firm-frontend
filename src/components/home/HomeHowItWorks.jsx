@@ -1,9 +1,17 @@
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function HomeHowItWorks() {
   return (
-    <section id="how-it-works" className="bg-white py-8 md:py-16">
+    <motion.section
+      id="how-it-works"
+      className="bg-white py-8 md:py-16"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+    >
       <div className="container">
         <div className="max-w-2xl">
           <div className="flex justify-start mb-4">
@@ -64,6 +72,6 @@ export default function HomeHowItWorks() {
           </Link>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

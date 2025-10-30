@@ -1,31 +1,73 @@
-import Link from "next/link";
-import React from "react";
+"use client";
 
-export default function HeroHome() {
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { fa } from "zod/v4/locales";
+
+export default function HeroSection() {
   return (
     <section className="bg-[url('/assets/img/hero-bg.png')] bg-cover bg-no-repeat bg-center pt-8 pb-5 md:py-12">
       <div className="container">
         <div className="text-center px-6 h-[calc(60vh-80px)] flex flex-col items-center justify-center gap-4">
-          <h1 className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins">
+          {/* First Heading */}
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins"
+          >
             List Your Law Firm or Business.
-          </h1>
-          <h2 className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins">
+          </motion.h1>
+
+          {/* Second Heading (slightly delayed) */}
+          <motion.h2
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins"
+          >
             Get More Clients, Faster.
-          </h2>
-          <p className="text-[#444] text-base md:text-[20px] mb-4 md:mb-8 font-poppins">
+          </motion.h2>
+
+          {/* Paragraph (optional smooth fade-in) */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
+            className="text-[#444] text-base md:text-[20px] mb-4 md:mb-8 font-poppins"
+          >
             Reach clients actively searching for legal services
             <br className="hidden sm:block" />
             or businesses like yours.
-          </p>
-          <Link
-            href="/register"
-            className="bg-[var(--secondary-color)] text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-teal-600 transition"
+          </motion.p>
+
+          {/* Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: "easeOut" }}
           >
-            Create free listing
-          </Link>
+            <Link
+              href="/register"
+              className="bg-[var(--secondary-color)] text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-teal-600 transition"
+            >
+              Create free listing
+            </Link>
+          </motion.div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 py-16">
+
+      {/* Stats Section (unchanged) */}
+      <motion.div
+        className="max-w-7xl mx-auto px-4 py-16"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false }}
+        transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+      >
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex gap-10 md:gap-16 items-center text-center">
             <div>
@@ -34,18 +76,14 @@ export default function HeroHome() {
               </p>
               <p className="text-[#595959] text-sm mt-1">Total Law Firm</p>
             </div>
-
             <div className="h-10 border-l border-[#262626] hidden md:block"></div>
-
             <div>
               <p className="text-[27px] font-bold text-[var(--color-black)]">
                 12k+
               </p>
               <p className="text-[#595959] text-sm mt-1">Happy Clients</p>
             </div>
-
             <div className="h-10 border-l border-[#262626] hidden md:block"></div>
-
             <div>
               <p className="text-[27px] font-bold text-[var(--color-black)]">
                 20k+
@@ -67,30 +105,18 @@ export default function HeroHome() {
             </div>
 
             <div className="flex -space-x-3">
-              <img
-                src="https://randomuser.me/api/portraits/men/1.jpg"
-                alt="User 1"
-                className="w-10 h-10 rounded-full border-2 border-teal-500 object-cover"
-              />
-              <img
-                src="https://randomuser.me/api/portraits/women/2.jpg"
-                alt="User 2"
-                className="w-10 h-10 rounded-full border-2 border-teal-500 object-cover"
-              />
-              <img
-                src="https://randomuser.me/api/portraits/men/3.jpg"
-                alt="User 3"
-                className="w-10 h-10 rounded-full border-2 border-teal-500 object-cover"
-              />
-              <img
-                src="https://randomuser.me/api/portraits/women/4.jpg"
-                alt="User 4"
-                className="w-10 h-10 rounded-full border-2 border-teal-500 object-cover"
-              />
+              {["men/1", "women/2", "men/3", "women/4"].map((img, i) => (
+                <img
+                  key={i}
+                  src={`https://randomuser.me/api/portraits/${img}.jpg`}
+                  alt={`User ${i + 1}`}
+                  className="w-10 h-10 rounded-full border-2 border-teal-500 object-cover"
+                />
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
