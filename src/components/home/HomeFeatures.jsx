@@ -22,8 +22,8 @@ export default function HomeFeatures() {
       id="features"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
-      transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
     >
       <div className="container">
         <div className="inline-block bg-orange-500 px-4 py-1 rounded-full section-subtitle mb-4">
@@ -39,13 +39,13 @@ export default function HomeFeatures() {
           variants={container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
-          transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
         >
           <motion.div
             className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
             variants={item}
-            transition={{ duration: 0.6, delay: 1.4, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
           >
             <div className="mb-4 flex justify-center items-center">
               <svg
@@ -79,7 +79,7 @@ export default function HomeFeatures() {
           <motion.div
             className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
             variants={item}
-            transition={{ duration: 0.6, delay: 1.6, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
           >
             <div className="mb-4 flex justify-center items-center">
               <svg
@@ -169,7 +169,7 @@ export default function HomeFeatures() {
           <motion.div
             className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
             variants={item}
-            transition={{ duration: 0.6, delay: 1.8, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
           >
             <div className="mb-4 flex justify-center items-center">
               <svg
@@ -235,7 +235,7 @@ export default function HomeFeatures() {
           <motion.div
             className="border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition"
             variants={item}
-            transition={{ duration: 0.6, delay: 2, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
           >
             <div className="mb-4 flex justify-center items-center">
               <svg

@@ -13,8 +13,8 @@ export default function HeroSection() {
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins"
           >
             List Your Law Firm or Business.
@@ -24,8 +24,8 @@ export default function HeroSection() {
           <motion.h2
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
             className="text-[32px] md:text-[48px] font-semibold text-[var(--color-black)] font-poppins"
           >
             Get More Clients, Faster.
@@ -35,8 +35,8 @@ export default function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.6, ease: "easeOut" }}
             className="text-[#444] text-base md:text-[20px] mb-4 md:mb-8 font-poppins"
           >
             Reach clients actively searching for legal services
@@ -48,7 +48,7 @@ export default function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9, ease: "easeOut" }}
+            transition={{ duration: 0.3, delay: 0.9, ease: "easeOut" }}
           >
             <Link
               href="/register"
@@ -65,8 +65,8 @@ export default function HeroSection() {
         className="max-w-7xl mx-auto px-4 py-16"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false }}
-        transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 1.2, ease: "easeOut" }}
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex gap-10 md:gap-16 items-center text-center">
