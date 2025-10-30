@@ -115,7 +115,7 @@ export default function LawyerDetailsPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
+    <div className="max-w-3xl mx-auto md:py-10">
       {/* Lawyer Header */}
       <div className="bg-white shadow rounded-2xl p-8 border border-gray-100 flex flex-col items-center text-center">
         {/* Profile Image */}

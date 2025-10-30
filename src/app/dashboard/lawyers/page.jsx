@@ -1,6 +1,14 @@
 "use client";
-import { Eye, MoreHorizontal, Pencil, Star, Trash2, Users } from "lucide-react";
-import React from "react";
+import {
+  Eye,
+  LogIn,
+  MoreHorizontal,
+  Pencil,
+  Star,
+  Trash2,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +22,14 @@ import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
-import { useCurrentUserInfoQuery, useLawyerLoginRequestMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import {
+  useCurrentUserInfoQuery,
+  useLawyerLoginRequestMutation,
+} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 
 export default function LawyersList() {
+  const [isOpen, setIsOpen] = useState(false);
   const pageId = permissions?.find(
     (perm) => perm.slug === "view-lawyer-list"
   )._id;
@@ -28,7 +41,6 @@ export default function LawyersList() {
     isLoading: isCompanyInfoLoading,
     isError,
   } = useGetFirmInfoQuery();
-
 
   console.log("Current User on Lawyers List Page:", currentUser);
   const [lawyerLoginRequest] = useLawyerLoginRequestMutation();
@@ -126,31 +138,22 @@ export default function LawyersList() {
     );
   }
 
-  
-
-
-  const handleLawyerLogin = async(lawyerId) => {
-   
-
+  const handleLawyerLogin = async (lawyerId) => {
     try {
-      const requestLawyer= await lawyerLoginRequest({ lawyerId }).unwrap();
+      const requestLawyer = await lawyerLoginRequest({ lawyerId }).unwrap();
       console.log("Lawyer Login Request Response:", requestLawyer);
-      if(requestLawyer?.data?.redirectUrl){
+      if (requestLawyer?.data?.redirectUrl) {
         window.open(requestLawyer?.data?.redirectUrl, "_blank");
       }
     } catch (error) {
       console.error("Error logging in as lawyer:", error);
     }
+  };
 
-
- 
-  }
-
-
-
-
-
-
+  const handleLawyerDelete = async (lawyerId) => {
+    // Implement delete functionality here
+    console.log("Delete lawyer with ID:", lawyerId);
+  };
 
   return (
     <div className="max-w-[1200px] mx-auto">
@@ -202,7 +205,7 @@ export default function LawyersList() {
                     </div>
 
                     {/* Dropdown */}
-                    <DropdownMenu>
+                    {/* <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
@@ -240,7 +243,7 @@ export default function LawyersList() {
                           </>
                         )}
                       </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                   </div>
 
                   {/* Profile Info */}
@@ -338,13 +341,43 @@ export default function LawyersList() {
                     </div>
 
                     {/* View Button */}
-                    <div className="w-full flex justify-center">
+                    {/* Action Buttons */}
+                    <div className="w-full flex flex-wrap justify-center gap-3 mt-3">
+                      {/* View Profile */}
                       <Link
                         href={`/dashboard/lawyers/${lawyer.slug}`}
-                        className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md"
+                        className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md transition-colors duration-200 font-medium cursor-pointer"
                       >
-                        View Profile
+                        <Eye className="w-4 h-4 inline-block mr-1" />
+                        View
                       </Link>
+
+                      {/* Login */}
+                      {hasLoginAsLawyerPermissions && (
+                        <button
+                          onClick={() => handleLawyerLogin(lawyer?._id)}
+                          className="px-4 py-2 text-sm bg-[#00C3C0] hover:bg-[#00a9a7] text-white rounded-md transition-colors duration-200 font-medium cursor-pointer"
+                        >
+                          <LogIn className="w-4 h-4 inline-block mr-1" />
+                          Login As Lawyer
+                        </button>
+                      )}
+
+                      {/* Delete */}
+                      <button
+                        onClick={() => setIsOpen(true)}
+                        className="px-4 py-2 text-sm bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors duration-200 font-medium cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4 inline-block mr-1" />
+                        Delete
+                      </button>
+                      <ConfirmationModal
+                        onConfirm={() => handleLawyerDelete(lawyer?._id)}
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                        description="Do you want to delete your lawyer?"
+                        cancelText="No"
+                      />
                     </div>
                   </div>
                 </div>
