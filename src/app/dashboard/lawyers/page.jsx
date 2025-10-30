@@ -95,7 +95,7 @@ export default function LawyersList() {
       day: "numeric",
     });
 
-  // ✅ Apply page access control only for 'staff' role
+  //  Apply page access control only for 'staff' role
   const hasPageAccess =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
