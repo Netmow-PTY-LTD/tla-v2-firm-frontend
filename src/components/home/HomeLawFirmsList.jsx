@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 // dummy data (no human images for logos)
 const lawFirms = [
@@ -60,8 +61,35 @@ const lawFirms = [
 ];
 
 export default function HomeLawFirmsList() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Delay between each card
+        delayChildren: 0.5, // Wait a bit before starting
+      },
+    },
+  };
+
+  // Each card animation
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
   return (
-    <section className="w-full bg-white py-16 px-4 text-center">
+    <motion.section
+      className="w-full bg-white py-16 text-center"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+    >
       <div className="container">
         <div className="flex justify-center mb-4">
           <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full font-poppins">
@@ -71,23 +99,30 @@ export default function HomeLawFirmsList() {
 
         <h2 className="section-title mb-12 font-poppins">Top Law Firms</h2>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <motion.div
+          className="grid gap-8 md:grid-cols-3"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {lawFirms.map((firm) => (
-            <div
+            <motion.div
               key={firm.id}
+              variants={cardVariants}
               className="p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col justify-between"
             >
               {/* Header */}
               <div>
                 <div className="flex items-center mb-3">
-                  <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 shadow-inner">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 shadow-inner shrink-0">
                     <img
                       src={firm.logo}
                       alt={`${firm.name} Logo`}
                       className="w-8 h-8 object-cover rounded-full"
                     />
                   </div>
-                  <h4 className="ml-4 text-[20px] font-semibold text-gray-800 font-poppins text-left">
+                  <h4 className="ml-4 md:text-[20px] font-semibold text-gray-800 font-poppins text-left">
                     {firm.name}
                   </h4>
                 </div>
@@ -127,10 +162,10 @@ export default function HomeLawFirmsList() {
                   View Profile
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

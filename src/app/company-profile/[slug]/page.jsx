@@ -67,7 +67,7 @@ export default function CompanyProfile() {
     companyProfileInfo?.data?.media?.bannerImage ||
     "/assets/img/company-profile-bg.webp";
   const firmLogo =
-    companyProfileInfo?.data?.logo || "/assets/img/company-dummy-logo.png";
+    companyProfileInfo?.data?.logo || "/assets/img/dummylogo.jpg";
   const description = companyProfileInfo?.data?.description || "";
   const certifications = companyProfileInfo?.data?.certification || [];
   const lawyers = companyProfileInfo?.data?.lawyers || [];
@@ -106,15 +106,15 @@ export default function CompanyProfile() {
                   fill="white"
                 />
               </svg>
-              Back
+              Home
             </Link>
-            <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[180px]">
+            <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[180px] border-5 border-[var(--secondary-color)] p-4 bg-white">
               <Image
-                src={firmLogo || "/assets/img/dummylogo.jpg"}
+                src={firmLogo}
                 alt="company logo"
                 width={268}
                 height={268}
-                className="rounded-lg w-full h-full object-cover border-5 border-[var(--secondary-color)]"
+                className="rounded-lg w-full h-full object-cover"
               />
             </div>
           </div>
@@ -254,40 +254,43 @@ export default function CompanyProfile() {
       {/* Accreditation and certification */}
       <section className="py-[50px] relative z-[1]">
         <div className="container">
-          <div className="text-base font-normal mb-8 text-[var(--color-black)] text-center">
+          <div className="text-base font-normal mb-2 text-[var(--color-black)] text-center">
             Accredited & Certified By
           </div>
           {certifications?.length > 0 && (
-            <div className="">
+            <div className="relative w-full py-8">
+              {/* Left gradient fade */}
               <div
-                className="absolute top-0 left-0 max-w-[541px] w-full max-h-[181px] h-full z-[9] hidden lg:block"
+                className="absolute top-0 left-0 h-full w-24 z-10 hidden lg:block pointer-events-none"
                 style={{
                   background:
-                    "linear-gradient(90deg, #FFF 50%, rgba(255, 255, 255, 0.00) 100%)",
+                    "linear-gradient(90deg, #FFF 10%, rgba(255, 255, 255, 0.00) 100%)",
                 }}
               ></div>
 
+              {/* Carousel */}
               <Carousel
                 plugins={[autoplay]}
                 opts={{
                   loop: true,
                   align: "center",
                 }}
-                className="w-full" // center carousel content horizontally
+                className="w-full"
               >
-                <CarouselContent className="flex justify-center">
-                  {" "}
-                  {/* ensure horizontal centering */}
+                <CarouselContent className="flex justify-center items-center gap-2">
                   {certifications?.map((item, index) => (
                     <CarouselItem
                       key={index}
-                      className="basis-1/2 sm:basis-1/3 md:basis-1/5 lg:basis-1/7 flex justify-center p-4"
+                      className="basis-1/2 sm:basis-1/3 md:basis-1/5 lg:basis-1/7 flex justify-center p-4 overflow-hidden"
                     >
-                      <div className="flex justify-center w-full">
+                      <div className="group relative flex justify-center items-center w-full h-28 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 p-4">
                         <img
                           src={item?.certificationId?.logo}
-                          alt={`Logo ${item?.certificationId?.certificationName}`}
-                          className="max-h-20 object-contain"
+                          alt={
+                            item?.certificationId?.certificationName ||
+                            `Certification ${index + 1}`
+                          }
+                          className="max-h-16 object-contain transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                     </CarouselItem>
@@ -295,7 +298,14 @@ export default function CompanyProfile() {
                 </CarouselContent>
               </Carousel>
 
-              <div className="absolute top-0 right-0 max-w-[541px] w-full max-h-[181px] h-full z-[9] bg-linear-to-l from-transparent to-white hidden lg:block"></div>
+              {/* Right gradient fade */}
+              <div
+                className="absolute top-0 right-0 h-full w-24 z-10 hidden lg:block pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(270deg, #FFF 10%, rgba(255, 255, 255, 0.00) 100%)",
+                }}
+              ></div>
             </div>
           )}
         </div>

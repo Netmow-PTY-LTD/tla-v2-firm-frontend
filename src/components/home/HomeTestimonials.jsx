@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Quote } from "lucide-react";
 import { userDummyImage } from "@/data/data";
+import { motion } from "framer-motion";
 
 const testimonials = [
   {
@@ -78,7 +79,13 @@ const testimonials = [
 
 export default function HomeTestimonials() {
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-20 bg-white">
+    <motion.section
+      className="py-8 md:py-16 bg-white"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <div className="container">
         {/* Heading */}
         <div className="text-center mb-10">
@@ -248,6 +255,6 @@ export default function HomeTestimonials() {
         }
       `}</style>
       </div>
-    </section>
+    </motion.section>
   );
 }

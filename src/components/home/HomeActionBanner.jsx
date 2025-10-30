@@ -1,9 +1,16 @@
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 export default function HomeActionBanner() {
   return (
     <>
-      <section className="home-cta section">
+      <motion.section
+        className="home-cta section"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+      >
         <div className="container">
           <div className="home-cta-content">
             <div className="flex flex-wrap items-center">
@@ -13,16 +20,18 @@ export default function HomeActionBanner() {
                   <div className="cta-text">
                     Connect with a lawyer instantly though chat, call, or video
                   </div>
-                  <div className="home-cta-button flex gap-2">
+                  <div className="home-cta-button flex flex-wrap gap-2">
                     <Link
                       href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}`}
                       className="btn-default btn-secondary uppercase"
+                      target="_blank"
                     >
                       Post a case
                     </Link>
                     <Link
                       href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`}
                       className="btn-default btn-primary uppercase"
+                      target="_blank"
                     >
                       Register as lawyer
                     </Link>
@@ -47,7 +56,7 @@ export default function HomeActionBanner() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </>
   );
 }

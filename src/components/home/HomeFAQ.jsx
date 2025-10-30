@@ -1,5 +1,6 @@
 import { faqData } from "@/data/data";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function HomeFAQ() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -11,8 +12,37 @@ export default function HomeFAQ() {
       setActiveIndex(index);
     }
   };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // delay between each item
+        delayChildren: 0.4, // wait before starting
+      },
+    },
+  };
+
+  // 🟢 Each FAQ item animation
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
   return (
-    <section className="tla-faq section">
+    <motion.section
+      className="tla-faq section"
+      id="faq"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+    >
       <div className="container">
         <div className="flex justify-center mb-4">
           <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full">
@@ -23,10 +53,21 @@ export default function HomeFAQ() {
         <h2 className="section-title mb-15 text-center">
           Everything you need to know
         </h2>
-        <div className="tla-faq-accordion">
+        <motion.div
+          className="tla-faq-accordion"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {faqData.length > 0 &&
             faqData?.map((faq, index) => (
-              <div className="tla-faq-accordion-item" key={faq?.id}>
+              <motion.div
+                className="tla-faq-accordion-item"
+                key={faq?.id}
+                variants={cardVariants}
+                viewport={{ once: true, amount: 0.2 }}
+              >
                 <div
                   className="tla-faq-accordion-header"
                   onClick={() => toggleAccordion(index)}
@@ -51,13 +92,12 @@ export default function HomeFAQ() {
                   className={`tla-faq-accordion-body ${
                     index === activeIndex ? "active" : ""
                   }`}
-                >
-                  {faq?.answer}
-                </div>
-              </div>
+                  dangerouslySetInnerHTML={{ __html: faq?.answer }}
+                ></div>
+              </motion.div>
             ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

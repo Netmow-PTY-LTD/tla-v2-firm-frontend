@@ -54,10 +54,20 @@ export default function Footer() {
                     <h5>Navigate</h5>
                     <ul>
                       <li>
-                        <Link href="/about">About TheLawApp</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/about`}
+                          target="_blank"
+                        >
+                          About TheLawApp
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/contact">Contact</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/contact`}
+                          target="_blank"
+                        >
+                          Contact
+                        </Link>
                       </li>
                       <li>
                         <Link
@@ -78,15 +88,26 @@ export default function Footer() {
                     <h5>For Clients</h5>
                     <ul>
                       <li>
-                        <Link href={isValidToken ? `/dashboard` : `/login`}>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`}
+                          target="_blank"
+                        >
                           Find Lawyers
                         </Link>
                       </li>
                       <li>
-                        <Link href="/how-it-works/clients">How IT Works</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/how-it-works/clients`}
+                          target="_blank"
+                        >
+                          How IT Works
+                        </Link>
                       </li>
                       <li>
-                        <Link href={isValidToken ? `/dashboard` : `/login`}>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`}
+                          target="_blank"
+                        >
                           Login Client
                         </Link>
                       </li>
@@ -96,15 +117,26 @@ export default function Footer() {
                     <h5>For Lawyers</h5>
                     <ul>
                       <li>
-                        <Link href="/how-it-works/lawyers">How It Works</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/how-it-works/lawyers`}
+                          target="_blank"
+                        >
+                          How It Works
+                        </Link>
                       </li>
                       <li>
-                        <Link href={isValidToken ? `/dashboard` : `/login`}>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`}
+                        >
                           Join as a Lawyer
                         </Link>
                       </li>
                       <li>
-                        <Link href="/pricing">Pricing</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/pricing`}
+                        >
+                          Pricing
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -112,25 +144,54 @@ export default function Footer() {
                     <h5>Other Pages</h5>
                     <ul>
                       <li>
-                        <Link href="/faq">FAQs</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/faq`}
+                          target="_blank"
+                        >
+                          FAQs
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/disclaimer">Disclaimer</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/disclaimer`}
+                          target="_blank"
+                        >
+                          Disclaimer
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/privacy-policy">Privacy Policy</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/privacy-policy`}
+                          target="_blank"
+                        >
+                          Privacy Policy
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/terms">Terms of Use</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/terms`}
+                          target="_blank"
+                        >
+                          Terms of Use
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/trust-and-quality">Trust and Quality</Link>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/trust-and-quality`}
+                          target="_blank"
+                        >
+                          Trust and Quality
+                        </Link>
                       </li>
                     </ul>
                   </div>
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto text-right">
                     <h5 style={{ marginBottom: "25px" }}>Need help ?</h5>
-                    <Link href={"/contact"} className="btn-default btn-primary">
+                    <Link
+                      href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/contact`}
+                      className="btn-default btn-primary"
+                      target="_blank"
+                    >
                       Contact Us
                     </Link>
                     <div className="footer-social-icon mt-4 flex item-center gap-3 justify-end">
@@ -180,13 +241,25 @@ export default function Footer() {
                     <div className="footer-bottom-menu">
                       <ul className="flex items-center gap-3">
                         <li>
-                          <Link href="/">Disclaimer</Link>
+                          <Link
+                            href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/disclaimer`}
+                          >
+                            Disclaimer
+                          </Link>
                         </li>
                         <li>
-                          <Link href="/">Privacy Policy</Link>
+                          <Link
+                            href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/privacy-policy`}
+                          >
+                            Privacy Policy
+                          </Link>
                         </li>
                         <li>
-                          <Link href="/">Terms & Use</Link>
+                          <Link
+                            href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/terms`}
+                          >
+                            Terms & Use
+                          </Link>
                         </li>
                       </ul>
                     </div>
