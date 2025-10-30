@@ -1,9 +1,17 @@
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function HomeListingBenefits() {
   return (
-    <section className="py-8 md:py-16" id="why-list">
+    <motion.section
+      className="py-8 md:py-16"
+      id="why-list"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{ duration: 0.6, delay: 1, ease: "easeOut" }}
+    >
       <div className="container">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-1/3 space-y-4 md:space-y-6">
@@ -304,6 +312,6 @@ export default function HomeListingBenefits() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
