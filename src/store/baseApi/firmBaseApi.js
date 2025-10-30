@@ -9,9 +9,9 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const state = getState();
-    const token = state.auth.token;
-    if (token) {
-      headers.set("Authorization", token);
+    const firm_token = state.auth.firm_token;
+    if (firm_token) {
+      headers.set("Authorization", firm_token);
     }
     return headers;
   },
@@ -44,9 +44,9 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         }
       );
       const data = await res.json();
-      if (data?.data?.accessToken) {
+      if (data?.data?.firm_accessToken) {
         const user = api.getState().auth.user;
-        api.dispatch(setUser({ user, token: data.data.accessToken }));
+        api.dispatch(setUser({ user, firm_token: data.data.firm_accessToken }));
         // Retry original request with new token
         result = await baseQuery(arg, api, extraOptions);
       } else {
