@@ -13,15 +13,31 @@ export default function HomeHowItWorks() {
       transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
     >
       <div className="container">
-        <div className="max-w-2xl">
-          <div className="flex justify-start mb-4">
-            <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full font-poppins">
-              How it works
-            </span>
+        <div className="flex justify-between flex-wrap items-center gap-6 mb-10">
+          <div className="max-w-2xl">
+            <div className="flex justify-start mb-4">
+              <span className="bg-orange-500 section-subtitle px-5 py-2 rounded-full font-poppins">
+                How it works
+              </span>
+            </div>
+            <h2 className="section-title">
+              Simple steps to list your firm and connect with clients instantly
+            </h2>
           </div>
-          <h2 className="section-title mb-10">
-            Simple steps to list your firm and connect with clients instantly
-          </h2>
+          <div className="flex gap-3">
+            <Link
+              href="/register"
+              className="bg-[var(--secondary-color)] text-white font-semibold px-6 py-3 rounded-md hover:bg-teal-600 transition inline-flex"
+            >
+              Start free listing
+            </Link>
+            <Link
+              href="/login"
+              className="px-5 py-3 rounded-xl border hover:bg-gray-50"
+            >
+              Log In
+            </Link>
+          </div>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {/* Step 1 */}
@@ -55,21 +71,6 @@ export default function HomeHowItWorks() {
               start building lasting relationships.
             </p>
           </div>
-        </div>
-
-        <div className="mt-8 flex gap-3">
-          <Link
-            href="/register"
-            className="bg-[var(--secondary-color)] text-white font-semibold px-6 py-3 rounded-md hover:bg-teal-600 transition inline-flex"
-          >
-            Start free listing
-          </Link>
-          <Link
-            href="/login"
-            className="px-5 py-3 rounded-xl border hover:bg-gray-50"
-          >
-            Log In
-          </Link>
         </div>
       </div>
     </motion.section>

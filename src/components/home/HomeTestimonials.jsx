@@ -1,12 +1,11 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
-import { Quote } from "lucide-react";
-import { userDummyImage } from "@/data/data";
+// import "swiper/css/pagination";
+// import { userDummyImage } from "@/data/data";
 import { motion } from "framer-motion";
 
 const testimonials = [
@@ -99,13 +98,10 @@ export default function HomeTestimonials() {
 
         {/* Swiper */}
         <Swiper
-          modules={[Navigation, Pagination]}
+          modules={[Navigation]}
           slidesPerView={1}
           spaceBetween={30}
           loop={true}
-          pagination={{
-            clickable: true,
-          }}
           navigation={{
             prevEl: ".swiper-button-prev-custom",
             nextEl: ".swiper-button-next-custom",
@@ -196,7 +192,7 @@ export default function HomeTestimonials() {
           ))}
 
           {/* Custom Navigation Buttons */}
-          <div className="flex justify-between mt-10 relative z-10 w-[200px]">
+          <div className="flex justify-center mt-10 relative z-10 w-full">
             <div className="flex justify-center items-center gap-3">
               <button className="swiper-button-prev-custom flex items-center justify-center w-10 h-10 bg-[var(--primary-color)] text-white rounded-full hover:bg-[var(--secondary-color)] transition-all duration-300 ease-in-out cursor-pointer">
                 <svg

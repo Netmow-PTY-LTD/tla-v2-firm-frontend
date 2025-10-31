@@ -34,7 +34,7 @@ export default function HomeListingBenefits() {
               href="/register"
               className="bg-[var(--secondary-color)] text-white font-semibold px-6 py-3 rounded-md hover:bg-teal-600 transition inline-flex"
             >
-              Create free listing
+              Start free listing
             </Link>
           </div>
 
