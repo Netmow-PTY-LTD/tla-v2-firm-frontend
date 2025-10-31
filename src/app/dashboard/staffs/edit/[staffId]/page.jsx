@@ -21,6 +21,7 @@ import { useGetPagesListQuery } from "@/store/tlaFeatures/public/publicApiServic
 import { Skeleton } from "@/components/ui/skeleton";
 import permissionss from "@/data/permissions";
 import AccessDenied from "@/components/AccessDenied";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({

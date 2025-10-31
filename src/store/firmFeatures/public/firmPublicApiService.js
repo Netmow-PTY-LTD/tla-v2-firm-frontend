@@ -1,6 +1,5 @@
 import { firmBaseApi } from "@/store/baseApi/firmBaseApi";
 
-
 const publicApiService = firmBaseApi.injectEndpoints({
   endpoints: (builder) => ({
     checkFirmName: builder.mutation({
@@ -8,15 +7,9 @@ const publicApiService = firmBaseApi.injectEndpoints({
         url: `/public/check-firm-name`,
         method: "POST",
         body,
-       
       }),
-     
     }),
   }),
 });
 
-export const {
-
-  useCheckFirmNameMutation
- 
-} = publicApiService;
+export const { useCheckFirmNameMutation } = publicApiService;

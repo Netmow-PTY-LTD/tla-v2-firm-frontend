@@ -19,6 +19,8 @@ export default function LawyerDetailsPage() {
 
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useCurrentUserInfoQuery();
+
+  console.log("Current User Data in Lawyer Details Page:", currentUser);
   const params = useParams();
   const slug = params?.slug;
 
@@ -109,6 +111,8 @@ export default function LawyerDetailsPage() {
           return idMatch && perm?.permission === true;
         })
       : true; // other roles always have access
+
+  console.log("Has Page Access:", hasPageAccess);
 
   if (!hasPageAccess) {
     return <AccessDenied />;

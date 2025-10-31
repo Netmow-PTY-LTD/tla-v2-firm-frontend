@@ -9,6 +9,7 @@ import { loginValidationSchema } from "@/schema/auth/authValidation.schema";
 import { useLoginFirmMutation } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 import { setUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
+import { Loader, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -19,7 +20,7 @@ const LawFirmLoginForm = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const [authLogin, { isLoading }] =  useLoginFirmMutation();
+  const [authLogin, { isLoading }] = useLoginFirmMutation();
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -55,8 +56,6 @@ const LawFirmLoginForm = () => {
           //  Redirect if login worked
 
           router.push(`/dashboard`);
-
-          
         }
       }
     } catch (error) {
@@ -120,7 +119,14 @@ const LawFirmLoginForm = () => {
               style={{ cursor: "pointer" }}
               disabled={loading || isLoading}
             >
-              <span>Log In</span>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Logging In...</span>
+                </div>
+              ) : (
+                <span>Log In</span>
+              )}
             </button>
           </div>
         </FormWrapper>
