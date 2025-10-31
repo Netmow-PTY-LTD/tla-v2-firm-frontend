@@ -39,7 +39,7 @@ import MainLayout from "@/components/layouts/MainLayout";
 import HomeHowItWorks from "@/components/home/HomeHowItWorks";
 
 export default function LawListingHome() {
-  const token = Cookies.get("token");
+  const token = Cookies.get("firm_token");
   const validToken = checkTokenValidity(token);
   // const { data: currentUser, isLoading: isCurrentUserLoading } =
   //   useGetFirmUserInfoQuery(undefined, {
