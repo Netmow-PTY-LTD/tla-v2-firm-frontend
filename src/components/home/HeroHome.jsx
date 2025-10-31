@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { fa } from "zod/v4/locales";
 
 export default function HeroSection() {
   return (
@@ -54,7 +53,7 @@ export default function HeroSection() {
               href="/register"
               className="bg-[var(--secondary-color)] text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-teal-600 transition"
             >
-              Create free listing
+              Get Started - It's Free
             </Link>
           </motion.div>
         </div>
