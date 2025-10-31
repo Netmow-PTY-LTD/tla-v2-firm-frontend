@@ -1,6 +1,7 @@
 "use client";
 import {
   Eye,
+  Loader,
   LogIn,
   MoreHorizontal,
   Pencil,
@@ -43,7 +44,7 @@ export default function LawyersList() {
   } = useGetFirmInfoQuery();
 
   console.log("Current User on Lawyers List Page:", currentUser);
-  const [lawyerLoginRequest] = useLawyerLoginRequestMutation();
+  const [lawyerLoginRequest, { isLoading: isLawyerLoginRequestLoading }] = useLawyerLoginRequestMutation();
 
   //console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
 
@@ -99,9 +100,9 @@ export default function LawyersList() {
   const hasPageAccess =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+        return idMatch && perm?.permission === true;
+      })
       : true; // other roles always have access
 
   if (!hasPageAccess) {
@@ -115,10 +116,10 @@ export default function LawyersList() {
   const hasLoginAsLawyerPermissions =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch =
-            perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch =
+          perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
+        return idMatch && perm?.permission === true;
+      })
       : true;
 
   if (lawyers.length === 0) {
@@ -255,8 +256,8 @@ export default function LawyersList() {
                           alt={lawyer.name}
                           className="w-full h-full object-cover"
                           onError={(e) =>
-                            (e.currentTarget.src =
-                              "https://themesbrand.com/velzon/html/master/assets/images/users/avatar-2.jpg")
+                          (e.currentTarget.src =
+                            "https://themesbrand.com/velzon/html/master/assets/images/users/avatar-2.jpg")
                           }
                         />
                       </div>
@@ -328,15 +329,21 @@ export default function LawyersList() {
                     <div className="w-full flex text-center text-gray-500">
                       <div className="flex-1 border-r">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.cases}
+                          {lawyer.totalCases ?? 0}
                         </h5>
                         <p className="text-sm">Total Cases</p>
                       </div>
                       <div className="flex-1">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.hired}
+                          {lawyer.hiredCases ?? 0}
                         </h5>
                         <p className="text-sm">Hired</p>
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="text-lg font-semibold text-gray-800">
+                          {lawyer.responseCases ?? 0}
+                        </h5>
+                        <p className="text-sm">Responses</p>
                       </div>
                     </div>
 
@@ -355,10 +362,15 @@ export default function LawyersList() {
                       {/* Login */}
                       {hasLoginAsLawyerPermissions && (
                         <button
+                          disabled={isLawyerLoginRequestLoading}
                           onClick={() => handleLawyerLogin(lawyer?._id)}
                           className="px-4 py-2 text-sm bg-[#00C3C0] hover:bg-[#00a9a7] text-white rounded-md transition-colors duration-200 font-medium cursor-pointer"
                         >
-                          <LogIn className="w-4 h-4 inline-block mr-1" />
+                          {isLawyerLoginRequestLoading ? (
+                            <Loader className="w-4 h-4 inline-block mr-1" />
+                          ) : (
+                            <LogIn className="w-4 h-4 inline-block mr-1" />
+                          )}
                           Login As Lawyer
                         </button>
                       )}
