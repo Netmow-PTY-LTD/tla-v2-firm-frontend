@@ -16,7 +16,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
   const [user, setUser] = React.useState(null);
   const router = useRouter();
 
-  const token = Cookies.get("token");
+  const token = Cookies.get("firm_token");
   const { data: companyInfo, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,

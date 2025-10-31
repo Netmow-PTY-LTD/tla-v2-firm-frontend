@@ -20,7 +20,7 @@ export default function AddOptionalLicenseModal({
   const [isOpen, setIsOpen] = useState(false);
   const onCancel = () => setIsOpen(!isOpen);
 
-  const token = Cookies.get("token");
+  const token = Cookies.get("firm_token");
   const { data: firmInfo, isLoading: isFirmInfoLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,

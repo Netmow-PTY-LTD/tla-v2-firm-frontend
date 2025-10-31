@@ -30,7 +30,7 @@ export default function Footer() {
 
   // console.log('cookieCountry in footer', JSON.parse(cookieCountry));
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.firm_token);
 
   // const { data: currentUser } = useAuthUserInfoQuery(undefined, {
   //   skip: !token,
