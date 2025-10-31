@@ -25,7 +25,7 @@ export default function EditCoreLicenseModal({
   selectedLicense,
 }) {
   //console.log("selectedLicense in EditCoreLicenseModal", selectedLicense);
-  const token = Cookies.get("token");
+  const token = Cookies.get("firm_token");
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,

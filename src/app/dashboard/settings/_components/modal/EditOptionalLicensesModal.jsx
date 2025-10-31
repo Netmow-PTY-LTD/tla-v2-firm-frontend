@@ -24,7 +24,7 @@ export default function EditOptionalLicenseModal({
   onClose,
   selectedLicense,
 }) {
-  const token = Cookies.get("token");
+  const token = Cookies.get("firm_token");
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
