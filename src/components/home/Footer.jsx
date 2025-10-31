@@ -113,7 +113,7 @@ export default function Footer() {
       </div>
 
       <p className="text-[var(--color-text)] text-sm">
-        Copywriter © 2025 by{" "}
+        Copyright © {new Date().getFullYear()} | All rights reserved by{" "}
         <Link href="/" className="text-orange-500 font-medium">
           TheLawApp
         </Link>
