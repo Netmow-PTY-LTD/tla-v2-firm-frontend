@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import LawCertificationCombobox from "./register/LawCertificationCombobox";
 import { setUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { verifyToken } from "@/helpers/verifyToken";
+import { Loader, Loader2 } from "lucide-react";
 
 export default function LawFirmRegisterStepThree() {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ export default function LawFirmRegisterStepThree() {
         const token = res?.token;
         const userPayload = await verifyToken(token);
         if (userPayload) {
-          dispatch(setUser({ user: res?.data?.user, token }));
+          dispatch(setUser({ user: res?.data?.user, firm_token: token }));
         }
         showSuccessToast(res?.message || "Firm registered successfully");
         dispatch(resetRegistration());
@@ -151,7 +152,14 @@ export default function LawFirmRegisterStepThree() {
                 className="btn-default bg-[var(--color-special)] cursor-pointer"
                 disabled={isLoading} //  disable while submitting
               >
-                {isLoading ? "Submitting..." : "Finish"}
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Submitting...</span>
+                  </div>
+                ) : (
+                  "Finish"
+                )}
               </button>
             </div>
           </FormWrapper>
