@@ -328,13 +328,13 @@ export default function LawyersList() {
                     <div className="w-full flex text-center text-gray-500">
                       <div className="flex-1 border-r">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.cases}
+                          {lawyer.totalCases ?? 0}
                         </h5>
                         <p className="text-sm">Total Cases</p>
                       </div>
                       <div className="flex-1">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.hired}
+                          {lawyer.hiredCases ?? 0}
                         </h5>
                         <p className="text-sm">Hired</p>
                       </div>
