@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 const pageSizeOptions = [5, 10, 20];
 
@@ -30,8 +31,7 @@ export default function StaffsList() {
 
   const pageId = permissions?.find((perm) => perm.slug === "list-of-staff")._id;
 
-  const currentUser = useSelector((state) => state.auth.user);
-  console.log("Current User from Redux:", currentUser);
+  const { data: currentUser } = useCurrentUserInfoQuery();
 
   const {
     data: staffList,
@@ -236,9 +236,11 @@ export default function StaffsList() {
 
   // ✅ Apply page access control only for 'staff' role
   const hasPageAccess =
-    currentUser?.role === "staff"
-      ? currentUser?.permissions?.some((perm) => {
-          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch =
+            String(perm?.pageId?._id) === String(pageId) ||
+            String(perm?._id) === String(pageId);
           return idMatch && perm?.permission === true;
         })
       : true;

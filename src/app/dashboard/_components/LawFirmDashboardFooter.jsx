@@ -1,24 +1,14 @@
 "use client";
-import { selectCurrentUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import Link from "next/link";
 import React from "react";
-import { useSelector } from "react-redux";
 
 export default function LawFirmDashboardFooter() {
-  const currentUser = useSelector(selectCurrentUser);
-
-  const homeUrl =
-    currentUser?.role === "user" && currentUser?.regUserType === "lawyer"
-      ? "/lawyer/dashboard"
-      : currentUser?.role === "user" && currentUser?.regUserType === "client"
-      ? "/client/dashboard"
-      : "/admin";
   return (
     <footer className="db-footer bg-[#F3F3F3]">
       <div className="container">
         <p className="font-semibold">
           Copyright &copy; {new Date().getFullYear()} |{" "}
-          <Link href={homeUrl}>TheLawApp</Link>.
+          <Link href="/dashboard">TheLawApp</Link>.
         </p>
       </div>
     </footer>

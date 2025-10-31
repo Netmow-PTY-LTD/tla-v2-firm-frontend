@@ -79,6 +79,9 @@ export default function DashboardHome() {
         })
       : true;
 
+  console.log("PageId in <DashboardHome />:", pageId);
+  console.log("hasPageAccess:", hasPageAccess);
+
   if (!hasPageAccess) {
     return <AccessDenied />;
   }
