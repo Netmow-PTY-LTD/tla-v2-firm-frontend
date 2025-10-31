@@ -19,6 +19,7 @@ import { useGetPagesListQuery } from "@/store/tlaFeatures/public/publicApiServic
 import { useMemo } from "react";
 import AccessDenied from "@/components/AccessDenied";
 import permissionss from "@/data/permissions";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 
 // ---------------- Schema ----------------
 
@@ -61,7 +62,9 @@ const staffSchema = z.object({
 
 export default function CreateStaffPage() {
   const router = useRouter();
-  const currentUser = useSelector(selectCurrentUser);
+
+  const { data: currentUser } = useCurrentUserInfoQuery();
+  console.log("Current User:", currentUser);
   // Only pass firmId if currentUser exists and role is "firm"
   const firmProfileId = currentUser?.firmProfileId;
 
@@ -156,12 +159,12 @@ export default function CreateStaffPage() {
 
   // ✅ Apply page access control only for 'staff' role
   const hasPageAccess =
-    currentUser?.role === "staff"
-      ? currentUser?.permissions?.some((perm) => {
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
           const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
           return idMatch && perm?.permission === true;
         })
-      : true; // other roles always have access
+      : true;
 
   if (!hasPageAccess) {
     return <AccessDenied />;
