@@ -30,5 +30,5 @@ export default firmAuthSlice.reducer;
 
 
 // Corrected selectors
-export const selectCurrentToken = (state) => state.firmAuth.token;
+export const selectCurrentToken = (state) => state.firmAuth.firm_token;
 export const selectCurrentUser = (state) => state.firmAuth?.user;
