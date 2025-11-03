@@ -71,21 +71,21 @@ export default function HeroSection() {
           <div className="flex gap-10 md:gap-16 items-center text-center">
             <div>
               <p className="text-[27px] font-bold text-[var(--color-black)]">
-                33k+
+                8
               </p>
               <p className="text-[#595959] text-sm mt-1">Total Law Firm</p>
             </div>
             <div className="h-10 border-l border-[#262626] hidden md:block"></div>
             <div>
               <p className="text-[27px] font-bold text-[var(--color-black)]">
-                12k+
+                7k+
               </p>
               <p className="text-[#595959] text-sm mt-1">Happy Clients</p>
             </div>
             <div className="h-10 border-l border-[#262626] hidden md:block"></div>
             <div>
               <p className="text-[27px] font-bold text-[var(--color-black)]">
-                20k+
+                74
               </p>
               <p className="text-[#595959] text-sm mt-1">Trusted Lawyer</p>
             </div>
