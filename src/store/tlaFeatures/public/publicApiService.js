@@ -185,6 +185,15 @@ const publicApiService = baseApi.injectEndpoints({
       providesTags: ["city-list"],
     }),
 
+    //country wise services
+    getCountryWiseServices: builder.query({
+      query: (countryId) => ({
+        url: `/country-wise-map/country/${countryId}?type=servicelist`,
+        method: "GET",
+      }),
+      providesTags: ["country-wise-map"],
+    }),
+
     //pages permission
     getPagesList: builder.query({
       query: () => ({
@@ -221,4 +230,5 @@ export const {
   useGetCityListQuery,
   useLazyGetZipCodeListQuery,
   useGetPagesListQuery,
+  useGetCountryWiseServicesQuery,
 } = publicApiService;

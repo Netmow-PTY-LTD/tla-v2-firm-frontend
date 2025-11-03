@@ -102,6 +102,8 @@ export const firmBaseApi = createApi({
     "notification",
     "stats",
     "lawyer-remove",
+    "country-wise-map",
+    "lawyer",
   ],
   endpoints: () => ({}),
 });
