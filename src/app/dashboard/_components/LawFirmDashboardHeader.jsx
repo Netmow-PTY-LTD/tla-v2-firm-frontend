@@ -29,7 +29,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
       skip: !token,
     });
 
-  //console.log("c from header", currentUser);
+  console.log("c from header", currentUser);
 
   return (
     <header className="db-header">
@@ -45,7 +45,7 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
         <button
           data-sidebar-toggle
           onClick={() => onToggleSidebar()}
-          className="xl:hidden"
+          className="xl:hidden cursor-pointer"
         >
           <PanelLeft />
         </button>

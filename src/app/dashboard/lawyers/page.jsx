@@ -30,6 +30,7 @@ import {
 } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
+import { userDummyImage } from "@/data/data";
 
 export default function LawyersList() {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,6 +119,10 @@ export default function LawyersList() {
     }
   };
 
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
+
   if (lawyers.length === 0) {
     return (
       <div className="p-8 text-center max-w-[900px] mx-auto">
@@ -172,10 +177,6 @@ export default function LawyersList() {
         </div>
       </div>
     );
-  }
-
-  if (!hasPageAccess) {
-    return <AccessDenied />;
   }
 
   return (
@@ -274,13 +275,9 @@ export default function LawyersList() {
                     <div className="w-full flex flex-col items-center gap-4 text-center">
                       <div className="w-20 h-20 rounded-full overflow-hidden border flex-shrink-0">
                         <img
-                          src={lawyer.profilePicture}
+                          src={lawyer.profilePicture || userDummyImage}
                           alt={lawyer.name}
                           className="w-full h-full object-cover"
-                          onError={(e) =>
-                            (e.currentTarget.src =
-                              "https://themesbrand.com/velzon/html/master/assets/images/users/avatar-2.jpg")
-                          }
                         />
                       </div>
                       <div>
