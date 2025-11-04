@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import LawFirmProfileDropDown from "./LawFirmProfileDropdown";
 import { Badge } from "@/components/ui/badge";
+import NotificationDropdown from "./NotificationDropDwon";
 
 export default function LawFirmDashboardHeader({ onToggleSidebar }) {
   const [user, setUser] = React.useState(null);
@@ -58,12 +59,13 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
         >
           <span>{companyInfo?.data?.firmName}</span>
         </Badge>
-        <Link
+        {/* <Link
           href="#"
           className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full flex-shrink-0"
         >
           <BellRing className="w-5 h-5 text-gray-500" />
-        </Link>
+        </Link> */}
+        <NotificationDropdown />
         <LawFirmProfileDropDown
           currentUser={currentUser?.data ?? []}
           isCurrentUserLoading={isCurrentUserLoading}
