@@ -41,6 +41,8 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import permissions from "@/data/permissions.json";
+import AccessDenied from "@/components/AccessDenied";
 
 const genderOptions = [
   { id: 1, label: "Male", value: "male" },
@@ -91,6 +93,8 @@ export default function CreateNewLawyer() {
 
   const router = useRouter();
 
+  const pageId = permissions.find((p) => p.slug === "add-new-lawyer")?._id;
+
   const form = useForm({
     resolver: zodResolver(lawyerSchema),
     defaultValues: {
@@ -120,7 +124,12 @@ export default function CreateNewLawyer() {
     }
   );
 
-  const { data: allZipCodes } = useGetZipCodeListQuery(countryId, {
+  const paramsPayload = {
+    countryId: countryId,
+    search: query || "",
+  };
+
+  const { data: allZipCodes } = useGetZipCodeListQuery(paramsPayload, {
     skip: !countryId,
   });
 
@@ -241,6 +250,17 @@ export default function CreateNewLawyer() {
     }
   };
 
+  const hasPageAccess =
+    currentUser?.data?.role === "staff"
+      ? currentUser?.data?.permissions?.some((perm) => {
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
+      : true;
+
+  if (!hasPageAccess) {
+    return <AccessDenied />;
+  }
   return (
     <div className="max-w-[900px] mx-auto bg-white p-6 rounded-lg shadow-sm">
       <div className="w-full">
@@ -248,11 +268,10 @@ export default function CreateNewLawyer() {
           Create New Lawyer
         </h3>
         <p className="text-[#6e6e6e] mt-2 text-sm">
-          Add individual staff members to your company profile to showcase your
-          team. Each staff account can include personal details, role, and
-          specialization, ensuring clients can see who they will be working
-          with. You can also assign permissions to control access within the
-          company dashboard.
+          Add individual lawyers to your firm’s profile to highlight your legal
+          team. Each lawyer’s profile can include personal details, professional
+          role, and area of specialization, helping clients understand who will
+          handle their cases.
         </p>
       </div>
       <div className="mt-6">
@@ -477,9 +496,7 @@ export default function CreateNewLawyer() {
                   )}
                 /> */}
                 <FormItem>
-                  <FormLabel>
-                    What type of legal service do you provide?
-                  </FormLabel>
+                  <FormLabel>Services Specialization</FormLabel>
                   <div className="space-y-1 relative">
                     <Input
                       placeholder="Type to search..."
@@ -701,13 +718,14 @@ export default function CreateNewLawyer() {
             {/* Add more fields as necessary */}
 
             <Button
-              className="cursor-pointer mt-8"
+              className="cursor-pointer mt-2"
               type="submit"
               disabled={isCreatingLawyerLoading}
             >
               {isCreatingLawyerLoading ? (
                 <div className="flex items-center gap-2">
-                  <Loader2 /> <span>Creating...</span>
+                  <Loader2 className="w-4 h-4 animate-spin" />{" "}
+                  <span>Creating...</span>
                 </div>
               ) : (
                 "Create Lawyer"
