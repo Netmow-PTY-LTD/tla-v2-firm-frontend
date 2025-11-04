@@ -36,13 +36,21 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronDown, Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  ChevronDown,
+  Eye,
+  EyeOff,
+  Loader2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import permissions from "@/data/permissions.json";
 import AccessDenied from "@/components/AccessDenied";
+import Link from "next/link";
 
 const genderOptions = [
   { id: 1, label: "Male", value: "male" },
@@ -277,7 +285,7 @@ export default function CreateNewLawyer() {
       <div className="mt-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="flex flex-wrap gap-y-4">
+            <div className="flex flex-wrap gap-y-6">
               <div className="w-full md:w-1/2 md:pr-2">
                 <FormField
                   control={form.control}
@@ -400,7 +408,7 @@ export default function CreateNewLawyer() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="tla-form-control"
+                          className="tla-form-control h-[44px]"
                           onChange={(e) => {
                             field.onChange(e);
                           }}
@@ -423,7 +431,7 @@ export default function CreateNewLawyer() {
                       <FormControl>
                         <Input
                           {...field}
-                          className="tla-form-control"
+                          className="tla-form-control h-[44px]"
                           onChange={(e) => {
                             field.onChange(e);
                           }}
@@ -717,20 +725,29 @@ export default function CreateNewLawyer() {
 
             {/* Add more fields as necessary */}
 
-            <Button
-              className="cursor-pointer mt-2"
-              type="submit"
-              disabled={isCreatingLawyerLoading}
-            >
-              {isCreatingLawyerLoading ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />{" "}
-                  <span>Creating...</span>
-                </div>
-              ) : (
-                "Create Lawyer"
-              )}
-            </Button>
+            <div className="flex justify-between gap-4 items-center">
+              <Link
+                href="/dashboard/lawyers"
+                className="text-sm flex items-center hover:underline bg-black text-white px-4 py-2 rounded-md"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                <span>Back to Lawyers List</span>
+              </Link>
+              <Button
+                className="cursor-pointer mt-2"
+                type="submit"
+                disabled={isCreatingLawyerLoading}
+              >
+                {isCreatingLawyerLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />{" "}
+                    <span>Creating...</span>
+                  </div>
+                ) : (
+                  "Create Lawyer"
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
