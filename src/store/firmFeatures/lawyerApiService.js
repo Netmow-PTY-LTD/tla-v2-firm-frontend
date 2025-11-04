@@ -13,7 +13,7 @@ const lawyerApiService = firmBaseApi.injectEndpoints({
 
     lawyerLoginRequest: builder.mutation({
       query: (data) => ({
-        url: "/auth/request-lawyer-access",
+        url: "/lawyer/request-lawyer-access",
         method: "POST",
         body: data,
       }),
@@ -21,7 +21,7 @@ const lawyerApiService = firmBaseApi.injectEndpoints({
     //lawyer remove from firm
     removeLawyerFromFirm: builder.mutation({
       query: (body) => ({
-        url: `/auth/lawyer-remove-from-firm`,
+        url: `/lawyer/lawyer-remove-from-firm`,
         method: "POST",
         body: { lawyerProfileId: body.lawyerProfileId },
       }),
