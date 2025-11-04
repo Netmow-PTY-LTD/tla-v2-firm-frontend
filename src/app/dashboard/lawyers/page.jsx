@@ -15,14 +15,11 @@ import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
-import {
-  useCurrentUserInfoQuery,
-  useLawyerLoginRequestMutation,
-  useRemoveLawyerFromFirmMutation,
-} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { userDummyImage } from "@/data/data";
+import { useLawyerLoginRequestMutation, useRemoveLawyerFromFirmMutation } from "@/store/firmFeatures/lawyerApiService";
 
 export default function LawyersList() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,12 +37,11 @@ export default function LawyersList() {
     refetch: refetchFirmInfo,
   } = useGetFirmInfoQuery();
 
-  console.log("Current User on Lawyers List Page:", currentUser);
+
   const [lawyerLoginRequest, { isLoading: isLawyerLoginRequestLoading }] =
     useLawyerLoginRequestMutation();
-    
 
-  //console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
+
 
   const lawyers = companyInfo?.data?.lawyers || [];
 

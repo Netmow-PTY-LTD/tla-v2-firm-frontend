@@ -10,7 +10,28 @@ const lawyerApiService = firmBaseApi.injectEndpoints({
       }),
       invalidatesTags: ["lawyer"],
     }),
+
+    lawyerLoginRequest: builder.mutation({
+      query: (data) => ({
+        url: "/auth/request-lawyer-access",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    //lawyer remove from firm
+    removeLawyerFromFirm: builder.mutation({
+      query: (body) => ({
+        url: `/auth/lawyer-remove-from-firm`,
+        method: "POST",
+        body: { lawyerProfileId: body.lawyerProfileId },
+      }),
+      invalidatesTags: ["lawyer-remove"],
+    }),
   }),
 });
 
-export const { useCreateLawyerMutation } = lawyerApiService;
+export const {
+   useCreateLawyerMutation ,
+    useLawyerLoginRequestMutation,
+    useRemoveLawyerFromFirmMutation
+  } = lawyerApiService;
