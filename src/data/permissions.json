@@ -142,5 +142,11 @@
     "name": "You are permitted to log in to the Lawyer Panel",
     "slug": "you-are-permitted-to-log-in-to-the-lawyer-panel",
     "path": ""
+  },
+  {
+    "_id": "6909771624cfc0282e70ef3c",
+    "title": "Add New Lawyer",
+    "description": "Add New Lawyer",
+    "slug": "add-new-lawyer"
   }
 ]
