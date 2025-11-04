@@ -19,7 +19,12 @@ import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthA
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { userDummyImage } from "@/data/data";
-import { useLawyerLoginRequestMutation, useRemoveLawyerFromFirmMutation } from "@/store/firmFeatures/lawyerApiService";
+import {
+  useLawyerLoginRequestMutation,
+  useRemoveLawyerFromFirmMutation,
+} from "@/store/firmFeatures/lawyerApiService";
+import EliteProBadge from "@/components/icons/EliteProBadge";
+import SubscriptionBadge from "@/components/icons/SubscriptionBadge";
 
 export default function LawyersList() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,11 +42,8 @@ export default function LawyersList() {
     refetch: refetchFirmInfo,
   } = useGetFirmInfoQuery();
 
-
   const [lawyerLoginRequest, { isLoading: isLawyerLoginRequestLoading }] =
     useLawyerLoginRequestMutation();
-
-
 
   const lawyers = companyInfo?.data?.lawyers || [];
 
@@ -59,9 +61,9 @@ export default function LawyersList() {
   const hasPageAccess =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-        const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
-        return idMatch && perm?.permission === true;
-      })
+          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+          return idMatch && perm?.permission === true;
+        })
       : true; // other roles always have access
 
   const loginAccessId = permissions?.find(
@@ -71,10 +73,10 @@ export default function LawyersList() {
   const hasLoginAsLawyerPermissions =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-        const idMatch =
-          perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
-        return idMatch && perm?.permission === true;
-      })
+          const idMatch =
+            perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
+          return idMatch && perm?.permission === true;
+        })
       : true;
 
   const handleLawyerLogin = async (lawyerId) => {
@@ -205,15 +207,15 @@ export default function LawyersList() {
                       </button>
                       {singleLawyer?.isElitePro === true &&
                         singleLawyer?.eliteProSubscriptionId !== null && (
-                          <div className="w-8 h-8 bg-[var(--primary-color)] text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center justify-center">
-                            E
+                          <div className="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center">
+                            <EliteProBadge className="w-5 h-5" />
                           </div>
                         )}
 
                       {singleLawyer?.subscriptionId &&
                         singleLawyer?.subscriptionId !== null && (
-                          <div className="bg-[var(--secondary-color)] text-white px-2 py-1 rounded-full text-xs font-semibold w-8 h-8 flex items-center justify-center">
-                            S
+                          <div className="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center">
+                            <SubscriptionBadge className="w-5 h-5" />
                           </div>
                         )}
                     </div>
@@ -327,8 +329,8 @@ export default function LawyersList() {
                               Subscription:
                             </span>
                             <span className="text-gray-800 font-medium text-xs">
-                              {formatDate(singleLawyer.subscriptionPeriodStart)} →{" "}
-                              {formatDate(singleLawyer.subscriptionPeriodEnd)}
+                              {formatDate(singleLawyer.subscriptionPeriodStart)}{" "}
+                              → {formatDate(singleLawyer.subscriptionPeriodEnd)}
                             </span>
                           </div>
                         )}
@@ -386,13 +388,15 @@ export default function LawyersList() {
 
                       {/* Delete */}
                       <button
-                        onClick={() => { setIsOpen(true); setLawyerIdToRemove(singleLawyer?._id) }}
+                        onClick={() => {
+                          setIsOpen(true);
+                          setLawyerIdToRemove(singleLawyer?._id);
+                        }}
                         className="px-4 py-2 text-sm bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors duration-200 font-medium cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4 inline-block mr-1" />
                         Delete
                       </button>
-
                     </div>
                   </div>
                 </div>
@@ -410,7 +414,6 @@ export default function LawyersList() {
         description="Do you want to remove this lawyer?"
         cancelText="No"
       />
-
     </div>
   );
 }
