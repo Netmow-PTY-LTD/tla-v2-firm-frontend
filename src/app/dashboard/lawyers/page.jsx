@@ -10,30 +10,20 @@ import {
   Users,
 } from "lucide-react";
 import React, { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useGetFirmInfoQuery } from "@/store/firmFeatures/firmApiService";
 import { Skeleton } from "@/components/ui/skeleton";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
-import {
-  useCurrentUserInfoQuery,
-  useLawyerLoginRequestMutation,
-  useRemoveLawyerFromFirmMutation,
-} from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import { ConfirmationModal } from "@/components/common/components/ConfirmationModal";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
 import { userDummyImage } from "@/data/data";
+import { useLawyerLoginRequestMutation, useRemoveLawyerFromFirmMutation } from "@/store/firmFeatures/lawyerApiService";
 
 export default function LawyersList() {
   const [isOpen, setIsOpen] = useState(false);
+  const [lawyerIdToRemove, setLawyerIdToRemove] = useState(null);
   const pageId = permissions?.find(
     (perm) => perm.slug === "view-lawyer-list"
   )._id;
@@ -47,11 +37,11 @@ export default function LawyersList() {
     refetch: refetchFirmInfo,
   } = useGetFirmInfoQuery();
 
-  console.log("Current User on Lawyers List Page:", currentUser);
+
   const [lawyerLoginRequest, { isLoading: isLawyerLoginRequestLoading }] =
     useLawyerLoginRequestMutation();
 
-  //console.log("Company Info on Lawyers List:", companyInfo?.data?.lawyers);
+
 
   const lawyers = companyInfo?.data?.lawyers || [];
 
@@ -69,9 +59,9 @@ export default function LawyersList() {
   const hasPageAccess =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+        return idMatch && perm?.permission === true;
+      })
       : true; // other roles always have access
 
   const loginAccessId = permissions?.find(
@@ -81,10 +71,10 @@ export default function LawyersList() {
   const hasLoginAsLawyerPermissions =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch =
-            perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch =
+          perm?.pageId?._id === loginAccessId || perm?._id === loginAccessId;
+        return idMatch && perm?.permission === true;
+      })
       : true;
 
   const handleLawyerLogin = async (lawyerId) => {
@@ -192,9 +182,9 @@ export default function LawyersList() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {lawyers?.length > 0 &&
-          lawyers?.map((lawyer) => (
+          lawyers?.map((singleLawyer) => (
             <div
-              key={lawyer._id}
+              key={singleLawyer._id}
               className="bg-white shadow rounded-lg overflow-hidden relative w-full border"
             >
               {/* Team Cover */}
@@ -213,15 +203,15 @@ export default function LawyersList() {
                       >
                         <Star className="h-4 w-4 text-yellow-500" />
                       </button>
-                      {lawyer?.isElitePro === true &&
-                        lawyer?.eliteProSubscriptionId !== null && (
+                      {singleLawyer?.isElitePro === true &&
+                        singleLawyer?.eliteProSubscriptionId !== null && (
                           <div className="w-8 h-8 bg-[var(--primary-color)] text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center justify-center">
                             E
                           </div>
                         )}
 
-                      {lawyer?.subscriptionId &&
-                        lawyer?.subscriptionId !== null && (
+                      {singleLawyer?.subscriptionId &&
+                        singleLawyer?.subscriptionId !== null && (
                           <div className="bg-[var(--secondary-color)] text-white px-2 py-1 rounded-full text-xs font-semibold w-8 h-8 flex items-center justify-center">
                             S
                           </div>
@@ -275,27 +265,27 @@ export default function LawyersList() {
                     <div className="w-full flex flex-col items-center gap-4 text-center">
                       <div className="w-20 h-20 rounded-full overflow-hidden border flex-shrink-0">
                         <img
-                          src={lawyer.profilePicture || userDummyImage}
-                          alt={lawyer.name}
+                          src={singleLawyer.profilePicture || userDummyImage}
+                          alt={singleLawyer.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div>
                         <Link
-                          href={`/dashboard/lawyers/${lawyer.slug}`}
+                          href={`/dashboard/lawyers/${singleLawyer.slug}`}
                           className="hover:underline"
                         >
                           <h5 className="text-base font-semibold">
-                            {lawyer.name}
+                            {singleLawyer.name}
                           </h5>
                         </Link>
                         <p className="text-gray-500 text-sm">
-                          {lawyer.designation}
+                          {singleLawyer.designation}
                         </p>
                       </div>
                     </div>
                     <div className="flex flex-wrap justify-center gap-2">
-                      {lawyer?.serviceIds?.map((service, index) => (
+                      {singleLawyer?.serviceIds?.map((service, index) => (
                         <span
                           key={index}
                           className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-md"
@@ -311,34 +301,34 @@ export default function LawyersList() {
                           Total Credits:
                         </span>
                         <span className="text-gray-800 font-medium text-xs">
-                          {lawyer?.credits || 0}
+                          {singleLawyer?.credits || 0}
                         </span>
                       </div>
 
                       {/* Elite Pro Dates */}
-                      {lawyer?.eliteProPeriodStart &&
-                        lawyer?.eliteProPeriodEnd && (
+                      {singleLawyer?.eliteProPeriodStart &&
+                        singleLawyer?.eliteProPeriodEnd && (
                           <div className="flex justify-between">
                             <span className="font-medium text-xs">
                               Elite Pro:
                             </span>
                             <span className="text-gray-800 font-medium text-xs">
-                              {formatDate(lawyer.eliteProPeriodStart)} →{" "}
-                              {formatDate(lawyer.eliteProPeriodEnd)}
+                              {formatDate(singleLawyer.eliteProPeriodStart)} →{" "}
+                              {formatDate(singleLawyer.eliteProPeriodEnd)}
                             </span>
                           </div>
                         )}
 
                       {/* Subscription Dates */}
-                      {lawyer?.subscriptionPeriodStart &&
-                        lawyer?.subscriptionPeriodEnd && (
+                      {singleLawyer?.subscriptionPeriodStart &&
+                        singleLawyer?.subscriptionPeriodEnd && (
                           <div className="flex justify-between">
                             <span className="font-medium text-xs">
                               Subscription:
                             </span>
                             <span className="text-gray-800 font-medium text-xs">
-                              {formatDate(lawyer.subscriptionPeriodStart)} →{" "}
-                              {formatDate(lawyer.subscriptionPeriodEnd)}
+                              {formatDate(singleLawyer.subscriptionPeriodStart)} →{" "}
+                              {formatDate(singleLawyer.subscriptionPeriodEnd)}
                             </span>
                           </div>
                         )}
@@ -348,19 +338,19 @@ export default function LawyersList() {
                     <div className="w-full flex text-center text-gray-500">
                       <div className="flex-1 border-r">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.totalCases ?? 0}
+                          {singleLawyer.totalCases ?? 0}
                         </h5>
                         <p className="text-sm">Total Cases</p>
                       </div>
                       <div className="flex-1">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.hiredCases ?? 0}
+                          {singleLawyer.hiredCases ?? 0}
                         </h5>
                         <p className="text-sm">Hired</p>
                       </div>
                       <div className="flex-1">
                         <h5 className="text-lg font-semibold text-gray-800">
-                          {lawyer.responseCases ?? 0}
+                          {singleLawyer.responseCases ?? 0}
                         </h5>
                         <p className="text-sm">Responses</p>
                       </div>
@@ -371,7 +361,7 @@ export default function LawyersList() {
                     <div className="w-full flex flex-wrap justify-center gap-3 mt-3">
                       {/* View Profile */}
                       <Link
-                        href={`/dashboard/lawyers/${lawyer.slug}`}
+                        href={`/dashboard/lawyers/${singleLawyer.slug}`}
                         className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md transition-colors duration-200 font-medium cursor-pointer"
                       >
                         <Eye className="w-4 h-4 inline-block mr-1" />
@@ -382,7 +372,7 @@ export default function LawyersList() {
                       {hasLoginAsLawyerPermissions && (
                         <button
                           disabled={isLawyerLoginRequestLoading}
-                          onClick={() => handleLawyerLogin(lawyer?._id)}
+                          onClick={() => handleLawyerLogin(singleLawyer?._id)}
                           className="px-4 py-2 text-sm bg-[#00C3C0] hover:bg-[#00a9a7] text-white rounded-md transition-colors duration-200 font-medium cursor-pointer"
                         >
                           {isLawyerLoginRequestLoading ? (
@@ -396,19 +386,13 @@ export default function LawyersList() {
 
                       {/* Delete */}
                       <button
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => { setIsOpen(true); setLawyerIdToRemove(singleLawyer?._id) }}
                         className="px-4 py-2 text-sm bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors duration-200 font-medium cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4 inline-block mr-1" />
                         Delete
                       </button>
-                      <ConfirmationModal
-                        onConfirm={() => handleLawyerRemove(lawyer?._id)}
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
-                        description="Do you want to remove this lawyer?"
-                        cancelText="No"
-                      />
+
                     </div>
                   </div>
                 </div>
@@ -416,6 +400,17 @@ export default function LawyersList() {
             </div>
           ))}
       </div>
+
+      {/* Confirmation Modal for Deletion */}
+
+      <ConfirmationModal
+        onConfirm={() => handleLawyerRemove(lawyerIdToRemove)}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        description="Do you want to remove this lawyer?"
+        cancelText="No"
+      />
+
     </div>
   );
 }
