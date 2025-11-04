@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   BadgeCheck,
   Bell,
@@ -13,34 +13,32 @@ import {
   PlusCircle,
   Send,
   Trash2,
-} from 'lucide-react';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import Link from 'next/link';
-import { useGetAllNotificationsQuery } from '@/store/firmFeatures/notificationsApiService';
-
-
+} from "lucide-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
+import { useGetAllNotificationsQuery } from "@/store/firmFeatures/notificationsApiService";
 
 dayjs.extend(relativeTime);
 
 const iconStyles = {
-  login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
-  update: { Icon: Edit, fill: '#F59E0B' }, // Amber/Yellow
-  delete: { Icon: Trash2, fill: '#EF4444' }, // Red
-  create: { Icon: PlusCircle, fill: '#10B981' }, // Green
-  schedule: { Icon: CalendarCheck, fill: '#6366F1' }, // Indigo
-  sendsms: { Icon: Send, fill: '#0EA5E9' }, // Sky blue
-  contact: { Icon: PhoneCall, fill: '#8B5CF6' }, // Violet
-  sendemail: { Icon: Mail, fill: '#2563EB' }, // Blue
-  whatsapp: { Icon: Bell, fill: '#25D366' }, // WhatsApp green
-  status: { Icon: BadgeCheck, fill: '#22C55E' }, // Success green
-  other: { Icon: Bell, fill: '#6B7280' }, // Gray
+  login: { Icon: LogIn, fill: "#3B82F6" }, // Blue
+  update: { Icon: Edit, fill: "#F59E0B" }, // Amber/Yellow
+  delete: { Icon: Trash2, fill: "#EF4444" }, // Red
+  create: { Icon: PlusCircle, fill: "#10B981" }, // Green
+  schedule: { Icon: CalendarCheck, fill: "#6366F1" }, // Indigo
+  sendsms: { Icon: Send, fill: "#0EA5E9" }, // Sky blue
+  contact: { Icon: PhoneCall, fill: "#8B5CF6" }, // Violet
+  sendemail: { Icon: Mail, fill: "#2563EB" }, // Blue
+  whatsapp: { Icon: Bell, fill: "#25D366" }, // WhatsApp green
+  status: { Icon: BadgeCheck, fill: "#22C55E" }, // Success green
+  other: { Icon: Bell, fill: "#6B7280" }, // Gray
 };
 
 const generateActivityIcon = (type) => {
   const { Icon, fill } = iconStyles[type] || iconStyles.other;
 
-  return <Icon className="w-5 h-5 inline" stroke={'#fff'} />;
+  return <Icon className="w-5 h-5 inline" stroke={"#fff"} />;
 };
 
 export default function NotificationDropdown() {
@@ -51,10 +49,8 @@ export default function NotificationDropdown() {
     isRead: false,
   });
 
-//   const [markAsRead] = useMarkAsRedNotificationMutation();
+  //   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
-
-
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -64,25 +60,25 @@ export default function NotificationDropdown() {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-//   const handleNotificationClick = async (n) => {
-//     setIsOpen(false);
-//     if (!n.read) {
-//       await markAsRead(n._id); // call mutation to mark as read
-//     }
-//     // Optional: route to the link
-//     if (n.link) {
-//       window.location.href = n.link;
-//     }
-//   };
+  //   const handleNotificationClick = async (n) => {
+  //     setIsOpen(false);
+  //     if (!n.read) {
+  //       await markAsRead(n._id); // call mutation to mark as read
+  //     }
+  //     // Optional: route to the link
+  //     if (n.link) {
+  //       window.location.href = n.link;
+  //     }
+  //   };
 
   return (
     <div className="relative" ref={dropdownRef}>
       <div
-        className="cursor-pointer relative"
+        className="cursor-pointer relative w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center flex-shrink-0"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <BellRing className="w-5 h-5 text-[#919FAC]" />
