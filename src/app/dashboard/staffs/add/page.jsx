@@ -24,7 +24,7 @@ import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthA
 // ---------------- Schema ----------------
 
 const staffSchema = z.object({
-  firmProfileId: z.string().min(1, "Firm profile ID is required"),
+  //firmProfileId: z.string().min(1, "Firm profile ID is required"),
   fullName: z.string().min(1, "Full name is required"),
   designation: z.string().min(1, "Designation is required"),
   email: z.string().email("Please enter a valid email address"),
@@ -64,9 +64,11 @@ export default function CreateStaffPage() {
   const router = useRouter();
 
   const { data: currentUser } = useCurrentUserInfoQuery();
-  console.log("Current User:", currentUser);
+  //console.log("Current User:", currentUser);
   // Only pass firmId if currentUser exists and role is "firm"
-  const firmProfileId = currentUser?.firmProfileId;
+  const firmProfileId = currentUser?.data?.firmProfileId?._id;
+
+  //console.log("FirmProfileId", firmProfileId);
 
   const pageId = permissionss?.find(
     (perm) => perm.slug === "add-new-staff"

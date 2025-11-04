@@ -45,8 +45,15 @@ export const LawFirmSidebarItems = {
       url: "/dashboard/lawyers",
       icon: Layers,
       isActive: true,
+      items: [
+        { title: "Add New", url: "/dashboard/lawyers/add", icon: Plus },
+        {
+          title: "List of Lawyers",
+          url: "/dashboard/lawyers",
+          icon: List,
+        },
+      ],
     },
-
     {
       title: "Requests",
       url: "/dashboard/requests",
