@@ -57,7 +57,7 @@ export default function Header() {
             </nav>
           )}
           <div className="flex items-center gap-2">
-            {token & validToken ? (
+            {validToken ? (
               <Link
                 href="/dashboard"
                 className="px-3 py-2 text-sm rounded-xl bg-black text-white hover:bg-black/90 flex items-center gap-2"
