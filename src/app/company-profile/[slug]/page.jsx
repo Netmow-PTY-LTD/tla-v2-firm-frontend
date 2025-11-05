@@ -218,6 +218,7 @@ export default function CompanyProfile() {
 /* Images and media */
 .company-desc img {
   max-width: 100%;
+  width: 100%;
   height: auto;
   display: block;
   margin: 1.5rem 0;
