@@ -43,7 +43,7 @@ export default function Firm() {
       phone: companyInfo?.data?.contactInfo?.phone || "",
       website: companyInfo?.data?.contactInfo?.officialWebsite || "",
       registrationNumber: companyInfo?.data?.registrationNumber || "",
-      vatTaxId: companyInfo?.data?.vatTaxId || "",
+      brand_color: companyInfo?.data?.brandColor || "",
       yearEstablished: companyInfo?.data?.yearEstablished || "",
       legalFocusAreas: companyInfo?.data?.legalFocusAreas || [],
       zipCode: companyInfo?.data?.contactInfo?.zipCode
@@ -63,7 +63,7 @@ export default function Firm() {
     useUpdateFirmInfoMutation();
 
   const onSubmit = async (data) => {
-    //console.log("form data after submit==>", data);
+    console.log("form brand color after submit==>", data?.brand_color);
 
     const {
       companyLogo,
@@ -72,7 +72,7 @@ export default function Firm() {
       phone,
       website,
       registrationNumber,
-      vatTaxId,
+      brand_color,
       companySize,
       yearsInBusiness,
       description,
@@ -85,7 +85,7 @@ export default function Firm() {
     const payload = {
       firmName,
       registrationNumber,
-      vatTaxId,
+      brandColor: brand_color,
       contactInfo: {
         country:
           companyInfo?.data?.contactInfo?.country ||
