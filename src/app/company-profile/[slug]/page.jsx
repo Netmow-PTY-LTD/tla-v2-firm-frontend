@@ -333,13 +333,13 @@ export default function CompanyProfile() {
             </Link>
             <div className="flex flex-wrap lg:flex-nowrap justify-between items-end gap-8">
               <div className="flex flex-wrap items-end gap-8">
-                <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[80px] border-5 border-[var(--brand-color)] p-4 bg-white">
+                <div className="inline-flex justify-center items-center rounded-lg w-[268px] h-[268px] mt-[80px] border-5 border-[var(--brand-color)] p-4 bg-white">
                   <Image
                     src={firmLogo}
                     alt="company logo"
                     width={268}
                     height={268}
-                    className="rounded-lg w-full h-full object-cover"
+                    className="rounded-lg max-w-full h-auto object-contain"
                   />
                 </div>
                 <div className="flex flex-col gap-4">
