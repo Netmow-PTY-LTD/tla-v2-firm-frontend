@@ -22,6 +22,8 @@ export default function Header() {
   const token = useSelector(selectCurrentToken);
   const validToken = checkTokenValidity(token);
 
+  console.log('validte token',validToken)
+
   return (
     <>
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b">
@@ -55,7 +57,7 @@ export default function Header() {
             </nav>
           )}
           <div className="flex items-center gap-2">
-            {token ? (
+            {token & validToken ? (
               <Link
                 href="/dashboard"
                 className="px-3 py-2 text-sm rounded-xl bg-black text-white hover:bg-black/90 flex items-center gap-2"

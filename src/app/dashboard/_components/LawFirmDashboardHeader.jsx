@@ -13,11 +13,17 @@ import LawFirmProfileDropDown from "./LawFirmProfileDropdown";
 import { Badge } from "@/components/ui/badge";
 import NotificationDropdown from "./NotificationDropDwon";
 
+import { checkTokenValidity } from "@/helpers/checkTokenValidity";
+
 export default function LawFirmDashboardHeader({ onToggleSidebar }) {
   const [user, setUser] = React.useState(null);
   const router = useRouter();
 
-  const token = Cookies.get("firm_token");
+  const getToken = Cookies.get("firm_token");
+
+  const token = checkTokenValidity(getToken)
+
+
   const { data: companyInfo, isLoading: isCurrentUserLoading } =
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
@@ -31,6 +37,9 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
     });
 
   console.log("c from header", currentUser);
+
+
+
 
   return (
     <header className="db-header">
