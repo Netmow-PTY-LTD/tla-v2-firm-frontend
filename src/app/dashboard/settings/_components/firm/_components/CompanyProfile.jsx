@@ -61,8 +61,9 @@ export default function CompanyProfile() {
           textColor="text-[#4b4949]"
         />
         <TextInput
-          label="VAT / Tax ID"
-          name="vatTaxId"
+          label="Brand Color"
+          name="brand_color"
+          type="color"
           placeholder="Enter VAT/Tax ID"
           textColor="text-[#4b4949]"
         />

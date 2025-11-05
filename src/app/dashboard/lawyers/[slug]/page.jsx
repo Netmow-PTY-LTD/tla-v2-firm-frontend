@@ -1,6 +1,6 @@
 "use client";
 
-import { lawyers } from "@/data/data";
+import { lawyers, userDummyImage } from "@/data/data";
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -112,8 +112,6 @@ export default function LawyerDetailsPage() {
         })
       : true; // other roles always have access
 
-  console.log("Has Page Access:", hasPageAccess);
-
   if (!hasPageAccess) {
     return <AccessDenied />;
   }
@@ -125,7 +123,7 @@ export default function LawyerDetailsPage() {
         {/* Profile Image */}
         <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-gray-200 mb-4">
           <img
-            src={lawyer?.img || lawyer?.profilePicture}
+            src={lawyer?.img || lawyer?.profilePicture || userDummyImage}
             alt={lawyer?.name}
             className="w-full h-full object-cover"
           />
