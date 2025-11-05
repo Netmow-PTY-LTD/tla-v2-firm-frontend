@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { userDummyImage } from "@/data/data";
 export default function CompanyLawyersList({ lawyers }) {
+  console.log("lawyers", lawyers);
   return (
     <section className="py-[50px]">
       <div className="container">
@@ -25,13 +27,9 @@ export default function CompanyLawyersList({ lawyers }) {
                       <div className="w-full flex flex-col items-center gap-4 text-center">
                         <div className="w-20 h-20 rounded-full overflow-hidden border flex-shrink-0">
                           <img
-                            src={lawyer?.profilePicture}
+                            src={lawyer?.profilePicture || userDummyImage}
                             alt={lawyer?.name}
                             className="w-full h-full object-cover"
-                            onError={(e) =>
-                              (e.currentTarget.src =
-                                "https://themesbrand.com/velzon/html/master/assets/images/users/avatar-2.jpg")
-                            }
                           />
                         </div>
                         <div className="text-white">
@@ -62,13 +60,13 @@ export default function CompanyLawyersList({ lawyers }) {
                       <div className="w-full flex text-center">
                         <div className="flex-1 border-r">
                           <h5 className="text-lg font-semibold text-white">
-                            {lawyer.cases}
+                            {lawyer.totalCases}
                           </h5>
                           <p className="text-sm text-white">Total Cases</p>
                         </div>
                         <div className="flex-1">
                           <h5 className="text-lg font-semibold text-white">
-                            {lawyer.hired}
+                            {lawyer.hiredCases}
                           </h5>
                           <p className="text-sm text-white">Hired</p>
                         </div>

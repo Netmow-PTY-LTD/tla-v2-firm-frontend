@@ -207,14 +207,14 @@ export default function LawyersList() {
                       </button>
                       {singleLawyer?.isElitePro === true &&
                         singleLawyer?.eliteProSubscriptionId !== null && (
-                          <div className="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center">
+                          <div className="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center bg-white">
                             <EliteProBadge className="w-5 h-5" />
                           </div>
                         )}
 
                       {singleLawyer?.subscriptionId &&
                         singleLawyer?.subscriptionId !== null && (
-                          <div className="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center">
+                          <div className="w-8 h-8 border border-gray-300 rounded-full flex justify-center items-center bg-white">
                             <SubscriptionBadge className="w-5 h-5" />
                           </div>
                         )}
