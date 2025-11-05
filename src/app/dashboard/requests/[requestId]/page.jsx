@@ -16,6 +16,8 @@ import { useParams } from "next/navigation";
 import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
 import AccessDenied from "@/components/AccessDenied";
 import permissions from "@/data/permissions";
+import { Loader2 } from "lucide-react";
+import { showSuccessToast } from "@/components/common/toasts";
 
 export default function Page() {
   const params = useParams();
@@ -34,7 +36,10 @@ export default function Page() {
 
   //console.log("Single Request Data:", data);
 
-  const [updateLawyerRequestStatus] = useUpdateLawyerRequestMutation();
+  const [
+    updateLawyerRequestStatus,
+    { isLoading: isUpdateLawyerRequestStatusLoading },
+  ] = useUpdateLawyerRequestMutation();
 
   if (isLoading) {
     return (
@@ -76,7 +81,7 @@ export default function Page() {
         data: payload,
       }).unwrap(); // unwrap will throw error if mutation fails
 
-      toast.success(
+      showSuccessToast(
         `Request has been ${
           newStatus === "approved" ? "approved" : "rejected"
         } successfully!`
@@ -108,9 +113,9 @@ export default function Page() {
     <div className="max-w-4xl mx-auto bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       {/* Header Section */}
       <div className="px-6 sm:px-8 py-5 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white/60 backdrop-blur-sm">
-        <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+        <h4 className="text-lg font-semibold text-gray-900 tracking-tight">
           Request Details
-        </h3>
+        </h4>
         <span
           className={`px-4 py-1 text-sm font-medium rounded-full shadow-sm capitalize ${
             status === "pending"
@@ -139,9 +144,9 @@ export default function Page() {
                 className="w-16 h-16 rounded-full object-cover ring-2 ring-gray-100"
               />
               <div>
-                <h4 className="text-md font-semibold text-gray-900">
+                <h5 className="text-md font-semibold text-gray-900">
                   {lawyerId.name}
-                </h4>
+                </h5>
                 <p className="text-sm text-gray-500">
                   {lawyerId.lawyerContactEmail}
                 </p>
@@ -173,9 +178,9 @@ export default function Page() {
 
           {/* Firm Info */}
           <div className="bg-white/70 col-span-1">
-            <h4 className="text-lg font-semibold text-gray-900 mb-3">
+            <h5 className="text-lg font-semibold text-gray-900 mb-1">
               Firm Details
-            </h4>
+            </h5>
             <div className="text-sm text-gray-700 space-y-1.5">
               <p>
                 <span className="font-medium text-gray-800">Name:</span>{" "}
@@ -211,9 +216,9 @@ export default function Page() {
 
         {/* Request Message */}
         <div className="border-t border-gray-200 pt-6">
-          <h4 className="text-lg font-semibold text-gray-900 mb-2">
+          <h5 className="text-lg font-semibold text-gray-900 mb-2">
             Request Message
-          </h4>
+          </h5>
           <div className="bg-gray-50 rounded-lg p-4 text-gray-700 text-sm leading-relaxed whitespace-pre-line break-words">
             {message}
           </div>
@@ -231,8 +236,15 @@ export default function Page() {
             <Button
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg w-full sm:w-auto px-6 py-2.5 transition-all shadow-sm"
               onClick={() => handleStatusUpdate("approved")}
+              disabled={isUpdateLawyerRequestStatusLoading}
             >
-              Approve Request
+              {isUpdateLawyerRequestStatusLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                </div>
+              ) : (
+                "Approve Request"
+              )}
             </Button>
             <Button
               className="bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-lg w-full sm:w-auto px-6 py-2.5 transition-all shadow-sm"

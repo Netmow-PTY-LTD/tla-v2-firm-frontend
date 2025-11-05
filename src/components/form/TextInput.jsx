@@ -37,7 +37,7 @@ export default function TextInput({
           <FormItem className={itemClassName}>
             {label && (
               <FormLabel className={`${labelClassName}`} htmlFor={name}>
-                {label}
+                {label} {type === "color" ? `(${value})` : ""}
               </FormLabel>
             )}
             <FormControl>
