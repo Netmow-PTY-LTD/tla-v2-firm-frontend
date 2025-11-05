@@ -19,6 +19,7 @@ import CompanyVideos from "../_components/CompanyVideos";
 import { useGetCompanyProfileBySlugQuery } from "@/store/firmFeatures/firmApiService";
 import { Loader, Loader2 } from "lucide-react";
 import Preloader from "@/components/Preloader";
+import { hexToRgba } from "@/helpers/hextorgba";
 
 const slides = [
   { id: 1, image: "/assets/img/org-logo1.webp" },
@@ -75,6 +76,9 @@ export default function CompanyProfile() {
   const contactInfo = companyProfileInfo?.data?.contactInfo || null;
   const photos = companyProfileInfo?.data?.media?.photos || [];
   const videos = companyProfileInfo?.data?.media?.videos || [];
+  const brandColor = companyProfileInfo?.data?.brandColor || "#dadada";
+
+  const brandColorRgba = hexToRgba(brandColor, 0.1);
 
   if (isCompanyProfileInfoLoading || isCompanyProfileInfoFetching) {
     return <Preloader />;
@@ -82,8 +86,226 @@ export default function CompanyProfile() {
 
   return (
     <MainLayout>
+      <style>
+        {`
+            :root {
+              --brand-color: ${brandColor};
+              --brand-color-rgba: ${brandColorRgba}
+            }
+            
+            .profile-heading:after {
+                background-color: ${brandColor};
+            }
+
+       .company-desc {
+  color: #1a1a1a;
+  font-size: 1rem;
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+/* Headings */
+.company-desc h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: #111;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.company-desc h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  color: #222;
+}
+
+.company-desc h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem;
+  color: #333;
+}
+
+.company-desc h4,
+.company-desc h5,
+.company-desc h6 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 1rem 0 0.5rem;
+  color: #444;
+}
+
+/* Paragraph */
+.company-desc p {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Links */
+.company-desc a {
+  color: #0070f3;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.company-desc a:hover {
+  color: #0056b3;
+}
+
+/* Lists */
+.company-desc ul,
+.company-desc ol {
+  margin: 1rem 0 1rem 2rem;
+  padding: 0;
+}
+.company-desc ul {
+  list-style-type: disc;
+}
+.company-desc ol {
+  list-style-type: decimal;
+}
+.company-desc li {
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquote */
+.company-desc blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: #f9f9f9;
+  border-left: 4px solid #0070f3;
+  font-style: italic;
+  color: #555;
+}
+
+/* Emphasis and text styles */
+.company-desc i,
+.company-desc em {
+  font-style: italic;
+  color: #555;
+}
+.company-desc b,
+.company-desc strong {
+  font-weight: 600;
+  color: #000;
+}
+.company-desc u {
+  text-decoration: underline;
+}
+.company-desc s,
+.company-desc del {
+  text-decoration: line-through;
+  color: #888;
+}
+.company-desc mark {
+  background-color: #fff59d;
+  padding: 0 2px;
+}
+.company-desc small {
+  font-size: 0.875rem;
+  color: #666;
+}
+.company-desc sub {
+  font-size: 0.75rem;
+  vertical-align: sub;
+}
+.company-desc sup {
+  font-size: 0.75rem;
+  vertical-align: super;
+}
+
+/* Images and media */
+.company-desc img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+}
+.company-desc figure {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.company-desc figcaption {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* Code and preformatted text */
+.company-desc pre {
+  background: #1e1e1e;
+  color: #e5e5e5;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+.company-desc code {
+  background: #f5f5f5;
+  color: #d63384;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+/* Tables */
+.company-desc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+.company-desc th,
+.company-desc td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+.company-desc th {
+  background-color: #f3f3f3;
+  font-weight: 600;
+}
+
+/* Horizontal rule */
+.company-desc hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 2rem 0;
+}
+
+/* Line break */
+.company-desc br {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Inline elements */
+.company-desc span {
+  color: inherit;
+}
+.company-desc div {
+  color: inherit;
+}
+
+/* Embedded media */
+.company-desc iframe,
+.company-desc video,
+.company-desc audio {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  display: block;
+}
+
+
+          `}
+      </style>
       <section
-        className="bg-cover bg-no-repeat bg-center py-20 h-[482px] mb-[100px]"
+        className="bg-cover bg-no-repeat bg-center py-10 md:py-20 h-auto lg:h-[350px] lg:mb-[120px]"
         style={{
           backgroundImage: `url(${bannerImage})`,
         }}
@@ -108,49 +330,46 @@ export default function CompanyProfile() {
               </svg>
               Home
             </Link>
-            <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[180px] border-5 border-[var(--secondary-color)] p-4 bg-white">
-              <Image
-                src={firmLogo}
-                alt="company logo"
-                width={268}
-                height={268}
-                className="rounded-lg w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Company Information */}
-      <section className="py-[50px]">
-        <div className="container">
-          <div className="flex flex-wrap justify-between items-center gap-4">
-            <div className="flex flex-col gap-4">
-              <h2 className="text-[36px] font-semibold mb-4 text-[var(--secondary-color)]">
-                {companyProfileInfo?.data?.firmName || ""}
-              </h2>
-              {companyProfileInfo?.data?.yearEstablished &&
-                companyProfileInfo?.data?.yearEstablished !== "" && (
-                  <div className="flex items-center gap-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="33"
-                      height="32"
-                      viewBox="0 0 33 32"
-                      fill="none"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M15.5 6.817L5.676 9.624C4.388 9.992 3.5 11.169 3.5 12.509V30C3.5 30.552 3.948 31 4.5 31H15.5V6.817ZM26.5 8C25.948 8 25.5 7.552 25.5 7V4C25.5 2.343 24.157 1 22.5 1H18.5C17.948 1 17.5 1.448 17.5 2V30C17.5 30.552 17.948 31 18.5 31H28.5C29.052 31 29.5 30.552 29.5 30V11C29.5 9.343 28.157 8 26.5 8ZM20.5 29H26.5C26.5 29 26.5 25.707 26.5 24C26.5 23.47 26.289 22.961 25.914 22.586C25.539 22.211 25.03 22 24.5 22H22.5C21.97 22 21.461 22.211 21.086 22.586C20.711 22.961 20.5 23.47 20.5 24V29ZM7.5 27H8.486C9.038 27 9.486 26.552 9.486 26C9.486 25.448 9.038 25 8.486 25H7.5C6.948 25 6.5 25.448 6.5 26C6.5 26.552 6.948 27 7.5 27ZM11.5 27H12.486C13.038 27 13.486 26.552 13.486 26C13.486 25.448 13.038 25 12.486 25H11.5C10.948 25 10.5 25.448 10.5 26C10.5 26.552 10.948 27 11.5 27ZM7.5 23H8.486C9.038 23 9.486 22.552 9.486 22C9.486 21.448 9.038 21 8.486 21H7.5C6.948 21 6.5 21.448 6.5 22C6.5 22.552 6.948 23 7.5 23ZM11.5 23H12.486C13.038 23 13.486 22.552 13.486 22C13.486 21.448 13.038 21 12.486 21H11.5C10.948 21 10.5 21.448 10.5 22C10.5 22.552 10.948 23 11.5 23ZM22.5 20H24.5C25.052 20 25.5 19.552 25.5 19C25.5 18.448 25.052 18 24.5 18H22.5C21.948 18 21.5 18.448 21.5 19C21.5 19.552 21.948 20 22.5 20ZM11.5 19H12.486C13.038 19 13.486 18.552 13.486 18C13.486 17.448 13.038 17 12.486 17H11.5C10.948 17 10.5 17.448 10.5 18C10.5 18.552 10.948 19 11.5 19ZM7.5 19H8.486C9.038 19 9.486 18.552 9.486 18C9.486 17.448 9.038 17 8.486 17H7.5C6.948 17 6.5 17.448 6.5 18C6.5 18.552 6.948 19 7.5 19ZM22.5 16H24.5C25.052 16 25.5 15.552 25.5 15C25.5 14.448 25.052 14 24.5 14H22.5C21.948 14 21.5 14.448 21.5 15C21.5 15.552 21.948 16 22.5 16ZM7.5 15H8.486C9.038 15 9.486 14.552 9.486 14C9.486 13.448 9.038 13 8.486 13H7.5C6.948 13 6.5 13.448 6.5 14C6.5 14.552 6.948 15 7.5 15ZM11.5 15H12.486C13.038 15 13.486 14.552 13.486 14C13.486 13.448 13.038 13 12.486 13H11.5C10.948 13 10.5 13.448 10.5 14C10.5 14.552 10.948 15 11.5 15ZM22.5 12H24.5C25.052 12 25.5 11.552 25.5 11C25.5 10.448 25.052 10 24.5 10H22.5C21.948 10 21.5 10.448 21.5 11C21.5 11.552 21.948 12 22.5 12Z"
-                        fill="#00C3C0"
-                      />
-                    </svg>
-                    <span className="text-base font-medium text-[#444]">
-                      Established in {companyProfileInfo?.data?.yearEstablished}
-                    </span>
-                  </div>
-                )}
-              {/* <div className="flex items-center gap-3">
+            <div className="flex flex-wrap lg:flex-nowrap justify-between items-end gap-8">
+              <div className="flex flex-wrap items-end gap-8">
+                <div className="inline-block rounded-lg w-[268px] h-[268px] mt-[80px] border-5 border-[var(--brand-color)] p-4 bg-white">
+                  <Image
+                    src={firmLogo}
+                    alt="company logo"
+                    width={268}
+                    height={268}
+                    className="rounded-lg w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-[36px] font-semibold text-white lg:text-[var(--brand-color)]">
+                    {companyProfileInfo?.data?.firmName || ""}
+                  </h2>
+                  {companyProfileInfo?.data?.yearEstablished &&
+                    companyProfileInfo?.data?.yearEstablished !== "" && (
+                      <div className="flex items-center gap-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="33"
+                          height="32"
+                          viewBox="0 0 33 32"
+                          fill="none"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M15.5 6.817L5.676 9.624C4.388 9.992 3.5 11.169 3.5 12.509V30C3.5 30.552 3.948 31 4.5 31H15.5V6.817ZM26.5 8C25.948 8 25.5 7.552 25.5 7V4C25.5 2.343 24.157 1 22.5 1H18.5C17.948 1 17.5 1.448 17.5 2V30C17.5 30.552 17.948 31 18.5 31H28.5C29.052 31 29.5 30.552 29.5 30V11C29.5 9.343 28.157 8 26.5 8ZM20.5 29H26.5C26.5 29 26.5 25.707 26.5 24C26.5 23.47 26.289 22.961 25.914 22.586C25.539 22.211 25.03 22 24.5 22H22.5C21.97 22 21.461 22.211 21.086 22.586C20.711 22.961 20.5 23.47 20.5 24V29ZM7.5 27H8.486C9.038 27 9.486 26.552 9.486 26C9.486 25.448 9.038 25 8.486 25H7.5C6.948 25 6.5 25.448 6.5 26C6.5 26.552 6.948 27 7.5 27ZM11.5 27H12.486C13.038 27 13.486 26.552 13.486 26C13.486 25.448 13.038 25 12.486 25H11.5C10.948 25 10.5 25.448 10.5 26C10.5 26.552 10.948 27 11.5 27ZM7.5 23H8.486C9.038 23 9.486 22.552 9.486 22C9.486 21.448 9.038 21 8.486 21H7.5C6.948 21 6.5 21.448 6.5 22C6.5 22.552 6.948 23 7.5 23ZM11.5 23H12.486C13.038 23 13.486 22.552 13.486 22C13.486 21.448 13.038 21 12.486 21H11.5C10.948 21 10.5 21.448 10.5 22C10.5 22.552 10.948 23 11.5 23ZM22.5 20H24.5C25.052 20 25.5 19.552 25.5 19C25.5 18.448 25.052 18 24.5 18H22.5C21.948 18 21.5 18.448 21.5 19C21.5 19.552 21.948 20 22.5 20ZM11.5 19H12.486C13.038 19 13.486 18.552 13.486 18C13.486 17.448 13.038 17 12.486 17H11.5C10.948 17 10.5 17.448 10.5 18C10.5 18.552 10.948 19 11.5 19ZM7.5 19H8.486C9.038 19 9.486 18.552 9.486 18C9.486 17.448 9.038 17 8.486 17H7.5C6.948 17 6.5 17.448 6.5 18C6.5 18.552 6.948 19 7.5 19ZM22.5 16H24.5C25.052 16 25.5 15.552 25.5 15C25.5 14.448 25.052 14 24.5 14H22.5C21.948 14 21.5 14.448 21.5 15C21.5 15.552 21.948 16 22.5 16ZM7.5 15H8.486C9.038 15 9.486 14.552 9.486 14C9.486 13.448 9.038 13 8.486 13H7.5C6.948 13 6.5 13.448 6.5 14C6.5 14.552 6.948 15 7.5 15ZM11.5 15H12.486C13.038 15 13.486 14.552 13.486 14C13.486 13.448 13.038 13 12.486 13H11.5C10.948 13 10.5 13.448 10.5 14C10.5 14.552 10.948 15 11.5 15ZM22.5 12H24.5C25.052 12 25.5 11.552 25.5 11C25.5 10.448 25.052 10 24.5 10H22.5C21.948 10 21.5 10.448 21.5 11C21.5 11.552 21.948 12 22.5 12Z"
+                            fill="currentColor"
+                            className="fill-white lg:fill-[var(--brand-color)]"
+                          />
+                        </svg>
+                        <span className="text-base font-medium text-white lg:text-[#444]">
+                          Established in{" "}
+                          {companyProfileInfo?.data?.yearEstablished}
+                        </span>
+                      </div>
+                    )}
+                  {/* <div className="flex items-center gap-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="33"
@@ -169,74 +388,78 @@ export default function CompanyProfile() {
                   Around 2,900 people total (lawyers + business services staff)
                 </span>
               </div> */}
-            </div>
-            <div className="flex flex-col gap-4">
-              {companyProfileInfo?.data?.registrationNumber &&
-                companyProfileInfo?.data?.registrationNumber !== "" && (
-                  <div className="text-[#444] text-[24px] font-semibold">
-                    {companyProfileInfo?.data?.registrationNumber}
-                  </div>
-                )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 bg-[var(--brand-color)] rounded-[10px] p-4 w-full lg:w-auto">
+                {companyProfileInfo?.data?.registrationNumber &&
+                  companyProfileInfo?.data?.registrationNumber !== "" && (
+                    <div className="text-[#fff] text-[20px] font-semibold">
+                      License: {companyProfileInfo?.data?.registrationNumber}
+                    </div>
+                  )}
 
-              {companyProfileInfo?.data?.contactInfo?.email &&
-                companyProfileInfo?.data?.contactInfo?.email !== "" && (
-                  <div className="flex items-center gap-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="21"
-                      height="21"
-                      viewBox="0 0 21 21"
-                      fill="none"
-                    >
-                      <path
-                        d="M17.3945 3.83398H4.0612C3.14453 3.83398 2.40286 4.58398 2.40286 5.50065L2.39453 15.5007C2.39453 16.4173 3.14453 17.1673 4.0612 17.1673H17.3945C18.3112 17.1673 19.0612 16.4173 19.0612 15.5007V5.50065C19.0612 4.58398 18.3112 3.83398 17.3945 3.83398ZM17.3945 7.16732L10.7279 11.334L4.0612 7.16732V5.50065L10.7279 9.66732L17.3945 5.50065V7.16732Z"
-                        fill="#00C3C0"
-                      />
-                    </svg>
-                    <span className="text-base font-medium text-[#444]">
-                      {companyProfileInfo?.data?.contactInfo?.email}
-                    </span>
-                  </div>
-                )}
-              {companyProfileInfo?.data?.contactInfo?.officialWebsite &&
-                companyProfileInfo?.data?.contactInfo?.officialWebsite !==
-                  "" && (
-                  <div className="flex items-center gap-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="19"
-                      height="19"
-                      viewBox="0 0 19 19"
-                      fill="none"
-                    >
-                      <g clipPath="url(#clip0_2081_10590)">
+                {companyProfileInfo?.data?.contactInfo?.email &&
+                  companyProfileInfo?.data?.contactInfo?.email !== "" && (
+                    <div className="flex items-center gap-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="21"
+                        viewBox="0 0 21 21"
+                        fill="none"
+                      >
                         <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M9.74204 0.621094C14.712 0.621094 18.742 4.65132 18.742 9.62095C18.742 14.591 14.7118 18.6209 9.74204 18.6209C4.77227 18.6211 0.742188 14.591 0.742188 9.62095C0.742188 4.65132 4.77227 0.621094 9.74204 0.621094ZM12.214 1.57251C15.2342 2.57637 17.5003 5.23418 17.9368 8.47207L17.6507 8.44146C17.5999 8.66045 17.5532 8.66602 17.5532 8.92969C17.5532 9.1623 17.8461 9.31802 17.8461 9.80903C17.8461 9.94058 17.5372 10.2037 17.5236 10.2495L17.0648 9.71133V10.3953L16.9951 10.3926L16.8714 9.13066L16.6152 9.21138L16.3104 8.27256L15.3063 9.32065L15.2942 10.0881L14.9664 10.308L14.6182 8.3395L14.4099 8.4917L13.9382 7.85522L13.2332 7.87617L12.9631 7.56753L12.6867 7.64355L12.1429 7.02041L12.0379 7.09189L12.3748 7.95293H12.7658V7.75752H12.961C13.102 8.14687 13.2542 7.91631 13.2542 8.14849C13.2542 8.96104 12.2506 9.5584 11.5932 9.71133C11.6283 9.85825 11.6147 10.0047 11.7884 10.0047C12.1565 10.0047 11.9736 9.94028 12.3748 9.90703C12.3562 10.7372 11.4227 11.7286 11.0241 12.3466L11.2025 13.6195C11.2495 13.8959 10.6284 14.1885 10.4172 14.4998L10.5186 14.9874L10.2325 15.103C10.1824 15.604 9.69604 16.1597 9.15054 16.1597H8.5646C8.5646 15.4737 8.07593 14.4948 8.07593 14.0101C8.07593 13.5984 8.27119 13.5431 8.27119 13.0332C8.27119 12.5621 7.78296 11.8865 7.78296 11.7631V10.9815H7.39199C7.33398 10.7637 7.36943 10.6885 7.09902 10.6885H7.00132C6.57446 10.6885 6.64653 10.8838 6.21968 10.8838H5.82871C5.47627 10.8838 4.85181 9.75278 4.85181 9.61362V8.44131C4.85181 7.93535 5.31484 7.38457 5.63345 7.171V6.68276L6.07319 6.23569L6.31738 6.19409C6.84165 6.19409 6.77939 5.90112 7.09902 5.90112H7.97852V6.58506L8.94531 6.99785L9.03643 6.58066C9.47456 6.68335 9.58852 6.87832 10.1283 6.87832H10.3236C10.6943 6.87832 10.7143 6.38643 10.7143 5.99912L9.93159 6.07647L9.59116 5.33467L9.25264 5.42476C9.31343 5.69019 9.34668 5.57988 9.34668 5.80371C9.34668 5.93555 9.23813 5.9502 9.15112 5.99912L8.8126 5.13999L8.08472 4.62012L7.98804 4.71504L8.60781 5.36719C8.52549 5.60112 8.51582 6.27671 8.17407 5.80356L8.4937 5.64976L7.69712 4.81494L7.21987 5.00156L6.74878 5.45273C6.69956 5.81616 6.60054 5.99897 6.22026 5.99897C5.96714 5.99897 6.11992 5.9335 5.73159 5.90127V4.92437H6.61079L6.32588 4.27368L6.22026 4.33813V4.14258L7.64805 3.48428C7.62109 3.27935 7.58828 3.38921 7.58828 3.16567C7.58828 3.15234 7.68423 2.97202 7.68599 2.96997L8.05527 3.19922L7.96694 2.77866L7.39727 2.89585L7.2915 2.38462C7.74326 2.14673 8.7373 1.30942 9.05342 1.30942H9.34668C9.65532 1.30942 10.4821 1.61396 10.6166 1.79766L9.83257 1.71826L10.4143 2.19741L10.4701 1.99307L10.9042 1.87412L10.9095 1.60239H11.1052V1.89536L12.214 1.57251ZM17.8754 11.1438C17.8529 11.2671 17.828 11.3893 17.8004 11.5106L17.7555 11.1954L17.8754 11.1438ZM17.594 12.2517C17.5725 12.317 17.5505 12.3826 17.5274 12.4474H17.4556V12.2517H17.594ZM2.46455 14.2705C1.93369 13.4659 1.53716 12.5653 1.30498 11.6007L2.89009 12.365L2.89814 12.838C2.89814 13.0118 2.60151 13.3815 2.50747 13.522L2.46455 14.2705Z"
-                          fill="#00C3C0"
+                          d="M17.3945 3.83398H4.0612C3.14453 3.83398 2.40286 4.58398 2.40286 5.50065L2.39453 15.5007C2.39453 16.4173 3.14453 17.1673 4.0612 17.1673H17.3945C18.3112 17.1673 19.0612 16.4173 19.0612 15.5007V5.50065C19.0612 4.58398 18.3112 3.83398 17.3945 3.83398ZM17.3945 7.16732L10.7279 11.334L4.0612 7.16732V5.50065L10.7279 9.66732L17.3945 5.50065V7.16732Z"
+                          fill="#fff"
                         />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_2081_10590">
-                          <rect
-                            width="18"
-                            height="18"
-                            fill="white"
-                            transform="translate(0.742188 0.621094)"
+                      </svg>
+                      <span className="text-base font-medium text-[#fff]">
+                        {companyProfileInfo?.data?.contactInfo?.email}
+                      </span>
+                    </div>
+                  )}
+                {companyProfileInfo?.data?.contactInfo?.officialWebsite &&
+                  companyProfileInfo?.data?.contactInfo?.officialWebsite !==
+                    "" && (
+                    <div className="flex items-center gap-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="19"
+                        height="19"
+                        viewBox="0 0 19 19"
+                        fill="none"
+                      >
+                        <g clipPath="url(#clip0_2081_10590)">
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M9.74204 0.621094C14.712 0.621094 18.742 4.65132 18.742 9.62095C18.742 14.591 14.7118 18.6209 9.74204 18.6209C4.77227 18.6211 0.742188 14.591 0.742188 9.62095C0.742188 4.65132 4.77227 0.621094 9.74204 0.621094ZM12.214 1.57251C15.2342 2.57637 17.5003 5.23418 17.9368 8.47207L17.6507 8.44146C17.5999 8.66045 17.5532 8.66602 17.5532 8.92969C17.5532 9.1623 17.8461 9.31802 17.8461 9.80903C17.8461 9.94058 17.5372 10.2037 17.5236 10.2495L17.0648 9.71133V10.3953L16.9951 10.3926L16.8714 9.13066L16.6152 9.21138L16.3104 8.27256L15.3063 9.32065L15.2942 10.0881L14.9664 10.308L14.6182 8.3395L14.4099 8.4917L13.9382 7.85522L13.2332 7.87617L12.9631 7.56753L12.6867 7.64355L12.1429 7.02041L12.0379 7.09189L12.3748 7.95293H12.7658V7.75752H12.961C13.102 8.14687 13.2542 7.91631 13.2542 8.14849C13.2542 8.96104 12.2506 9.5584 11.5932 9.71133C11.6283 9.85825 11.6147 10.0047 11.7884 10.0047C12.1565 10.0047 11.9736 9.94028 12.3748 9.90703C12.3562 10.7372 11.4227 11.7286 11.0241 12.3466L11.2025 13.6195C11.2495 13.8959 10.6284 14.1885 10.4172 14.4998L10.5186 14.9874L10.2325 15.103C10.1824 15.604 9.69604 16.1597 9.15054 16.1597H8.5646C8.5646 15.4737 8.07593 14.4948 8.07593 14.0101C8.07593 13.5984 8.27119 13.5431 8.27119 13.0332C8.27119 12.5621 7.78296 11.8865 7.78296 11.7631V10.9815H7.39199C7.33398 10.7637 7.36943 10.6885 7.09902 10.6885H7.00132C6.57446 10.6885 6.64653 10.8838 6.21968 10.8838H5.82871C5.47627 10.8838 4.85181 9.75278 4.85181 9.61362V8.44131C4.85181 7.93535 5.31484 7.38457 5.63345 7.171V6.68276L6.07319 6.23569L6.31738 6.19409C6.84165 6.19409 6.77939 5.90112 7.09902 5.90112H7.97852V6.58506L8.94531 6.99785L9.03643 6.58066C9.47456 6.68335 9.58852 6.87832 10.1283 6.87832H10.3236C10.6943 6.87832 10.7143 6.38643 10.7143 5.99912L9.93159 6.07647L9.59116 5.33467L9.25264 5.42476C9.31343 5.69019 9.34668 5.57988 9.34668 5.80371C9.34668 5.93555 9.23813 5.9502 9.15112 5.99912L8.8126 5.13999L8.08472 4.62012L7.98804 4.71504L8.60781 5.36719C8.52549 5.60112 8.51582 6.27671 8.17407 5.80356L8.4937 5.64976L7.69712 4.81494L7.21987 5.00156L6.74878 5.45273C6.69956 5.81616 6.60054 5.99897 6.22026 5.99897C5.96714 5.99897 6.11992 5.9335 5.73159 5.90127V4.92437H6.61079L6.32588 4.27368L6.22026 4.33813V4.14258L7.64805 3.48428C7.62109 3.27935 7.58828 3.38921 7.58828 3.16567C7.58828 3.15234 7.68423 2.97202 7.68599 2.96997L8.05527 3.19922L7.96694 2.77866L7.39727 2.89585L7.2915 2.38462C7.74326 2.14673 8.7373 1.30942 9.05342 1.30942H9.34668C9.65532 1.30942 10.4821 1.61396 10.6166 1.79766L9.83257 1.71826L10.4143 2.19741L10.4701 1.99307L10.9042 1.87412L10.9095 1.60239H11.1052V1.89536L12.214 1.57251ZM17.8754 11.1438C17.8529 11.2671 17.828 11.3893 17.8004 11.5106L17.7555 11.1954L17.8754 11.1438ZM17.594 12.2517C17.5725 12.317 17.5505 12.3826 17.5274 12.4474H17.4556V12.2517H17.594ZM2.46455 14.2705C1.93369 13.4659 1.53716 12.5653 1.30498 11.6007L2.89009 12.365L2.89814 12.838C2.89814 13.0118 2.60151 13.3815 2.50747 13.522L2.46455 14.2705Z"
+                            fill="#fff"
                           />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    <span className="text-base font-medium text-[#444]">
-                      {companyProfileInfo?.data?.contactInfo?.officialWebsite}
-                    </span>
-                  </div>
-                )}
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_2081_10590">
+                            <rect
+                              width="18"
+                              height="18"
+                              fill="white"
+                              transform="translate(0.742188 0.621094)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <span className="text-base font-medium text-[#fff]">
+                        {companyProfileInfo?.data?.contactInfo?.officialWebsite}
+                      </span>
+                    </div>
+                  )}
+              </div>
             </div>
           </div>
         </div>
       </section>
+      {/* Company Information */}
+
       {/* About */}
       <section className="py-[50px]">
         <div className="container">
@@ -244,10 +467,10 @@ export default function CompanyProfile() {
             About
           </h2>
           {description && description !== "" && (
-            <p
-              className="text-base text-[#444]"
+            <div
+              className="text-base text-[#444] company-desc"
               dangerouslySetInnerHTML={{ __html: description }}
-            ></p>
+            ></div>
           )}
         </div>
       </section>
