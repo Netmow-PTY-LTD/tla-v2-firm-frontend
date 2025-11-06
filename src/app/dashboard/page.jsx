@@ -27,7 +27,7 @@ export default function DashboardHome() {
     isError,
   } = useGetFirmInfoQuery();
 
-  //console.log("Company Info on Dashboard Home:", companyInfo);
+  console.log("Company Info on Dashboard Home:", companyInfo);
 
   const { data: dashboardStats } = useGetFirmDashboardStatsQuery();
   //console.log("Dashboard Stats:", dashboardStats);
