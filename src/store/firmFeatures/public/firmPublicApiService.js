@@ -9,7 +9,14 @@ const publicApiService = firmBaseApi.injectEndpoints({
         body,
       }),
     }),
+    getFirmStats: builder.query({
+      query: () => ({
+        url: `/firm-stats`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCheckFirmNameMutation } = publicApiService;
+export const { useCheckFirmNameMutation, useGetFirmStatsQuery } =
+  publicApiService;
