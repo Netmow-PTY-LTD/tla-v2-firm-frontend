@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function HeroSection() {
   const { data: firmStats, isLoading } = useGetFirmStatsQuery();
 
-  console.log("firmStats", firmStats);
+  //console.log("firmStats", firmStats);
   return (
     <section className="bg-[url('/assets/img/hero-bg.png')] bg-cover bg-no-repeat bg-center pt-8 pb-5 md:py-12">
       <div className="container">
@@ -64,7 +64,7 @@ export default function HeroSection() {
       </div>
 
       {/* Stats Section (unchanged) */}
-      <motion.div
+      {/* <motion.div
         className="max-w-7xl mx-auto px-4 py-16"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -119,7 +119,7 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }
