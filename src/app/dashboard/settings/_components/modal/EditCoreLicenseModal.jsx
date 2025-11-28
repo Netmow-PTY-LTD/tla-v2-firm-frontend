@@ -32,10 +32,7 @@ export default function EditCoreLicenseModal({
     });
   //console.log("currentUser in AddCoreLicenseModal", currentUser);
 
-  const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id ||
-    ""; // Default to Australia if not available
+  const countryId = currentUser?.data?.contactInfo?.country?._id || ""; // Default to Australia if not available
 
   const {
     data: certificationsList,
@@ -47,7 +44,8 @@ export default function EditCoreLicenseModal({
     page: 1,
     limit: 10,
   });
-  //console.log("Certifications List:", certificationsList);
+
+  //console.log("Certifications List in Core:", certificationsList);
 
   const { data: singleLicense, isLoading: isSingleLicenseLoading } =
     useGetSingleLicenseAndCertificationByIdQuery(selectedLicense?._id, {

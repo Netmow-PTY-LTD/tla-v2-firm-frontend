@@ -12,7 +12,7 @@ import { setUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { Loader, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
@@ -21,6 +21,18 @@ const LawFirmLoginForm = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [authLogin, { isLoading }] = useLoginFirmMutation();
+
+  const [savedEmail, setSavedEmail] = useState("");
+  const [savedRemember, setSavedRemember] = useState(false);
+
+  // Load saved values when component mounts
+  useEffect(() => {
+    const remember = localStorage.getItem("rememberMe") === "true";
+    const email = remember ? localStorage.getItem("userEmail") : "";
+
+    setSavedEmail(email || "");
+    setSavedRemember(remember);
+  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -81,11 +93,11 @@ const LawFirmLoginForm = () => {
         <FormWrapper
           onSubmit={onSubmit}
           schema={loginValidationSchema}
-          // defaultValues={{
-          //   email: localStorage.getItem("userEmail") || "",
-          //   password: "",
-          //   rememberMe: localStorage.getItem("rememberMe") === "true",
-          // }}
+          defaultValues={{
+            email: savedEmail,
+            password: "",
+            rememberMe: savedRemember,
+          }}
         >
           <div className="space-y-5">
             <TextInput

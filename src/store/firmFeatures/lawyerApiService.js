@@ -8,7 +8,7 @@ const lawyerApiService = firmBaseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["lawyer"],
+      invalidatesTags: ["lawyer", "firmInfo", "firm"],
     }),
 
     lawyerLoginRequest: builder.mutation({
