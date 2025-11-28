@@ -29,12 +29,12 @@ export default function EditOptionalLicenseModal({
     useGetFirmUserInfoQuery(undefined, {
       skip: !token,
     });
-  //console.log("currentUser in AddCoreLicenseModal", currentUser);
+    
+ // console.log("currentUser in EditCoreLicenseModal", currentUser);
 
-  const countryId =
-    currentUser?.data?.firmProfile?.contactInfo?.country ||
-    currentUser?.data?.firmProfile?.contactInfo?.country?._id ||
-    ""; // Default to Australia if not available
+  const countryId = currentUser?.data?.contactInfo?.country?._id || ""; // Default to Australia if not available
+
+    //console.log("countryId in EditCoreLicenseModal", countryId);
 
   const {
     data: certificationsList,
@@ -46,7 +46,7 @@ export default function EditOptionalLicenseModal({
     page: 1,
     limit: 10,
   });
-  //console.log("Certifications List:", certificationsList);
+  console.log("Certifications List:", certificationsList);
 
   const { data: singleLicense, isLoading: isSingleLicenseLoading } =
     useGetSingleLicenseAndCertificationByIdQuery(selectedLicense?._id, {
