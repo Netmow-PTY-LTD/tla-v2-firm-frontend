@@ -10,10 +10,11 @@ export default function CompanyProfileCard({ companyInfo }) {
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-[10px] relative z-[9] shadow-sm">
         {/* Left section: Avatar and text */}
         <div className="flex flex-wrap items-center gap-4">
-          <Avatar className="h-[70px] w-[70px] border border-gray-300">
+          <Avatar className="h-[70px] w-[70px] border border-gray-300 p-1.5">
             <AvatarImage
               src={companyInfo?.logo || userDummyImage}
               alt="Profile"
+              className="object-contain"
             />
             <AvatarFallback>PI</AvatarFallback>
           </Avatar>
