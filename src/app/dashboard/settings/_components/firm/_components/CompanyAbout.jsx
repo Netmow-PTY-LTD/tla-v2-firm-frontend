@@ -58,6 +58,15 @@ export default function CompanyAbout({ companyInfo }) {
             textColor="text-[#4b4949]"
           />
         </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-7">
+          <TextInput
+            label="Year Established"
+            name="yearEstablished"
+            placeholder="Year Established"
+            textColor="text-[#4b4949]"
+          />
+        </div>
         {/* <TextareaInput
           label="Describe your company "
           name="description"
