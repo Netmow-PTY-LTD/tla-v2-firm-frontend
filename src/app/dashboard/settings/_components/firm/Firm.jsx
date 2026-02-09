@@ -77,6 +77,7 @@ export default function Firm() {
       yearsInBusiness,
       description,
       zipCode,
+      yearEstablished,
       ...rest
     } = data;
 
@@ -100,6 +101,7 @@ export default function Firm() {
       },
       companySize,
       yearsInBusiness,
+      yearEstablished,
       description,
     };
 
