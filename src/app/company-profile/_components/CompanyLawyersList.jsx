@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { userDummyImage } from "@/data/data";
 export default function CompanyLawyersList({ lawyers }) {
-  console.log("lawyers", lawyers);
   return (
     <section className="py-[50px]">
       <div className="container">
@@ -23,7 +22,7 @@ export default function CompanyLawyersList({ lawyers }) {
                 <div className="p-6 mt-[-90px] relative z-10">
                   <div className="flex flex-col">
                     {/* Profile Info */}
-                    <div className="flex flex-col gap-8 mt-6">
+                    <div className="flex flex-col gap-7 mt-6">
                       <div className="w-full flex flex-col items-center gap-4 text-center">
                         <div className="w-20 h-20 rounded-full overflow-hidden border flex-shrink-0">
                           <img
@@ -32,12 +31,12 @@ export default function CompanyLawyersList({ lawyers }) {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <div className="text-white">
+                        <div className="text-white min-h-[90px]">
                           <Link
                             href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/profile/${lawyer.slug}`}
                             className="hover:underline"
                           >
-                            <h5 className="text-base font-semibold">
+                            <h5 className="text-base font-semibold mb-2">
                               {lawyer?.name}
                             </h5>
                           </Link>
