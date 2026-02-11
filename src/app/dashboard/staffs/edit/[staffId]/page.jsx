@@ -22,6 +22,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import permissionss from "@/data/permissions";
 import AccessDenied from "@/components/AccessDenied";
 import { useCurrentUserInfoQuery } from "@/store/firmFeatures/firmAuth/firmAuthApiService";
+import { useFormContext } from "react-hook-form";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // ---------------- Schema ----------------
 const staffSchema = z.object({
@@ -63,6 +65,62 @@ const staffSchema = z.object({
   permissions: z.any().optional(),
 });
 
+const SelectAllPermissions = ({ permissionOptions }) => {
+  const { watch, setValue, getValues } = useFormContext();
+  const permissions = watch("permissions") || {};
+
+  const { allSelected, someSelected } = useMemo(() => {
+    if (!permissionOptions || permissionOptions.length === 0) {
+      return { allSelected: false, someSelected: false };
+    }
+    const selectedCount = permissionOptions.filter(
+      (opt) => !!permissions[opt.value]
+    ).length;
+    return {
+      allSelected: selectedCount === permissionOptions.length,
+      someSelected:
+        selectedCount > 0 && selectedCount < permissionOptions.length,
+    };
+  }, [permissions, permissionOptions]);
+
+  const handleToggle = () => {
+    const newValue = !allSelected;
+    const currentPermissions = { ...getValues("permissions") };
+    permissionOptions.forEach((opt) => {
+      currentPermissions[opt.value] = newValue;
+    });
+
+    setValue("permissions", currentPermissions, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  if (!permissionOptions || permissionOptions.length === 0) return null;
+
+  return (
+    <div
+      className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-md border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
+      onClick={handleToggle}
+    >
+      <Checkbox
+        id="select-all-permissions"
+        checked={allSelected ? true : someSelected ? "indeterminate" : false}
+        onCheckedChange={handleToggle}
+        className="cursor-pointer border-[var(--color-text)]"
+        onClick={(e) => e.stopPropagation()}
+      />
+      <label
+        htmlFor="select-all-permissions"
+        className="text-sm font-medium cursor-pointer select-none text-[#4b4949]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        Select All
+      </label>
+    </div>
+  );
+};
+
 export default function EditStaffPage() {
   const { data: currentUser } = useCurrentUserInfoQuery();
 
@@ -87,10 +145,12 @@ export default function EditStaffPage() {
 
   //console.log("permissions", permissions);
 
-  const permissionOptions = permissions?.data?.map((perm) => ({
-    label: perm.title,
-    value: perm._id,
-  }));
+  const permissionOptions = useMemo(() => {
+    return permissions?.data?.map((perm) => ({
+      label: perm.title,
+      value: perm._id,
+    }));
+  }, [permissions]);
 
   const defaultValues = useMemo(() => {
     // Transform array of permissions into { [pageId]: boolean }
@@ -220,9 +280,9 @@ export default function EditStaffPage() {
   const hasPageAccess =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+        return idMatch && perm?.permission === true;
+      })
       : true;
 
   if (!hasPageAccess) {
@@ -299,13 +359,20 @@ export default function EditStaffPage() {
             />
           </div>
           <div className="border-t border-[#f2f2f2] h-1 mt-10" />
-          <h3 className="text-black font-semibold heading-lg mt-6">
-            Set Permissions
-          </h3>
-          <p className="text-[#6e6e6e] mt-2 text-sm">
-            Choose which pages this staff member can access. Select from the
-            list below to assign permissions.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6">
+            <div>
+              <h3 className="text-black font-semibold heading-lg">
+                Set Permissions
+              </h3>
+              <p className="text-[#6e6e6e] mt-2 text-sm">
+                Choose which pages this staff member can access. Select from the
+                list below to assign permissions.
+              </p>
+            </div>
+            {!isLoadingPermissions && (
+              <SelectAllPermissions permissionOptions={permissionOptions} />
+            )}
+          </div>
           {permissionOptions?.length > 0 && (
             <div className="flex flex-wrap gap-4">
               {permissionOptions.map((perm) => (
