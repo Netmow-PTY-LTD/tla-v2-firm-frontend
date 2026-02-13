@@ -37,13 +37,21 @@ export const metadata = {
     siteName: "Company The Law App",
     images: [
       {
-        url: "/assets/img/logo.webp",
-        width: 800,
-        height: 600,
+        url: "/assets/img/favicon.ico",
+        width: 1200,
+        height: 630,
+        alt: "The Law App - Find a Lawyer Online",
       },
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Find a Lawyer | Hire a Lawyer | The Law App Online | Company The Law App",
+    description:
+      "The Law App is a complete online marketplace for people to search for lawyers at a price they can afford and for lawyers to build an online presence to find clients without the need for heavy marketing expenses.",
+    images: ["/assets/img/favicon.ico"],
   },
 };
 
@@ -52,7 +60,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>{children}</ReduxProvider>
-        <Toaster/>
+        <Toaster />
       </body>
     </html>
   );
