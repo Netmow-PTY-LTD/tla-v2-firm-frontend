@@ -45,11 +45,10 @@ export default function LawFirmDashboardHeader({ onToggleSidebar }) {
     <header className="db-header">
       <div className="db-header-container flex gap-4">
         <Link href={`${token ? "/dashboard" : "/"}`} className="db-logo">
-          <Image
-            src={"/assets/img/company-logo.png"}
+          <img
+            src={"/assets/img/logo-tla.svg"}
             alt="TLA Logo"
-            width={150}
-            height={40}
+            className="h-[48px]"
           />
         </Link>
         <button

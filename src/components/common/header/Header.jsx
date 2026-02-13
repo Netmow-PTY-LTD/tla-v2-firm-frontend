@@ -22,7 +22,7 @@ export default function Header() {
   const token = useSelector(selectCurrentToken);
   const validToken = checkTokenValidity(token);
 
-  console.log('validte token',validToken)
+  console.log('validte token', validToken)
 
   return (
     <>
@@ -30,12 +30,10 @@ export default function Header() {
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/">
-              <Image
-                src="/assets/img/company-logo.png"
+              <img
+                src="/assets/img/logo-tla.svg"
                 alt="TLA Logo"
-                width={166}
-                height={40}
-                className="w-[100px] md:w-[166px]"
+                className="h-[48px]"
               />
             </Link>
           </div>
