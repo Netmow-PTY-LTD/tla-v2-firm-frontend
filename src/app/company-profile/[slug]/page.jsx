@@ -401,7 +401,7 @@ export default function CompanyProfile() {
 
                 {companyProfileInfo?.data?.contactInfo?.email &&
                   companyProfileInfo?.data?.contactInfo?.email !== "" && (
-                    <div className="flex items-center gap-3">
+                    <a href={`mailto:${companyProfileInfo?.data?.contactInfo?.email}`} className="flex items-center gap-3 underline hover:underline text-[#fff]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="21"
@@ -417,12 +417,12 @@ export default function CompanyProfile() {
                       <span className="text-base font-medium text-[#fff]">
                         {companyProfileInfo?.data?.contactInfo?.email}
                       </span>
-                    </div>
+                    </a>
                   )}
                 {companyProfileInfo?.data?.contactInfo?.officialWebsite &&
                   companyProfileInfo?.data?.contactInfo?.officialWebsite !==
-                    "" && (
-                    <div className="flex items-center gap-3">
+                  "" && (
+                    <a href={companyProfileInfo?.data?.contactInfo?.officialWebsite} className="flex items-center gap-3 underline hover:underline text-[#fff]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="19"
@@ -452,7 +452,7 @@ export default function CompanyProfile() {
                       <span className="text-base font-medium text-[#fff]">
                         {companyProfileInfo?.data?.contactInfo?.officialWebsite}
                       </span>
-                    </div>
+                    </a>
                   )}
               </div>
             </div>

@@ -3,10 +3,10 @@ import { z } from "zod";
 import countries from "@/data/countries.json";
 
 export const loginValidationSchema = z.object({
-  email: z.string().nonempty("is required").email("Invalid email address"),
+  email: z.string().nonempty("Email is required").email("Invalid email address"),
   password: z
     .string()
-    .nonempty("is required")
+    .nonempty("Password is required")
     .min(6, "Password must be at least 6 characters"),
   rememberMe: z.boolean().optional(), // checkbox is optional
 });
