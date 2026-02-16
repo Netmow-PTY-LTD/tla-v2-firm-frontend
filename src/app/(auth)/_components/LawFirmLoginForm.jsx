@@ -12,7 +12,7 @@ import { setUser } from "@/store/firmFeatures/firmAuth/firmAuthSlice";
 import { Loader, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { useDispatch } from "react-redux";
 
@@ -23,14 +23,18 @@ const LawFirmLoginForm = () => {
   const [authLogin, { isLoading }] = useLoginFirmMutation();
 
   const [savedEmail, setSavedEmail] = useState("");
+  const [savedPassword, setSavedPassword] = useState("");
   const [savedRemember, setSavedRemember] = useState(false);
+  const formRef = useRef(null);
 
   // Load saved values when component mounts
   useEffect(() => {
     const remember = localStorage.getItem("rememberMe") === "true";
     const email = remember ? localStorage.getItem("userEmail") : "";
+    const password = remember ? localStorage.getItem("userPassword") : "";
 
     setSavedEmail(email || "");
+    setSavedPassword(password || "");
     setSavedRemember(remember);
   }, []);
 
@@ -60,9 +64,11 @@ const LawFirmLoginForm = () => {
           if (data.rememberMe) {
             localStorage.setItem("rememberMe", "true");
             localStorage.setItem("userEmail", data.email);
+            localStorage.setItem("userPassword", data.password);
           } else {
             localStorage.removeItem("rememberMe");
             localStorage.removeItem("userEmail");
+            localStorage.removeItem("userPassword");
           }
 
           //  Redirect if login worked
@@ -72,7 +78,12 @@ const LawFirmLoginForm = () => {
       }
     } catch (error) {
       const errorMessage = error?.data?.message || "An error occurred";
-      showErrorToast(errorMessage);
+      if (formRef.current) {
+        formRef.current.setError("password", {
+          type: "manual",
+          message: errorMessage,
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -93,11 +104,15 @@ const LawFirmLoginForm = () => {
         <FormWrapper
           onSubmit={onSubmit}
           schema={loginValidationSchema}
-          defaultValues={{
-            email: savedEmail,
-            password: "",
-            rememberMe: savedRemember,
-          }}
+          formRef={formRef}
+          defaultValues={useMemo(
+            () => ({
+              email: savedEmail,
+              password: savedPassword,
+              rememberMe: savedRemember,
+            }),
+            [savedEmail, savedPassword, savedRemember]
+          )}
         >
           <div className="space-y-5">
             <TextInput
@@ -163,7 +178,7 @@ const LawFirmLoginForm = () => {
             <b>Claim Account</b>
           </Link>
         </div>
-      </div>
+      </div >
     </>
   );
 };
