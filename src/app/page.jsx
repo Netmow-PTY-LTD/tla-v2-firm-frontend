@@ -46,7 +46,7 @@ export default function LawListingHome() {
   //     skip: !token,
   //   });
 
-  console.log('Version 1.0.2')
+  console.log('Version 1.0.3')
 
   return (
     <MainLayout>
