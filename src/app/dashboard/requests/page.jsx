@@ -49,9 +49,9 @@ export default function LawyerRequestsAsMember() {
   const hasPageAccess =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+        return idMatch && perm?.permission === true;
+      })
       : true; // other roles always have access
 
   if (!hasPageAccess) {
@@ -107,42 +107,41 @@ export default function LawyerRequestsAsMember() {
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0">
                   <img
-                    src={req.lawyerId?.avatar || userDummyImage}
+                    src={req.lawyerId?.profilePicture || userDummyImage}
                     alt={req.lawyerId?.name || ""}
                     className="w-10 h-10 rounded-full object-cover border border-gray-200"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-gray-500 text-sm">
+                  <div className="text-gray-900 font-semibold text-base mb-0.5">
                     {req.lawyerId?.name}
                   </div>
-                  <div className="text-black font-medium text-sm mb-1">
-                    {req.message || "No message provided."}
+                  <div className="text-gray-600 text-sm mb-2 line-clamp-1 italic">
+                    "{req.message || "No message provided."}"
                   </div>
-                  <div className="text-xs text-gray-500">
-                    Status:{" "}
+                  <div className="flex items-center gap-3 flex-wrap">
                     <span
-                      className={`font-semibold capitalize ${
-                        req.status === "approved"
-                          ? "text-green-600"
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize shadow-sm ${req.status === "approved"
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
                           : req.status === "rejected"
-                          ? "text-red-600"
-                          : req.status === "cancelled"
-                          ? "text-gray-500"
-                          : "text-yellow-600"
-                      }`}
+                            ? "bg-rose-100 text-rose-800 border border-rose-200"
+                            : req.status === "cancelled"
+                              ? "bg-gray-100 text-gray-800 border border-gray-200"
+                              : "bg-amber-100 text-amber-800 border border-amber-200"
+                        }`}
                     >
                       {req.status}
                     </span>
+                    {req.reviewedBy && (
+                      <div className="text-xs text-gray-500 flex items-center gap-1">
+                        <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                        Reviewed by {req.reviewedBy.name}{" "}
+                        {req.reviewedAt && (
+                          <span className="text-gray-400">({formatRelativeTime(req.reviewedAt)})</span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {req.reviewedBy && (
-                    <div className="text-xs text-gray-400">
-                      Reviewed by: {req.reviewedBy.name}{" "}
-                      {req.reviewedAt && (
-                        <>({formatRelativeTime(req.reviewedAt)})</>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="flex items-center gap-3">
