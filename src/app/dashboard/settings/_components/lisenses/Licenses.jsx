@@ -7,7 +7,7 @@ import { useState } from "react";
 import BillingTaxFormAction from "../billingTax/BillingTaxFormAction";
 import SelectInput from "@/components/form/SelectInput";
 import AddCoreLicenseModal from "../modal/AddCoreLicenseModal";
-import { Edit, Trash, Trash2 } from "lucide-react";
+import { Edit, Loader, Trash, Trash2 } from "lucide-react";
 import AddOptionalLicenseModal from "../modal/AddOptionalLicenses";
 import { z } from "zod";
 import { useGetLicensesAndCertificationsListQuery } from "@/store/firmFeatures/certificateLicensesApiService";
@@ -37,9 +37,9 @@ export default function License() {
   const hasPermissions =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch = perm?.pageId?._id === pageId || perm?._id === pageId;
+        return idMatch && perm?.permission === true;
+      })
       : true;
 
   const [isEditCoreLicenseModalOpen, setIsEditCoreLicenseModalOpen] =
@@ -104,7 +104,12 @@ export default function License() {
         </div>
       </div>
       {/* Mandatory Licenses */}
-      {mandatoryLicenses?.length > 0 ? (
+      {isCoreLicensesLoading ? (
+        <div className="flex justify-center items-center gap-2 mt-5 bg-white rounded-lg shadow-sm p-10 border border-gray-200">
+          <Loader className="h-4 w-4 animate-spin" />
+          <span>Loading...</span>
+        </div>
+      ) : mandatoryLicenses?.length > 0 ? (
         <div className="space-y-4">
           {mandatoryLicenses.map((license) => (
             <LicenseCard
@@ -170,7 +175,12 @@ export default function License() {
         </div>
       </div>
 
-      {optionalLicenses?.length > 0 ? (
+      {isCoreLicensesLoading ? (
+        <div className="flex justify-center items-center gap-2 mt-5 bg-white rounded-lg shadow-sm p-10 border border-gray-200">
+          <Loader className="h-4 w-4 animate-spin" />
+          <span>Loading...</span>
+        </div>
+      ) : optionalLicenses?.length > 0 ? (
         <div className="space-y-4">
           {optionalLicenses?.map((license) => (
             <LicenseCard
