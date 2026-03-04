@@ -422,7 +422,7 @@ export default function CompanyProfile() {
                 {companyProfileInfo?.data?.contactInfo?.officialWebsite &&
                   companyProfileInfo?.data?.contactInfo?.officialWebsite !==
                   "" && (
-                    <a href={companyProfileInfo?.data?.contactInfo?.officialWebsite} className="flex items-center gap-3 underline hover:underline text-[#fff]">
+                    <a href={companyProfileInfo?.data?.contactInfo?.officialWebsite} target="_blank" className="flex items-center gap-3 hover:underline text-[#fff]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="19"
@@ -450,7 +450,7 @@ export default function CompanyProfile() {
                         </defs>
                       </svg>
                       <span className="text-base font-medium text-[#fff]">
-                        {companyProfileInfo?.data?.contactInfo?.officialWebsite}
+                        Website
                       </span>
                     </a>
                   )}

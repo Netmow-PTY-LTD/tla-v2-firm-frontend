@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 import TextInput from "@/components/form/TextInput";
 import FormWrapper from "@/components/form/FormWrapper";
 import { showErrorToast, showSuccessToast } from "@/components/common/toasts";
@@ -19,16 +20,15 @@ const partnerSchema = z.object({
   position: z.string().min(1, { message: "Position is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().min(1, { message: "Phone is required" }),
-  partnerImage: z.any().refine(
-    (file) =>
-      file === null ||
-      file === undefined ||
-      file instanceof File ||
-      typeof file === "string", // in case of existing image URL in edit form
-    {
-      message: "Invalid image file",
-    }
-  ),
+  partnerImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || (typeof file === "string" && file.trim() !== ""),
+      {
+        message: "Partner image is required",
+      }
+    ),
 
   // barAssociation: z.string().min(1, { message: "Bar Association is required" }),
   // licenseNo: z.string().min(1, { message: "License No is required" }),
@@ -101,7 +101,7 @@ const AddPartnerModal = ({ refetchPartners }) => {
           schema={partnerSchema}
           defaultValues={defaultValues}
         >
-          <div className="space-y-5">
+          <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
             <TextInput label="Name" name="name" placeholder="Enter name" />
             <TextInput
               label="Position"
@@ -115,13 +115,16 @@ const AddPartnerModal = ({ refetchPartners }) => {
               placeholder="Enter phone number"
             />
 
-            <AvatarUploader name="partnerImage" />
-            <label
-              htmlFor="partnerImage"
-              className="text-[var(--color-black)] font-medium"
-            >
-              Upload Photo
-            </label>
+            <div className="flex flex-col gap-1">
+              <AvatarUploader name="partnerImage" />
+              <label
+                htmlFor="partnerImage"
+                className="text-[var(--color-black)] font-medium"
+              >
+                Upload Photo
+              </label>
+              <PartnerImageError />
+            </div>
 
             {/* <TextInput
               label="Bar Association"
@@ -163,6 +166,18 @@ const AddPartnerModal = ({ refetchPartners }) => {
       </Modal>
     </div>
   );
+};
+
+const PartnerImageError = () => {
+  const {
+    formState: { errors },
+  } = useFormContext();
+
+  const error = errors.partnerImage;
+
+  if (!error) return null;
+
+  return <span className="text-destructive text-sm">{error.message}</span>;
 };
 
 export default AddPartnerModal;
