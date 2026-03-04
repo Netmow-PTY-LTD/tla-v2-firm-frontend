@@ -11,6 +11,7 @@ import {
 import { useGetPartnersListQuery } from "@/store/firmFeatures/partner/partnerApiService";
 import EditPartnerModal from "./components/EditPartnerModal";
 import permissions from "@/data/permissions";
+import { Loader } from "lucide-react";
 
 export default function ManagingPartner() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -28,10 +29,10 @@ export default function ManagingPartner() {
   const hasAddPermissions =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch =
-            perm?.pageId?._id === addPartnerId || perm?._id === addPartnerId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch =
+          perm?.pageId?._id === addPartnerId || perm?._id === addPartnerId;
+        return idMatch && perm?.permission === true;
+      })
       : true;
 
   const updatePartnerId = permissions?.find(
@@ -41,11 +42,11 @@ export default function ManagingPartner() {
   const hasUpdatePermissions =
     currentUser?.data?.role === "staff"
       ? currentUser?.data?.permissions?.some((perm) => {
-          const idMatch =
-            perm?.pageId?._id === updatePartnerId ||
-            perm?._id === updatePartnerId;
-          return idMatch && perm?.permission === true;
-        })
+        const idMatch =
+          perm?.pageId?._id === updatePartnerId ||
+          perm?._id === updatePartnerId;
+        return idMatch && perm?.permission === true;
+      })
       : true;
 
   const { data: companyInfo, isLoading: isCompanyInfoLoading } =
@@ -82,13 +83,20 @@ export default function ManagingPartner() {
           <AddPartnerModal refetchPartners={refetchPartners} />
         )}
       </div>
-      <PartnerList
-        partners={partners?.data || []}
-        handleEditClick={handleEditClick}
-        refetchPartners={refetchPartners}
-        firmId={companyInfo?.data?._id}
-        hasUpdatePermissions={hasUpdatePermissions}
-      />
+      {isPartnersLoading || isCompanyInfoLoading ? (
+        <div className="flex justify-center items-center gap-2 mt-5">
+          <Loader className="h-4 w-4 animate-spin" />
+          <span>Loading Partners...</span>
+        </div>
+      ) : (
+        <PartnerList
+          partners={partners?.data || []}
+          handleEditClick={handleEditClick}
+          refetchPartners={refetchPartners}
+          firmId={companyInfo?.data?._id}
+          hasUpdatePermissions={hasUpdatePermissions}
+        />
+      )}
       {hasUpdatePermissions && (
         <EditPartnerModal
           open={isEditModalOpen}
