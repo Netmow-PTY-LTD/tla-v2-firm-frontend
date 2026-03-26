@@ -55,7 +55,7 @@ export default function LawListingHome() {
       <HomeListingBenefits />
       <HomeHowItWorks />
       <HomeActionBanner />
-      <HomeLawFirmsList />
+      {/* <HomeLawFirmsList /> */}
       <HomeTestimonials />
       <HomeFAQ />
       <HomeCTA />
