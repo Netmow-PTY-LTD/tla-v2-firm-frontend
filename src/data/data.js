@@ -449,27 +449,32 @@ export const faqData = [
     id: 1,
     question: "What is a Law Firm / Company Listing?",
     answer:
-      "A Law Firm / Company Listing on TheLawApp is a verified public profile that represents a law firm, legal company, or independent lawyer on our platform.",
+      `A Law Firm, Company, or Business Listing on <b>The Law App</b> is a verified public profile that represents your firm or business. It allows you to showcase your services, expertise, team, and contact details so potential clients can easily find and connect with you.`,
   },
   {
     id: 2,
     question: "How do I create a listing?",
     answer:
-      "Creating a listing on TheLawApp is simple and during our freelaunch phase. You can create a Law Firm, Company, or Individual Lawyer listing in just a few steps.",
+      "Creating a listing is simple. Create an account, complete your professional profile, and publish your listing. You can then manage your listing, highlight your practice areas, add and manage staff accounts, and stay visible in the legal community.",
   },
   {
     id: 3,
     question: "Is there a fee to join?",
-    answer: `Joining TheLawApp is completely free during our freelaunch phase. <br /> Both clients and lawyers / law firms can: <br /> <b>Create an account</b>, <br /> <b>Post cases or listings</b>, and <br /> <b>Browse cases and contact clients without any charges.</b> `,
+    answer: `<b>No.</b> Joining TheLawApp is completely free. You can create an account, browse cases, and contact clients without any charges.`,
   },
   {
     id: 4,
     question: "How can I contact support?",
-    answer: `If you need help with TheLawApp, our support team is ready to assist you. <br /> <b>Email: support@thelawapp.com</b>, <br /> <b>Response time: Typically within 24 hours</b>`,
+    answer: `If you need assistance, our support team is ready to help. <ul class="list-disc ml-5 mt-2"><li><b>Email: support@thelawapp.com</b></li><li><b>Response time: Typically within 24 hours</b></li></ul>`,
   },
   {
     id: 5,
     question: "What types of law firms are listed?",
-    answer: `TheLawApp hosts a wide variety of law firms and legal professionals to meet diverse client needs. <br /><b>Small & Boutique Firms</b> – Focused expertise in specific legal areas. <br /><b>Regional & National Firms</b> – Larger firms with multiple offices and a broad range of practice areas.`,
+    answer: `The Law App supports a wide variety of legal professionals and businesses, including: <ul class="list-disc ml-5 mt-2"><li><b>Small & Boutique Firms</b> – Focused expertise in specific legal areas.</li><li><b>Regional & National Firms</b> – Larger firms with multiple offices and a broad range of practice areas.</li></ul>`,
+  },
+  {
+    id: 6,
+    question: "How does The Law App help me find clients?",
+    answer: `Once your listing is live, you can browse posted cases and contact clients directly without any charges. The platform connects you with potential clients efficiently, helping you grow your practice and build lasting professional relationships.`,
   },
 ];
