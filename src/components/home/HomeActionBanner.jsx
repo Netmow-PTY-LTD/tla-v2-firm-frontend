@@ -16,7 +16,7 @@ export default function HomeActionBanner() {
             <div className="flex flex-wrap items-center">
               <div className="w-full md:w-1/2">
                 <div className="home-cta-text md:pr-5 lg:pr-20">
-                  <h2>Urgent help/ instant consult!</h2>
+                  <h2>Urgent help - instant consult!</h2>
                   <div className="cta-text">
                     Connect with a lawyer instantly though chat, call, or video
                   </div>
