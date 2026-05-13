@@ -97,7 +97,7 @@ export default function HomeFAQ() {
             faqData?.map((faq, index) => (
               <motion.div
                 className="tla-faq-accordion-item"
-                key={faq?.id}
+                key={faq?._id || index}
                 variants={cardVariants}
                 viewport={{ once: true, amount: 0.2 }}
               >
