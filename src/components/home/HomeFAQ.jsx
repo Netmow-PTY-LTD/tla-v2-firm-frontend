@@ -4,7 +4,7 @@ import { useGetCompanyPublicFaqsQuery } from "@/store/firmFeatures/public/websit
 
 const FAQ_CATEGORIES = [
   { value: "general", label: "General" },
-  { value: "lawyer", label: "For Lawyer" },
+  { value: "client", label: "Client Requirements" },
 ];
 
 export default function HomeFAQ() {
