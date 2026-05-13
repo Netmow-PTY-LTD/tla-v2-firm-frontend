@@ -1,9 +1,18 @@
-import { faqData } from "@/data/data";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useGetCompanyPublicFaqsQuery } from "@/store/firmFeatures/public/websiteFaqPublicApiService";
+
+const FAQ_CATEGORIES = [
+  { value: "general", label: "General" },
+  { value: "lawyer", label: "For Lawyer" },
+];
 
 export default function HomeFAQ() {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [activeCategory, setActiveCategory] = useState("general");
+
+  const { data: faqResponse, isLoading } = useGetCompanyPublicFaqsQuery(activeCategory);
+  const faqData = faqResponse?.data || [];
 
   const toggleAccordion = (index) => {
     if (index === activeIndex) {
@@ -11,27 +20,6 @@ export default function HomeFAQ() {
     } else {
       setActiveIndex(index);
     }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2, // delay between each item
-        delayChildren: 0.4, // wait before starting
-      },
-    },
-  };
-
-  // 🟢 Each FAQ item animation
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
   };
 
   return (
@@ -53,20 +41,42 @@ export default function HomeFAQ() {
         <h2 className="section-title mb-15 text-center">
           Everything you need to know
         </h2>
+
+        {/* Category Tabs */}
+        <div className="flex justify-center mb-10 gap-3 flex-wrap">
+          {FAQ_CATEGORIES.map((category) => (
+            <button
+              key={category.value}
+              onClick={() => {
+                setActiveCategory(category.value);
+                setActiveIndex(null);
+              }}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                activeCategory === category.value
+                  ? "bg-orange-500 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              {category.label}
+            </button>
+          ))}
+        </div>
         <motion.div
           className="tla-faq-accordion"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
         >
-          {faqData.length > 0 &&
+          {isLoading ? (
+            <div className="text-center py-10">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-orange-500 border-t-transparent"></div>
+            </div>
+          ) : faqData.length > 0 ? (
             faqData?.map((faq, index) => (
               <motion.div
                 className="tla-faq-accordion-item"
-                key={faq?.id}
-                variants={cardVariants}
-                viewport={{ once: true, amount: 0.2 }}
+                key={faq?._id || index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
                 <div
                   className="tla-faq-accordion-header"
@@ -95,7 +105,12 @@ export default function HomeFAQ() {
                   dangerouslySetInnerHTML={{ __html: faq?.answer }}
                 ></div>
               </motion.div>
-            ))}
+            ))
+          ) : (
+            <div className="text-center py-10 text-gray-500">
+              <p>No FAQs available for this category.</p>
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.section>

@@ -131,6 +131,7 @@ export const baseApi = createApi({
     "certification",
     "city-list",
     "pages-list",
+    "website-faq",
   ],
   endpoints: () => ({}),
 });
