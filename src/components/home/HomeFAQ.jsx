@@ -22,27 +22,6 @@ export default function HomeFAQ() {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2, // delay between each item
-        delayChildren: 0.4, // wait before starting
-      },
-    },
-  };
-
-  // 🟢 Each FAQ item animation
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
-
   return (
     <motion.section
       className="tla-faq section"
@@ -84,10 +63,6 @@ export default function HomeFAQ() {
         </div>
         <motion.div
           className="tla-faq-accordion"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
         >
           {isLoading ? (
             <div className="text-center py-10">
@@ -98,8 +73,10 @@ export default function HomeFAQ() {
               <motion.div
                 className="tla-faq-accordion-item"
                 key={faq?._id || index}
-                variants={cardVariants}
-                viewport={{ once: true, amount: 0.2 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
                 <div
                   className="tla-faq-accordion-header"
